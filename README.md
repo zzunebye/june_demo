@@ -1,6 +1,9 @@
-# moovup_demo
+# Demo App for Job Searching Platform
 
-A new Flutter project.
+A new Flutter project to build a prototype of job searching platform.
+
+## Design
+![img.png](img.png)
 
 ## Getting Started
 
