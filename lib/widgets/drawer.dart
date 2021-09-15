@@ -11,7 +11,8 @@ class AppDrawer extends StatelessWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.purple, Colors.deepPurpleAccent]),
+              gradient: LinearGradient(
+                  colors: [Colors.purple, Colors.deepPurpleAccent]),
             ),
             child: Center(
               child: ListTile(
@@ -34,15 +35,30 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: CircleAvatar(
+              child: Icon(Icons.ac_unit),
+            ),
+            title: Text('Main'),
+            onTap: () {
+              Navigator.pushNamed(context, '/');
+            },
+          ),
+          ListTile(
+            leading: CircleAvatar(
               child: Icon(Icons.alt_route),
             ),
             title: Text('Preference'),
+            onTap: () {
+              Navigator.pushNamed(context, '/preference');
+            },
           ),
           ListTile(
             leading: CircleAvatar(
               child: Icon(Icons.view_list),
             ),
             title: Text('Job List'),
+            onTap: () {
+              Navigator.pushNamed(context, '/jobList');
+            },
           ),
           ListTile(
             leading: CircleAvatar(
