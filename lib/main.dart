@@ -5,16 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 import './widgets/drawer.dart';
+import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
 import 'package:http/http.dart' as http;
 
 class UserAuth {
   final String bearerToken;
-
-  // final int userId;
-  // final String title;
-  // final String body;
 
   UserAuth({required this.bearerToken}) {
     // print("bearerToken: "+ bearerToken);
@@ -24,26 +21,15 @@ class UserAuth {
 void main() async {
   // await initHiveForFlutter();
 
-  // Future<String> getBearerToken() async {
-  //   var url = Uri.parse('https://api-staging.moovup.hk/v2/create-anonymous');
-  //   var response = await http.post(url, body: {});
-  //   var responseData = json.decode(response.body);
-  //
-  //   UserAuth userAuth = UserAuth(bearerToken: responseData['access_token']);
-  //
-  //   return userAuth.bearerToken;
-  // }
   var url = Uri.parse('https://api-staging.moovup.hk/v2/create-anonymous');
   var response = await http.post(url, body: {});
   var responseData = json.decode(response.body);
-  //   UserAuth userAuth = UserAuth(bearerToken: responseData['access_token']);
   final HttpLink httpLink = HttpLink(
     'https://api-staging.moovup.hk/v2/seeker',
   );
 
   final AuthLink authLink = AuthLink(
     getToken: () async => 'Bearer ${responseData['access_token']}',
-    // getToken: () => 'Bearer <YOUR_PERSONAL_ACCESS_TOKEN>',
   );
 
   final Link link = authLink.concat(httpLink);
@@ -72,6 +58,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => MyHomePage(title: 'Main'),
         '/preference': (context) => PreferencePage(title: 'Preference'),
         '/jobList': (context) => JobListPage(title: 'Job List'),
+        '/job-detail': (context) => JobDetailPage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
