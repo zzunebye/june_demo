@@ -65,6 +65,9 @@ class AppDrawer extends StatelessWidget {
               child: Icon(Icons.app_settings_alt),
             ),
             title: Text('Setting'),
+            onTap: () {
+              Navigator.pushNamed(context, '/setting');
+            },
           ),
         ],
       ),

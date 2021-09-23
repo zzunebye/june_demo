@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 import './widgets/drawer.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
 import 'package:http/http.dart' as http;
+
+import 'pages/setting_page/setting_page.dart';
 
 class UserAuth {
   final String bearerToken;
@@ -55,15 +58,19 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHomePage(title: 'Main'),
+        '/': (context) => JobListPage(title: 'Main'),
         '/preference': (context) => PreferencePage(title: 'Preference'),
         '/jobList': (context) => JobListPage(title: 'Job List'),
-        '/job-detail': (context) => JobDetailPage(),
+        JobDetailPage.routeName: (context) => JobDetailPage(),
+        JobSearchPage.routeName: (context) =>
+            JobSearchPage(title: "Job Searching", searchCategory: ''),
+        '/setting': (context) => SettingPage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.amber,
         errorColor: Colors.red,
+        canvasColor: Color.fromRGBO(255, 254, 229, 1),
         textTheme: ThemeData.light().textTheme.copyWith(
             title: TextStyle(
               fontWeight: FontWeight.bold,
