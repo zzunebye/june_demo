@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:moovup_demo/helpers/api.dart';
 
 class JobDetailPage extends StatelessWidget {
   static const routeName = 'job-detail';
@@ -14,68 +15,7 @@ class JobDetailPage extends StatelessWidget {
     // final String endDate = (job['end_date'] != null)? job['end_date'].toString(): 'Unknown';
     print(args['title']);
     print(args['id']);
-    print(job);
-
-    String getAllJobs = """
-    query job {
-    get_jobs(_id: "${args['id']}"){
-      _id
-      _created_at
-      job_name
-      start_date
-      end_date
-      company  {
-        name
-        about
-      }
-      education_requirement{
-        category
-        level
-        name
-      }
-      spoken_skill{
-        name
-        level
-      }
-      written_skill{
-        name
-        level
-      }
-      attributes {
-        category
-        category_display_sequence
-      }
-      allowances {
-        name
-        description
-      }
-      job_types {
-        category
-        name
-        __typename
-      }
-      to_monthly_rate
-      to_hourly_rate
-
-      employment
-      employment_type {
-        name
-      }
-      state
-      attributes {
-        category
-      }
-      address {
-        address 
-        formatted_address
-      }
-      address_on_map
-      images
-    is_applied
-    is_invited
-  }
-}
-  """;
+    // print(job);
 
     buildSkillList(BuildContext context, String title, List skillList) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -100,8 +40,6 @@ class JobDetailPage extends StatelessWidget {
       ]);
     }
 
-    ;
-
     List<Map> educationLevel = [
       {"name": "Primary", "level": 1},
       {"name": "Secondary", "level": 2},
@@ -114,7 +52,7 @@ class JobDetailPage extends StatelessWidget {
       ),
       body: Query(
         options: QueryOptions(
-          document: gql(getAllJobs),
+          document: gql(GraphQlQuery.getJob(args['id'])),
         ),
         builder: (QueryResult result, {refetch, fetchMore}) {
           if (result.hasException) {

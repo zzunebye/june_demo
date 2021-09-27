@@ -1,28 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/widgets/category_container.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 
+import '../../dummy_data.dart';
 import '../../widgets/job_card.dart';
 
-const jobCategories = const [
-  JobCategory(id: 'j1', title: 'Retail Shop'),
-  JobCategory(id: 'j2', title: 'Food & Beverage'),
-  JobCategory(id: 'j3', title: 'Events & Promotion'),
-  JobCategory(id: 'j4', title: 'Education'),
-  JobCategory(id: 'j5', title: 'Office'),
-  JobCategory(id: 'j6', title: 'Customer Service'),
-  JobCategory(id: 'j7', title: 'Logistics & Transport'),
-];
 
-class JobCategory {
-  final String id;
-  final String title;
 
-  const JobCategory({required this.id, required this.title});
-}
 
 class JobListPage extends StatefulWidget {
   static const routeName = '/jobList';
@@ -35,52 +23,6 @@ class JobListPage extends StatefulWidget {
 }
 
 class _JobListState extends State<JobListPage> {
-  String getAllJobs = """
-    query job {
-      job_search (limit: 10){
-        total
-        result{
-          _id
-          _created_at
-              job_name
-          company {
-            name
-            about
-          }
-          attributes {
-            category
-            category_display_sequence
-          }
-          allowances {
-            name
-            description
-          }
-          job_types {
-            category
-            name
-            __typename
-          }
-          to_monthly_rate
-          to_hourly_rate
-    
-          employment
-          employment_type {
-            name
-          }
-          state
-          attributes {
-            category
-          }
-          address{
-            address
-            formatted_address
-          }
-          address_on_map
-          images
-        }
-      }
-    }
-  """;
 
   void selectJobCategoryCard(BuildContext ctx) {
     Navigator.of(ctx).pushNamed(
@@ -107,7 +49,7 @@ class _JobListState extends State<JobListPage> {
       drawer: AppDrawer(),
       body: Query(
         options: QueryOptions(
-          document: gql(getAllJobs),
+          document: gql(GraphQlQuery.getAllJobs(10)),
         ),
         builder: (QueryResult result, {refetch, fetchMore}) {
           if (result.hasException) {

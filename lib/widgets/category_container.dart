@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moovup_demo/models/job_category.dart';
 import 'package:moovup_demo/pages/job_list_page/job_list_page.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 
