@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:moovup_demo/providers/preference.dart';
+import 'package:provider/provider.dart';
 
 class PreferencePill extends StatelessWidget {
-  final String pillTitle;
   final int index;
   final int section;
-  final bool selected;
-  final Function onSelect;
 
-  PreferencePill(this.index, this.section, this.pillTitle, this.selected, this.onSelect);
+  PreferencePill(this.index, this.section);
 
   @override
   Widget build(BuildContext context) {
+    final pref = Provider.of<Preference>(context);
     return Container(
       margin: EdgeInsets.only(right: 6),
       child: ChoiceChip(
         labelStyle: TextStyle(color: Colors.white),
-        onSelected: (elem) {onSelect(section,index);},
+        onSelected: (_) {
+          pref.toggleStatus();
+        },
+        // onSelected: (elem) {onSelect(section,index);},
         selectedColor: Colors.deepPurpleAccent,
         disabledColor: Colors.white,
-        label: Text(pillTitle),
-        selected: selected,
+        label: Text(pref.name),
+        selected: pref.checked,
       ),
     );
   }

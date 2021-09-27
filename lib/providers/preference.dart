@@ -1,17 +1,20 @@
 import 'package:flutter/foundation.dart';
 
-class Preference {
+class Preference with ChangeNotifier {
   final String name;
   final String id;
-  bool checked;
   final DateTime changedDate;
-
-  // const Preference({Key? key}) : super(key: key);
+  bool checked;
 
   Preference({
     required this.name,
     required this.id,
-    required this.checked,
     required this.changedDate,
+    this.checked = false,
   });
+
+  void toggleStatus() {
+    checked = !checked;
+    notifyListeners();
+  }
 }

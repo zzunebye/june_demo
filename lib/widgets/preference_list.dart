@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:moovup_demo/widgets/preference_pill.dart';
 
-import '../../preference.dart';
+import '../providers/preference.dart';
 
 class PreferenceList extends StatelessWidget {
   final List<Preference> prefList;
@@ -37,12 +38,12 @@ class PreferenceList extends StatelessWidget {
                 alignment: WrapAlignment.center,
                 spacing: 3.0,
                 children: List.generate(prefList.length.toInt(), (index) {
-                  return PreferencePill(
-                    index,
-                    section,
-                    prefList[index].name,
-                    prefList[index].checked,
-                    onSelected,
+                  return ChangeNotifierProvider.value(
+                    value: prefList[index],
+                    child: PreferencePill(
+                      index,
+                      section,
+                    ),
                   );
                 }),
               ),

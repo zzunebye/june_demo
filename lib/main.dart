@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:moovup_demo/providers/preferences.dart';
+import 'package:provider/provider.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
@@ -54,39 +56,41 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      initialRoute: '/',
-      routes: {
-        '/': (context) => JobListPage(title: 'Main'),
-        '/preference': (context) => PreferencePage(title: 'Preference'),
-        '/jobList': (context) => JobListPage(title: 'Job List'),
-        JobDetailPage.routeName: (context) => JobDetailPage(),
-        JobSearchPage.routeName: (context) =>
-            JobSearchPage(title: "Job Searching", searchCategory: ''),
-        '/setting': (context) => SettingPage(),
-      },
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        accentColor: Colors.amber,
-        errorColor: Colors.red,
-        canvasColor: Color.fromRGBO(255, 254, 229, 1),
-        textTheme: ThemeData.light().textTheme.copyWith(
-            title: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-            button: TextStyle(color: Colors.white)),
-        appBarTheme: AppBarTheme(
+    return ChangeNotifierProvider(
+      create: (ctx) => Preferences(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        initialRoute: '/',
+        routes: {
+          '/': (context) => JobListPage(title: 'Main'),
+          PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
+          JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
+          JobDetailPage.routeName: (context) => JobDetailPage(),
+          JobSearchPage.routeName: (context) =>
+              JobSearchPage(title: "Job Searching", searchCategory: ''),
+          SettingPage.routeName: (context) => SettingPage(),
+        },
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+          accentColor: Colors.amber,
+          errorColor: Colors.red,
+          canvasColor: Color.fromRGBO(255, 254, 229, 1),
           textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              title: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
+              button: TextStyle(color: Colors.white)),
+          appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  title: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+          ),
         ),
       ),
-      // home: PreferencePage(title: 'Preference'),
     );
   }
 }
