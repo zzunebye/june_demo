@@ -9,11 +9,9 @@ import 'package:moovup_demo/widgets/drawer.dart';
 import '../../dummy_data.dart';
 import '../../widgets/job_card.dart';
 
-
-
-
 class JobListPage extends StatefulWidget {
   static const routeName = '/jobList';
+
   JobListPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -23,7 +21,6 @@ class JobListPage extends StatefulWidget {
 }
 
 class _JobListState extends State<JobListPage> {
-
   void selectJobCategoryCard(BuildContext ctx) {
     Navigator.of(ctx).pushNamed(
       JobSearchPage.routeName,
@@ -55,17 +52,17 @@ class _JobListState extends State<JobListPage> {
           if (result.hasException) {
             return Text(result.exception.toString());
           }
-
           if (result.isLoading) {
             return Center(child: CircularProgressIndicator());
           }
 
           List jobs = result.data?['job_search']['result'];
 
-          return Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: ListView(
+          return SingleChildScrollView(
+            // width: MediaQuery.of(context).size.width,
+            // height: MediaQuery.of(context).size.height,
+            physics: ScrollPhysics(),
+            child: Column(
               // mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
@@ -74,6 +71,7 @@ class _JobListState extends State<JobListPage> {
                   width: double.infinity,
                   child: GridView(
                     scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
                     padding: EdgeInsets.all(25),
                     children: jobCategories
                         .map(
@@ -89,17 +87,14 @@ class _JobListState extends State<JobListPage> {
                     ),
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 510,
-                  // padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                  child: ListView.builder(
-                    itemCount: jobs.length,
-                    itemBuilder: (context, index) {
-                      final jobId = jobs[index];
-                      return JobCard(job: jobId);
-                    },
-                  ),
+                ListView.builder(
+                  itemCount: jobs.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final jobId = jobs[index];
+                    return JobCard(job: jobId);
+                  },
                 ),
               ],
             ),
