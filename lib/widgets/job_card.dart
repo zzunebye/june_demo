@@ -19,7 +19,7 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("JobCard: $job");
+    // print("Build JobCard");
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),

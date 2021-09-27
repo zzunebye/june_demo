@@ -19,9 +19,6 @@ class PreferencePage extends StatefulWidget {
 }
 
 class _PreferencePageState extends State<PreferencePage> {
-  // 이렇게 상태를 선언할 수 있는건가?
-
-
 
   void _onSelectedChip(int section, int index) {
     print('${section}: ${index}');
@@ -32,7 +29,7 @@ class _PreferencePageState extends State<PreferencePage> {
 
   @override
   Widget build(BuildContext context) {
-    final prefData = Provider.of<Preferences>(context).list;
+    final prefData = Provider.of<Preferences>(context, listen: false).list;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -48,10 +45,10 @@ class _PreferencePageState extends State<PreferencePage> {
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            PreferenceList('Employment Types', prefData[0], _onSelectedChip, 0),
-            PreferenceList('Districts', prefData[1], _onSelectedChip, 1),
-            PreferenceList('Job Categories', prefData[2], _onSelectedChip, 2),
-            PreferenceList('Job Attributes', prefData[3], _onSelectedChip, 3),
+            PreferenceList('Employment Types', prefData[0] , 0),
+            PreferenceList('Districts', prefData[1], 1),
+            PreferenceList('Job Categories', prefData[2], 2),
+            PreferenceList('Job Attributes', prefData[3], 3),
             Container(
               // height: size.height * 0.1,
               child: Center(

@@ -7,18 +7,10 @@ import '../providers/preference.dart';
 class PreferenceList extends StatelessWidget {
   final List<Preference> prefList;
   final String title;
-  final Function onSelected;
   final int section;
 
-  // final Function onTapNext;
+  PreferenceList(this.title, this.prefList, this.section);
 
-  PreferenceList(this.title, this.prefList, this.onSelected, this.section);
-
-  void onSelectPill() {
-    onSelected(
-      section,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +21,7 @@ class PreferenceList extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(bottom: 15),
-            child: Text('${title}: ' + prefList.length.toString(),
+            child: Text('${title}',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           ),
           Container(
