@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:moovup_demo/pages/job_list_page/job_card.dart';
+import 'package:moovup_demo/widgets/job_card.dart';
 import 'package:moovup_demo/pages/job_list_page/job_list_page.dart';
 import 'package:moovup_demo/widgets/job_search_form.dart';
 

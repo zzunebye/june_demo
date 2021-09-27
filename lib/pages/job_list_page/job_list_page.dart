@@ -5,7 +5,7 @@ import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/widgets/category_container.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 
-import 'job_card.dart';
+import '../../widgets/job_card.dart';
 
 const jobCategories = const [
   JobCategory(id: 'j1', title: 'Retail Shop'),
@@ -25,6 +25,7 @@ class JobCategory {
 }
 
 class JobListPage extends StatefulWidget {
+  static const routeName = '/jobList';
   JobListPage({Key? key, required this.title}) : super(key: key);
 
   final String title;

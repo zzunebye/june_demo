@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moovup_demo/widgets/job_type_pill.dart';
-import '../job_detail_page/job_detail_page.dart';
+import '../pages/job_detail_page/job_detail_page.dart';
 
 class JobCard extends StatelessWidget {
   final Map job;
