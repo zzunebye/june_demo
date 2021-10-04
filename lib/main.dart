@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:moovup_demo/providers/preferences.dart';
 import 'package:provider/provider.dart';
+import './services/GraphQLService.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
@@ -24,28 +25,11 @@ class UserAuth {
 }
 
 void main() async {
-  // await initHiveForFlutter();
 
-  var url = Uri.parse('https://api-staging.moovup.hk/v2/create-anonymous');
-  var response = await http.post(url, body: {});
-  var responseData = json.decode(response.body);
-  final HttpLink httpLink = HttpLink(
-    'https://api-staging.moovup.hk/v2/seeker',
-  );
-
-  final AuthLink authLink = AuthLink(
-    getToken: () async => 'Bearer ${responseData['access_token']}',
-  );
-
-  final Link link = authLink.concat(httpLink);
-
+  GraphQLService gqlService = GraphQLService();
+  await gqlService.init();
   ValueNotifier<GraphQLClient> client = ValueNotifier(
-    GraphQLClient(
-      link: link,
-      cache: GraphQLCache(
-        store: InMemoryStore(),
-      ),
-    ),
+      gqlService.client
   );
 
   var app = GraphQLProvider(client: client, child: MyApp());

@@ -1,26 +1,24 @@
 import 'package:flutter/foundation.dart';
+import 'package:moovup_demo/helpers/api.dart';
 import '../services/GraphQLService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class PostRepository {
-  final GraphQLClient client;
+  // final GraphQLClient client;
+  final GraphQLService client;
 
   PostRepository({
-    @required this.client,
+    required this.client,
   });
 
-  Future<List<GetPosts$Query$Post>> getPosts() async {
-    final results = await client.query(
-      QueryOptions(
-        documentNode: GetPostsQuery().document,
-      ),
-    );
+  Future<QueryResult> fetchJobPosts() async {
+    final results = await client.performQuery(GraphQlQuery.getAllJobs(10));
     print(results);
-    if (results.hasException) {
-      throw results.exception;
-    } else {
-      return GetPosts$Query.fromJson(results.data).posts;
-    }
+    return results;
+    // if (results.hasException) {
+    //   throw results.exception;
+    // } else {
+    //   return GetPosts$Query.fromJson(results.data).posts;
+    // }
   }
 }
-
