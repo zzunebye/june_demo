@@ -13,9 +13,6 @@ class JobDetailPage extends StatelessWidget {
     final job = args['job'];
     // final String startDate = (job['start_date'] != null)? job['start_date'].toString(): 'Unknown';
     // final String endDate = (job['end_date'] != null)? job['end_date'].toString(): 'Unknown';
-    print(args['title']);
-    print(args['id']);
-    // print(job);
 
     buildSkillList(BuildContext context, String title, List skillList) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

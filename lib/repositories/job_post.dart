@@ -4,7 +4,6 @@ import '../services/GraphQLService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class PostRepository {
-  // final GraphQLClient client;
   final GraphQLService client;
 
   PostRepository({
@@ -12,13 +11,11 @@ class PostRepository {
   });
 
   Future<QueryResult> fetchJobPosts() async {
-    final results = await client.performQuery(GraphQlQuery.getAllJobs(10));
-    print(results);
-    return results;
-    // if (results.hasException) {
-    //   throw results.exception;
-    // } else {
-    //   return GetPosts$Query.fromJson(results.data).posts;
-    // }
+    final QueryResult results = await client.performQuery(GraphQlQuery.getAllJobs(10));
+    if (results.hasException) {
+      throw results;
+    } else {
+      return results;
+    }
   }
 }
