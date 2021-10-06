@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:moovup_demo/providers/preferences.dart';
 import 'package:provider/provider.dart';
+import './services/GraphQLService.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 import './widgets/drawer.dart';
+import 'config/environment.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
@@ -15,37 +17,22 @@ import 'package:http/http.dart' as http;
 
 import 'pages/setting_page/setting_page.dart';
 
-class UserAuth {
-  final String bearerToken;
-
-  UserAuth({required this.bearerToken}) {
-    // print("bearerToken: "+ bearerToken);
-  }
-}
 
 void main() async {
-  // await initHiveForFlutter();
-
-  var url = Uri.parse('https://api-staging.moovup.hk/v2/create-anonymous');
-  var response = await http.post(url, body: {});
-  var responseData = json.decode(response.body);
-  final HttpLink httpLink = HttpLink(
-    'https://api-staging.moovup.hk/v2/seeker',
+  const String environment = String.fromEnvironment(
+    'ENVIRONMENT',
+    defaultValue: Environment.DEV,
   );
 
-  final AuthLink authLink = AuthLink(
-    getToken: () async => 'Bearer ${responseData['access_token']}',
-  );
+  Environment().initConfig(environment);
+  final String apiHost = Environment().config.apiHost;
 
-  final Link link = authLink.concat(httpLink);
+  final GraphQLService gqlService = GraphQLService();
+
+  await gqlService.init(apiHost);
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(
-    GraphQLClient(
-      link: link,
-      cache: GraphQLCache(
-        store: InMemoryStore(),
-      ),
-    ),
+      gqlService.client
   );
 
   var app = GraphQLProvider(client: client, child: MyApp());
@@ -99,8 +86,6 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-
-  // Response token;
 
   Future<http.Response> getBearerToken(String title) {
     return http.post(
