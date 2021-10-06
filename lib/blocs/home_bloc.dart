@@ -37,7 +37,8 @@ class HomeBloc extends Bloc<HomeEvents, HomeStates> {
         print('graphQLErrors: ${result.exception!.graphqlErrors.toString()}');
         yield LoadDataFail(result.exception!.graphqlErrors[0]);
       } else {
-        print(result);
+        // print(result);
+        print("the page is loaded");
         yield LoadDataSuccess(result.data);
       }
     } catch (e) {

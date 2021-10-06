@@ -50,138 +50,6 @@ class _JobListState extends State<JobListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var queryBuild = Query(
-      options: QueryOptions(
-        document: gql(GraphQlQuery.getAllJobs(10)),
-      ),
-      builder: (QueryResult result, {refetch, fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString());
-        }
-        if (result.isLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
-
-        List jobs = result.data?['job_search']['result'];
-
-        return BlocProvider(
-          create: (BuildContext context) => HomeBloc(GraphQLService())..add(FetchHomeData()),
-          child: SingleChildScrollView(
-            // width: MediaQuery.of(context).size.width,
-            // height: MediaQuery.of(context).size.height,
-            physics: ScrollPhysics(),
-            child: Column(
-              // mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  // flex: 1,
-                  height: 230,
-                  width: double.infinity,
-                  child: GridView(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    padding: EdgeInsets.all(25),
-                    children: jobCategories
-                        .map(
-                          (catData) => CategoryButton(catData),
-                        )
-                        .toList(),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      // 전체 context의 크기에 따라서 한 줄에 몇 개의 item이 들어갈지 결정한다.
-                      maxCrossAxisExtent: 150, // item 당 차지하는 공간
-                      childAspectRatio: 2 / 3,
-                      crossAxisSpacing: 20, // item 사이 간
-                      mainAxisSpacing: 20,
-                    ),
-                  ),
-                ),
-                ListView.builder(
-                  itemCount: jobs.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final jobId = jobs[index];
-                    return JobCard(job: jobId);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-
-
-
-    var blocBuild = BlocBuilder<HomeBloc, HomeStates>(
-      builder: (BuildContext context, HomeStates state) {
-        if (state is OnLoading) {
-          return Scaffold(
-            appBar: _buildAppBar(),
-            body: LinearProgressIndicator(),
-          );
-        } else if (state is LoadDataFail) {
-          return Scaffold(
-            appBar: _buildAppBar(),
-            body: Center(child: Text(state.error)),
-          );
-        } else if (state is LoadDataSuccess) {
-          // print("data $data");
-          // print(data.runtimeType);
-          // print((state).data['job_search']?['result']);
-          data = (state).data['job_search']?['result']; //['job_search']['results'];
-          // var total = (state).data['job_search']?['total'];
-          print(data);
-          // print(data);
-          // print(data[0]);
-          return SingleChildScrollView(
-            // width: MediaQuery.of(context).size.width,
-            // height: MediaQuery.of(context).size.height,
-            physics: ScrollPhysics(),
-            child: Column(
-              // mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  // flex: 1,
-                  height: 230,
-                  width: double.infinity,
-                  child: GridView(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    padding: EdgeInsets.all(25),
-                    children: jobCategories
-                        .map(
-                          (catData) => CategoryButton(catData),
-                    )
-                        .toList(),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      // 전체 context의 크기에 따라서 한 줄에 몇 개의 item이 들어갈지 결정한다.
-                      maxCrossAxisExtent: 150, // item 당 차지하는 공간
-                      childAspectRatio: 2 / 3,
-                      crossAxisSpacing: 20, // item 사이 간
-                      mainAxisSpacing: 20,
-                    ),
-                  ),
-                ),
-                ListView.builder(
-                  itemCount: data.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final jobId = (data[index] as Map);
-                    print(jobId);
-                    return JobCard(job: jobId);
-                  },
-                ),
-              ],
-            ),
-          );
-        }
-        else {
-          return Center(child: Text("state.error"));
-        }
-      },
-    );
 
     return BlocProvider(
       create: (BuildContext context) => HomeBloc(GraphQLService())..add(FetchHomeData()),
@@ -198,8 +66,69 @@ class _JobListState extends State<JobListPage> {
         ),
         drawer: AppDrawer(),
         // body: queryBuild,
-        body: blocBuild,
+        body: JobList(),
       ),
+    );
+  }
+}
+
+class JobList extends StatelessWidget {
+  const JobList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeStates>(
+      builder: (BuildContext context, HomeStates state) {
+        if (state is OnLoading) {
+          return LinearProgressIndicator();
+        } else if (state is LoadDataFail) {
+          return Center(child: Text(state.error));
+        } else if (state is LoadDataSuccess) {
+          var data = (state).data['job_search']?['result']; //['job_search']['results'];
+          return SingleChildScrollView(
+            // width: MediaQuery.of(context).size.width,
+            // height: MediaQuery.of(context).size.height,
+            physics: ScrollPhysics(),
+            child: Column(
+              // mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  height: 230,
+                  width: double.infinity,
+                  child: GridView(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(25),
+                    children: jobCategories
+                        .map(
+                          (catData) => CategoryButton(catData),
+                        )
+                        .toList(),
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 150,
+                      childAspectRatio: 2 / 3,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                    ),
+                  ),
+                ),
+                ListView.builder(
+                  itemCount: data.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final jobId = (data[index] as Map);
+                    // print(jobId);
+                    return JobCard(job: jobId);
+                  },
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Center(child: Text("state.error"));
+        }
+      },
     );
   }
 }
