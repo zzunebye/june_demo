@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "407996847385",
+    "project_id": "flutterdemomup",
+    "storage_bucket": "flutterdemomup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407996847385:android:509d2eb7222a24ccd42188",
+        "android_client_info": {
+          "package_name": "com.project.zzunebye.moovup_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407996847385-lrbtsen480qappgdadn3q58tr5uk0iuv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4WRPYMo-Ibyo8rrYJpX65tjalND6K53I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407996847385-lrbtsen480qappgdadn3q58tr5uk0iuv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
