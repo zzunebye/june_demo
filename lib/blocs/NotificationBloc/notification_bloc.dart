@@ -23,9 +23,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   initialize() async {
-    registerNotification();
-
-    checkForInitialMessage();
+    await Firebase.initializeApp();
+    await registerNotification();
+    await checkForInitialMessage();
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       PushNotification notification = PushNotification(
@@ -40,13 +40,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     });
   }
 
-  void registerNotification() async {
-    await Firebase.initializeApp();
+  registerNotification() async {
     _messaging = FirebaseMessaging.instance;
-
-    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
-    });
 
     NotificationSettings settings = await _messaging.requestPermission(
       alert: true,
@@ -57,8 +52,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
-
         // Parse the message received
         PushNotification notification = PushNotification(
           title: message.notification?.title,
@@ -77,7 +70,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   checkForInitialMessage() async {
-    await Firebase.initializeApp();
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {

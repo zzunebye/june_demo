@@ -58,7 +58,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {}
 
@@ -69,7 +68,6 @@ class _MyAppState extends State<MyApp> {
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
         if (state is JobDetailNotificationState) {
-
           if (!state.notificationInfo.foreground) {
             navigatorKey.currentState!.pushNamed(
               JobDetailPage.routeName,
