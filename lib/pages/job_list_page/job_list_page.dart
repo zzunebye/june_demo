@@ -124,7 +124,7 @@ class JobList extends StatelessWidget {
             ),
           );
         } else {
-          return Center(child: Text("state.error"));
+          return Center(child: CircularProgressIndicator());
         }
       },
     );
