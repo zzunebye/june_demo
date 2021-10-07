@@ -102,16 +102,14 @@ class _MyAppState extends State<MyApp> {
           print("${_notificationInfo!.title}:  ${_notificationInfo!.body!}");
 
           final snackBar = SnackBar(
-            content: Text('${_notificationInfo!.title}'),
+            content: Text('Are you interested in ${_notificationInfo!.dataBody!['job_name']}?'),
             action: SnackBarAction(
-              label: 'Check',
+              label: 'Check!',
               onPressed: () {
                 navigatorKey.currentState!.pushNamed(
                   JobDetailPage.routeName,
                   arguments: {
                     'id': _notificationInfo!.dataBody!['id'],
-                    // 'id': job['_id'],
-                    'title': null,
                   },
                 );
               },
@@ -158,7 +156,7 @@ class _MyAppState extends State<MyApp> {
         title: message.notification?.title,
         body: message.notification?.body,
         dataTitle: message.data['title'],
-        dataBody: message.data['body'],
+        dataBody: message.data,
       );
 
       setState(() {
@@ -169,7 +167,25 @@ class _MyAppState extends State<MyApp> {
       print(
           "Message clicked! Handling a onMessageOpenedApp message: ${message.messageId} title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}");
 
-      navigatorKey.currentState!.pushNamed(JobDetailPage.routeName);
+      navigatorKey.currentState!.pushNamed(
+        JobDetailPage.routeName,
+        arguments: {
+          'id': _notificationInfo!.dataBody!['id'],
+          // 'id': job['_id'],
+        },
+      );
+      // navigatorKey.currentState!.pushNamed(JobDetailPage.routeName);
+      final snackBar = SnackBar(
+        content: Text('You are checking ${_notificationInfo!.dataBody!['job_name']}'),
+        action: SnackBarAction(
+          label: 'Close',
+          onPressed: () {
+            _messangerKey.currentState!.hideCurrentSnackBar();
+          },
+        ),
+      );
+
+      _messangerKey.currentState!.showSnackBar(snackBar);
     });
 
     super.initState();

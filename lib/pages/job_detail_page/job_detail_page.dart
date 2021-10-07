@@ -48,7 +48,7 @@ class JobDetailPage extends StatelessWidget {
         if (result.hasException) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(args['title']),
+              title: Text('Query is Failed'),
             ),
             body: Text(result.exception.toString()),
           );
@@ -57,7 +57,7 @@ class JobDetailPage extends StatelessWidget {
         if (result.isLoading) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(args['title']),
+              title: Text("Loading"),
             ),
             body: Center(child: CircularProgressIndicator()),
           );
