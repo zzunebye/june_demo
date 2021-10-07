@@ -58,6 +58,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 
+
         // Parse the message received
         PushNotification notification = PushNotification(
           title: message.notification?.title,
