@@ -11,7 +11,6 @@ class JobCard extends StatelessWidget {
     Navigator.of(ctx).pushNamed(
       JobDetailPage.routeName,
       arguments: {
-        'title': job['job_name'],
         'id': job['_id'],
       },
     );
@@ -19,7 +18,6 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("Build JobCard");
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),

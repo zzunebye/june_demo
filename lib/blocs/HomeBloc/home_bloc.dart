@@ -4,8 +4,8 @@ import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/repositories/job_post.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
-import './home_events.dart';
-import './home_states.dart';
+import 'home_events.dart';
+import 'home_states.dart';
 
 class HomeBloc extends Bloc<HomeEvents, HomeStates> {
   late GraphQLService service = GraphQLService();

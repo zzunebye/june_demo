@@ -10,9 +10,6 @@ class JobDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
-    final job = args['job'];
-    // final String startDate = (job['start_date'] != null)? job['start_date'].toString(): 'Unknown';
-    // final String endDate = (job['end_date'] != null)? job['end_date'].toString(): 'Unknown';
 
     buildSkillList(BuildContext context, String title, List skillList) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -43,27 +40,37 @@ class JobDetailPage extends StatelessWidget {
       {"name": "University", "level": 3},
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(args['title']),
+    return Query(
+      options: QueryOptions(
+        document: gql(GraphQlQuery.getJob(args['id'])),
       ),
-      body: Query(
-        options: QueryOptions(
-          document: gql(GraphQlQuery.getJob(args['id'])),
-        ),
-        builder: (QueryResult result, {refetch, fetchMore}) {
-          if (result.hasException) {
-            return Text(result.exception.toString());
-          }
+      builder: (QueryResult result, {refetch, fetchMore}) {
+        if (result.hasException) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(args['title']),
+            ),
+            body: Text(result.exception.toString()),
+          );
+        }
 
-          if (result.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+        if (result.isLoading) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(args['title']),
+            ),
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-          var job = result.data?['get_jobs'][0];
-          print('jobs: ${job}');
+        var job = result.data?['get_jobs'][0];
+        print('jobs: ${job}');
 
-          return ListView(
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(job['job_name']),
+          ),
+          body: ListView(
             children: [
               Card(
                 margin: const EdgeInsets.all(10.0),
@@ -215,9 +222,9 @@ class JobDetailPage extends StatelessWidget {
                 ],
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
