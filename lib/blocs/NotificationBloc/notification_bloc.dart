@@ -13,7 +13,6 @@ import 'package:moovup_demo/pages/job_detail_page/job_detail_page.dart';
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   late final FirebaseMessaging _messaging;
   late int _totalNotifications;
-  PushNotification? _notificationInfo;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   NotificationBloc() : super(NotificationState()) {}
@@ -22,19 +21,23 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     return StartUpNotificationState();
   }
 
+  PushNotification createNotification(RemoteMessage message, bool foreground) {
+    return PushNotification(
+      title: message.notification != null ? message.notification!.title! : '',
+      body: message.notification?.body,
+      dataTitle: message.data['title'],
+      dataBody: message.data,
+      foreground: foreground,
+    );
+  }
+
   initialize() async {
     await Firebase.initializeApp();
     await registerNotification();
     await checkForInitialMessage();
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      PushNotification notification = PushNotification(
-        title: message.notification?.title,
-        body: message.notification?.body,
-        dataTitle: message.data['title'],
-        dataBody: message.data,
-        foreground: false,
-      );
+      PushNotification notification = createNotification(message, false);
 
       add(NotificationEvent(notification));
     });
@@ -53,13 +56,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         // Parse the message received
-        PushNotification notification = PushNotification(
-          title: message.notification?.title,
-          body: message.notification?.body,
-          dataTitle: message.data['title'],
-          dataBody: message.data,
-          foreground: true,
-        );
+        PushNotification notification = createNotification(message, true);
 
         add(NotificationEvent(notification));
       });
@@ -73,13 +70,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      PushNotification notification = PushNotification(
-        title: initialMessage.notification?.title,
-        body: initialMessage.notification?.body,
-        dataTitle: initialMessage.data['title'],
-        dataBody: initialMessage.data['body'],
-        foreground: true,
-      );
+      PushNotification notification = createNotification(initialMessage, false);
     }
   }
 
