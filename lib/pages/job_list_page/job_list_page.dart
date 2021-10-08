@@ -24,7 +24,6 @@ class JobListPage extends StatefulWidget {
 }
 
 class _JobListState extends State<JobListPage> {
-  late List<Object> data;
 
   @override
   void initState() {

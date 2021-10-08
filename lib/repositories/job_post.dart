@@ -18,4 +18,13 @@ class PostRepository {
       return results;
     }
   }
+
+  Future<QueryResult> fetchSingleJob(String id) async {
+    final QueryResult results = await client.performQuery(GraphQlQuery.getJob(id));
+    if (results.hasException) {
+      throw results;
+    } else {
+      return results;
+    }
+  }
 }
