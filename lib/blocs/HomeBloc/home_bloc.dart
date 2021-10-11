@@ -27,17 +27,8 @@ class HomeBloc extends Bloc<HomeEvents, HomeStates> {
 
     try {
       final result = await repository.fetchJobPosts();
-
-      if (result.hasException) {
-        //MARK: below code will be testing on GraphQL Query
-        // print('graphQLErrors: ${result.exception!.graphqlErrors.toString()}');
-        yield LoadDataFail(result.exception!.graphqlErrors[0]);
-      } else {
-        yield LoadDataSuccess(result.data);
-      }
+      yield LoadDataSuccess(result.data);
     } catch (e) {
-      //MARK: below code will be testing on GraphQL Query
-      // print(e);
       yield LoadDataFail(e.toString());
     }
   }

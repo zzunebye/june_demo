@@ -247,6 +247,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
                   ),
                 ],
               );
+            } else if (state is LoadDataFail) {
+              return Center(child: Text(state.error));
             } else {
               return LinearProgressIndicator();
             }

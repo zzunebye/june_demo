@@ -25,14 +25,7 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
 
     try {
       final result = await repository.fetchSingleJob(event.jobId);
-
-      if (result.hasException) {
-        // MARK: below code will be testing on GraphQL Query
-        // print('graphQLErrors: ${result.exception!.graphqlErrors.toString()}');
-        yield LoadDataFail(result.exception!.graphqlErrors[0]);
-      } else {
-        yield LoadDataSuccess(result.data);
-      }
+      yield LoadDataSuccess(result.data);
     } catch (e) {
       yield LoadDataFail(e.toString());
     }
