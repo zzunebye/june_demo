@@ -21,7 +21,6 @@ class PreferencePage extends StatefulWidget {
 class _PreferencePageState extends State<PreferencePage> {
 
   void _onSelectedChip(int section, int index) {
-    print('${section}: ${index}');
     // setState(() {
     //   _theList[section][index].checked = !_theList[section][index].checked;
     // });

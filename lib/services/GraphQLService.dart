@@ -10,7 +10,6 @@ class GraphQLService {
     var url = Uri.parse(apiHost + '/create-anonymous');
     var response = await http.post(url, body: {});
     var responseData = json.decode(response.body);
-    print(responseData);
 
     final HttpLink httpLink = HttpLink(apiHost + '/seeker');
 

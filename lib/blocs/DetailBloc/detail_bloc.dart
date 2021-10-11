@@ -9,7 +9,6 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   late PostRepository repository;
 
   DetailBloc(GraphQLService _graphQLService) : super(DetailStates()) {
-    print('* Creating Detail Bloc');
     this.repository = PostRepository(client: GraphQLService());
   }
 
@@ -17,7 +16,6 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
 
   @override
   Stream<DetailStates> mapEventToState(DetailEvents event) async* {
-    print('* Receiving Event');
     if (event is FetchDetailData) {
       yield* _mapFetchDetailDataToStates(event);
     }
@@ -32,14 +30,13 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
       final result = await repository.fetchSingleJob(event.jobId);
 
       if (result.hasException) {
-        print('graphQLErrors: ${result.exception!.graphqlErrors.toString()}');
+        // MARK: below code will be testing on GraphQL Query
+        // print('graphQLErrors: ${result.exception!.graphqlErrors.toString()}');
         yield LoadDataFail(result.exception!.graphqlErrors[0]);
       } else {
-        // print(result);
         yield LoadDataSuccess(result.data);
       }
     } catch (e) {
-      print(e);
       yield LoadDataFail(e.toString());
     }
   }

@@ -44,7 +44,6 @@ class _JobSearchFormState extends State<JobSearchForm> {
             // DropdownButtonFormField(
             //   value: _searchOption.district,
             //   items: _districtCategory.map((item) {
-            //     print(item);
             //     return DropdownMenuItem(value: item, child: Text(item));
             //   }).toList(),
             // )
