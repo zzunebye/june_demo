@@ -29,7 +29,6 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
 
     try {
       // final result = await service.performQuery(GraphQlQuery.getAllJobs(10));
-      print('* Will Fetch Data with ${event.jobId}');
       final result = await repository.fetchSingleJob(event.jobId);
 
       if (result.hasException) {
@@ -37,8 +36,6 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
         yield LoadDataFail(result.exception!.graphqlErrors[0]);
       } else {
         // print(result);
-        print("* the page is loaded");
-        print("* Result of data: ${result.data}");
         yield LoadDataSuccess(result.data);
       }
     } catch (e) {

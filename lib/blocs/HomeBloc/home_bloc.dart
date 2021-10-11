@@ -1,6 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moovup_demo/config/environment.dart';
-import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/repositories/job_post.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
@@ -38,7 +36,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeStates> {
         yield LoadDataFail(result.exception!.graphqlErrors[0]);
       } else {
         // print(result);
-        print("the page is loaded");
+        // print("the page is loaded");
         yield LoadDataSuccess(result.data);
       }
     } catch (e) {

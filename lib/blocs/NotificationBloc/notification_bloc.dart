@@ -38,7 +38,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print("* message at onMessage $message");
         PushNotification notification = createNotification(message, true);
 
         add(NotificationEvent(notification));
@@ -74,7 +73,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
     if (event is NotificationEvent) {
       if (event.payload != null) {
-        print("${event.payload!.title}:  ${event.payload!.body!} ${event.payload!.dataBody}");
         yield JobDetailNotificationState(event.payload);
       }
     } else if (event is NotificationErrorEvent) {

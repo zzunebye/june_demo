@@ -115,7 +115,6 @@ class JobList extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     final jobId = (data[index] as Map);
-                    // print(jobId);
                     return JobCard(job: jobId);
                   },
                 ),

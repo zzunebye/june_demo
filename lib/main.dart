@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +10,6 @@ import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
 import 'config/environment.dart';
-import 'models/push_notification.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
@@ -79,7 +76,6 @@ class _MyAppState extends State<MyApp> {
                 ? SnackBarAction(
                     label: 'Check!',
                     onPressed: () {
-                      print("Routing FG: ${state.notificationInfo.dataBody!['id']}");
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
                           builder: (context) =>
