@@ -10,7 +10,7 @@ class SettingPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Settings'),
       ),
-      body: Center(child: Text('Settings', style: Theme.of(context).textTheme.title,)),
+      body: Center(child: Text('Settings', style: Theme.of(context).textTheme.headline5,)),
     );
   }
 }

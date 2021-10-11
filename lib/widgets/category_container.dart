@@ -12,7 +12,6 @@ class CategoryButton extends StatelessWidget {
     Navigator.of(ctx).pushNamed(
       JobSearchPage.routeName,
       arguments: {
-        // 'job': job,
       },
     );
   }
@@ -21,7 +20,7 @@ class CategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: Theme.of(context).accentColor,
-      onTap: () => selectJobCategory(context), //selectCategory(context),
+      onTap: () => selectJobCategory(context),
       borderRadius: BorderRadius.circular(15),
       child: Container(
         padding: const EdgeInsets.all(15),

@@ -1,11 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moovup_demo/config/environment.dart';
-import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/repositories/job_post.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
-import './home_events.dart';
-import './home_states.dart';
+import 'home_events.dart';
+import 'home_states.dart';
 
 class HomeBloc extends Bloc<HomeEvents, HomeStates> {
   late GraphQLService service = GraphQLService();
@@ -26,23 +24,11 @@ class HomeBloc extends Bloc<HomeEvents, HomeStates> {
   }
 
   Stream<HomeStates> _mapFetchHomeDataToStates(FetchHomeData event) async* {
-    // final query = event.query;
-    // final variables = event.variables;
 
     try {
-      // final result = await service.performQuery(GraphQlQuery.getAllJobs(10));
       final result = await repository.fetchJobPosts();
-
-      if (result.hasException) {
-        print('graphQLErrors: ${result.exception!.graphqlErrors.toString()}');
-        yield LoadDataFail(result.exception!.graphqlErrors[0]);
-      } else {
-        // print(result);
-        print("the page is loaded");
-        yield LoadDataSuccess(result.data);
-      }
+      yield LoadDataSuccess(result.data);
     } catch (e) {
-      print(e);
       yield LoadDataFail(e.toString());
     }
   }

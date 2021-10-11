@@ -8,25 +8,17 @@ class JobCard extends StatelessWidget {
   const JobCard({Key? key, required this.job}) : super(key: key);
 
   void selectJobCard(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(
-      JobDetailPage.routeName,
-      arguments: {
-        'title': job['job_name'],
-        'id': job['_id'],
-      },
-    );
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (context) => JobDetailPage(job['_id'])));
   }
 
   @override
   Widget build(BuildContext context) {
-    // print("Build JobCard");
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: InkWell(
         onTap: () => selectJobCard(context),
         child: Card(
-          // margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           elevation: 5,
           child: Padding(
             padding: const EdgeInsets.all(10.0),

@@ -19,7 +19,6 @@ class PreferencePill extends StatelessWidget {
                 onSelected: (_) {
                   pref.toggleStatus();
                 },
-                // onSelected: (elem) {onSelect(section,index);},
                 selectedColor: Colors.deepPurpleAccent,
                 disabledColor: Colors.white,
                 label: Text(pref.name),

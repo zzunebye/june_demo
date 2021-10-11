@@ -1,11 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:moovup_demo/blocs/home_bloc.dart';
-import 'package:moovup_demo/blocs/home_events.dart';
-import 'package:moovup_demo/blocs/home_states.dart';
-import 'package:moovup_demo/helpers/api.dart';
+import 'package:moovup_demo/blocs/HomeBloc/home_bloc.dart';
+import 'package:moovup_demo/blocs/HomeBloc/home_events.dart';
+import 'package:moovup_demo/blocs/HomeBloc/home_states.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 import 'package:moovup_demo/widgets/category_container.dart';
@@ -26,7 +24,6 @@ class JobListPage extends StatefulWidget {
 }
 
 class _JobListState extends State<JobListPage> {
-  late List<Object> data;
 
   @override
   void initState() {
@@ -39,12 +36,6 @@ class _JobListState extends State<JobListPage> {
       arguments: {
         'title': 'Job Searching',
       },
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: Text('GraphQL Demo'),
     );
   }
 
@@ -65,7 +56,6 @@ class _JobListState extends State<JobListPage> {
           ],
         ),
         drawer: AppDrawer(),
-        // body: queryBuild,
         body: JobList(),
       ),
     );
@@ -84,13 +74,11 @@ class JobList extends StatelessWidget {
         } else if (state is LoadDataFail) {
           return Center(child: Text(state.error));
         } else if (state is LoadDataSuccess) {
-          var data = (state).data['job_search']?['result']; //['job_search']['results'];
+          var data = (state).data['job_search']?['result'];
           return SingleChildScrollView(
-            // width: MediaQuery.of(context).size.width,
-            // height: MediaQuery.of(context).size.height,
             physics: ScrollPhysics(),
             child: Column(
-              // mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
                   height: 230,
@@ -118,7 +106,6 @@ class JobList extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     final jobId = (data[index] as Map);
-                    // print(jobId);
                     return JobCard(job: jobId);
                   },
                 ),
@@ -126,7 +113,7 @@ class JobList extends StatelessWidget {
             ),
           );
         } else {
-          return Center(child: Text("state.error"));
+          return Center(child: CircularProgressIndicator());
         }
       },
     );

@@ -10,7 +10,6 @@ class GraphQLService {
     var url = Uri.parse(apiHost + '/create-anonymous');
     var response = await http.post(url, body: {});
     var responseData = json.decode(response.body);
-    print(responseData);
 
     final HttpLink httpLink = HttpLink(apiHost + '/seeker');
 
@@ -33,7 +32,7 @@ class GraphQLService {
 
   init(apiHost) async {
     final Link link = await getToken(apiHost);
-    _client = await GraphQLClient(link: link, cache: GraphQLCache(store: InMemoryStore()));
+    _client = GraphQLClient(link: link, cache: GraphQLCache(store: InMemoryStore()));
   }
 
   GraphQLClient get client => _client;
