@@ -8,12 +8,7 @@ class JobCard extends StatelessWidget {
   const JobCard({Key? key, required this.job}) : super(key: key);
 
   void selectJobCard(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(
-      JobDetailPage.routeName,
-      arguments: {
-        'id': job['_id'],
-      },
-    );
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (context) => JobDetailPage(job['_id'])));
   }
 
   @override

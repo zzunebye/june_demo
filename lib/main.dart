@@ -68,29 +68,23 @@ class _MyAppState extends State<MyApp> {
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
         if (state is JobDetailNotificationState) {
-          if (!state.notificationInfo.foreground) {
-            navigatorKey.currentState!.pushNamed(
-              JobDetailPage.routeName,
-              arguments: {
-                'id': state.notificationInfo.dataBody!['id'],
-              },
-            );
-          }
 
           final snackBar = SnackBar(
-            content: state.notificationInfo.foreground
+            content: state.notificationInfo.getForeground
                 ? Text(
                     'Are you interested in ${state.notificationInfo.dataBody!['job_name']}?')
-                : Text('You are checking ${state.notificationInfo.dataBody!['job_name']}'),
-            action: state.notificationInfo.foreground
+                : Text(
+                    'You are checking ${state.notificationInfo.dataBody!['job_name']}'),
+            action: state.notificationInfo.getForeground
                 ? SnackBarAction(
                     label: 'Check!',
                     onPressed: () {
-                      navigatorKey.currentState!.pushNamed(
-                        JobDetailPage.routeName,
-                        arguments: {
-                          'id': state.notificationInfo.dataBody!['id'],
-                        },
+                      print("Routing FG: ${state.notificationInfo.dataBody!['id']}");
+                      navigatorKey.currentState!.push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              JobDetailPage(state.notificationInfo.dataBody!['id']),
+                        ),
                       );
                     },
                   )
@@ -114,9 +108,10 @@ class _MyAppState extends State<MyApp> {
           scaffoldMessengerKey: _messangerKey,
           routes: {
             '/': (context) => JobListPage(title: 'Main'),
-            PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
+            PreferencePage.routeName: (context) =>
+                PreferencePage(title: 'Preference'),
             JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
-            JobDetailPage.routeName: (context) => JobDetailPage(),
+            JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
             JobSearchPage.routeName: (context) =>
                 JobSearchPage(title: "Job Searching", searchCategory: ''),
             SettingPage.routeName: (context) => SettingPage(),
@@ -127,14 +122,14 @@ class _MyAppState extends State<MyApp> {
             errorColor: Colors.red,
             canvasColor: Color.fromRGBO(255, 254, 229, 1),
             textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
+                headline5: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
                 button: TextStyle(color: Colors.white)),
             appBarTheme: AppBarTheme(
               textTheme: ThemeData.light().textTheme.copyWith(
-                    title: TextStyle(
+                    headline5: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),

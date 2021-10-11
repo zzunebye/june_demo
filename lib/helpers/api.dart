@@ -88,12 +88,25 @@ class GraphQlQuery{
             name
             __typename
           }
+          education_requirement{
+            category
+            level
+            name
+          }
           to_monthly_rate
           to_hourly_rate
     
           employment
           employment_type {
             name
+          }
+         spoken_skill{
+            name
+            level
+          }
+          written_skill{
+            name
+            level
           }
           state
           attributes {

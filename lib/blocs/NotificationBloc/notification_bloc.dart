@@ -1,21 +1,18 @@
-import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moovup_demo/blocs/NotificationBloc/notification_events.dart';
 import 'package:moovup_demo/blocs/NotificationBloc/notification_states.dart';
 import 'package:moovup_demo/models/push_notification.dart';
-import 'package:moovup_demo/pages/job_detail_page/job_detail_page.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   late final FirebaseMessaging _messaging;
   late int _totalNotifications;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  NotificationBloc() : super(NotificationState()) {}
+  NotificationBloc() : super(NotificationState());
 
   NotificationState get initialState {
     return StartUpNotificationState();
@@ -31,21 +28,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     );
   }
 
-  initialize() async {
-    await Firebase.initializeApp();
-    await registerNotification();
-    await checkForInitialMessage();
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      PushNotification notification = createNotification(message, false);
-
-      add(NotificationEvent(notification));
-    });
-  }
-
   registerNotification() async {
-    _messaging = FirebaseMessaging.instance;
-
     NotificationSettings settings = await _messaging.requestPermission(
       alert: true,
       badge: true,
@@ -55,24 +38,37 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        // Parse the message received
+        print("* message at onMessage $message");
         PushNotification notification = createNotification(message, true);
 
         add(NotificationEvent(notification));
       });
     } else {
-      // print('User declined or has not accepted permission');
-      add(NotificationErrorEvent("You can provide permission by going into Settings later."));
+      add(NotificationErrorEvent(
+          "You can provide permission by going into Settings later."));
     }
   }
 
-  checkForInitialMessage() async {
+  initialize() async {
+    await Firebase.initializeApp();
+    _messaging = FirebaseMessaging.instance;
+    await registerNotification();
+
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
       PushNotification notification = createNotification(initialMessage, false);
     }
+
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      PushNotification notification = createNotification(message, false);
+
+      add(NotificationEvent(notification));
+    });
   }
+
+
 
   @override
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
