@@ -19,7 +19,6 @@ class JobCard extends StatelessWidget {
       child: InkWell(
         onTap: () => selectJobCard(context),
         child: Card(
-          // margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           elevation: 5,
           child: Padding(
             padding: const EdgeInsets.all(10.0),

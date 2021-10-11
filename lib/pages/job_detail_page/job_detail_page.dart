@@ -26,7 +26,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
 
   @override
   void initState() {
-    // final args = ModalRoute.of(context)!.settings.arguments as Map;
     super.initState();
   }
 
@@ -114,9 +113,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                       margin: EdgeInsets.all(5.0),
                                       child: Text(jobDetail['company']['name']),
                                     ),
-                                    // job['company']['about'].toString().isEmpty
-                                    //     ? Text('null')
-                                    //     : Text(job['company']['about']),
                                   ],
                                 ),
                               ),
@@ -130,12 +126,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                       ),
                                       child: Image.asset(
                                         'assets/images/no-job-image.jpeg',
-                                        // width: double.infinity,
-                                        // width: 100,
                                         height: 100,
-                                        // width: 200,
-                                        fit: BoxFit
-                                            .contain, // 컨테이너 사이즈가 이미지보다 작을 경우(?) fitting 하는 법.
+                                        fit: BoxFit.contain,
                                       ),
                                     )
                                   : ClipRRect(
@@ -146,13 +138,10 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                         bottomRight: Radius.circular(15),
                                       ),
                                       child: Image.network(
-                                        // Image.asset()이 정적 파일을 불러오는 반면, Image.network는 url을 통해 이미지를 불러옴.
-                                        // 'double.infinity'는 상대적으로 최대 사이즈까지 이미지 넓이를 잠음.
                                         jobDetail['image'],
                                         height: 250,
                                         width: 400,
-                                        fit: BoxFit
-                                            .cover, // 컨테이너 사이즈가 이미지보다 작을 경우(?) fitting 하는 법.
+                                        fit: BoxFit.cover,
                                       ),
                                     )
                             ],
@@ -238,7 +227,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
                           child: Container(
                             padding: EdgeInsets.all(0),
                             margin: EdgeInsets.all(0),
-                            // width: 60,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,

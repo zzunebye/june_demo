@@ -20,12 +20,6 @@ class PreferencePage extends StatefulWidget {
 
 class _PreferencePageState extends State<PreferencePage> {
 
-  void _onSelectedChip(int section, int index) {
-    // setState(() {
-    //   _theList[section][index].checked = !_theList[section][index].checked;
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
     final prefData = Provider.of<Preferences>(context, listen: false).list;

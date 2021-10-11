@@ -102,7 +102,6 @@ class _JobSearchPageState extends State<JobSearchPage> {
                       Container(
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height,
-                        // padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                         child: ListView.builder(
                           itemCount: jobs.length,
                           itemBuilder: (context, index) {

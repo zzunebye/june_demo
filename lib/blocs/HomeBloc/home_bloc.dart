@@ -24,11 +24,8 @@ class HomeBloc extends Bloc<HomeEvents, HomeStates> {
   }
 
   Stream<HomeStates> _mapFetchHomeDataToStates(FetchHomeData event) async* {
-    // final query = event.query;
-    // final variables = event.variables;
 
     try {
-      // final result = await service.performQuery(GraphQlQuery.getAllJobs(10));
       final result = await repository.fetchJobPosts();
 
       if (result.hasException) {

@@ -22,11 +22,8 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   }
 
   Stream<DetailStates> _mapFetchDetailDataToStates(FetchDetailData event) async* {
-    // final query = event.query;
-    // final variables = event.variables;
 
     try {
-      // final result = await service.performQuery(GraphQlQuery.getAllJobs(10));
       final result = await repository.fetchSingleJob(event.jobId);
 
       if (result.hasException) {

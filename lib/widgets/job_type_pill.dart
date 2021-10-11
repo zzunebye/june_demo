@@ -20,7 +20,6 @@ class JobTypePill extends StatelessWidget {
       ),
       child: Text(
         content,
-        // job['employment_type']['name'].toString(),
         style: TextStyle(fontSize: 10),
       ),
     );

@@ -39,12 +39,6 @@ class _JobListState extends State<JobListPage> {
     );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: Text('GraphQL Demo'),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -62,7 +56,6 @@ class _JobListState extends State<JobListPage> {
           ],
         ),
         drawer: AppDrawer(),
-        // body: queryBuild,
         body: JobList(),
       ),
     );
@@ -81,13 +74,11 @@ class JobList extends StatelessWidget {
         } else if (state is LoadDataFail) {
           return Center(child: Text(state.error));
         } else if (state is LoadDataSuccess) {
-          var data = (state).data['job_search']?['result']; //['job_search']['results'];
+          var data = (state).data['job_search']?['result'];
           return SingleChildScrollView(
-            // width: MediaQuery.of(context).size.width,
-            // height: MediaQuery.of(context).size.height,
             physics: ScrollPhysics(),
             child: Column(
-              // mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
                   height: 230,
