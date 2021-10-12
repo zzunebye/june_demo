@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/widgets/job_card.dart';
-import 'package:moovup_demo/pages/job_list_page/job_list_page.dart';
-import 'package:moovup_demo/widgets/job_search_form.dart';
+import 'package:moovup_demo/models/search.dart';
 
-class SearchOption {
-  String name= '';
-  String district= '';
-  String time= '';
-  String salary= '';
+import 'components/SearchOption.dart';
+
+class searchOptionData {
+  static Map district = {'title': 'District'};
+  static Map time = {'title': 'Time'};
+  static Map salary = {'title': "Title"};
 }
 
 class JobSearchPage extends StatefulWidget {
@@ -23,58 +24,61 @@ class JobSearchPage extends StatefulWidget {
 }
 
 class _JobSearchPageState extends State<JobSearchPage> {
-  String getAllJobs = '''
-    query job {
-      job_search (limit: 10){
-        total
-        result{
-          _created_at
-              job_name
-          company {
-            name
-            about
-          }
-          attributes {
-            category
-            category_display_sequence
-          }
-          allowances {
-            name
-            description
-          }
-          job_types {
-            category
-            name
-            __typename
-          }
-          to_monthly_rate
-          to_hourly_rate
-    
-          employment
-          employment_type {
-            name
-          }
-          state
-          attributes {
-            category
-          }
-          address{
-            address
-            formatted_address
-          }
-          address_on_map
-          images
-        }
-      }
-    }
-  ''';
+  final _formKey = GlobalKey<FormState>();
+
+  SearchOption _searchOption = new SearchOption(
+    name: "",
+    district: "Kowloon",
+    time: "",
+    salary: "",
+  );
+
+  Future<dynamic> buildModalBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            // mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: new Icon(Icons.share),
+                title: new Text('To be implemented'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: new Icon(Icons.share),
+                title: new Text('To be implemented'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: new Icon(Icons.share),
+                title: new Text('To be implemented'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: new Icon(Icons.share),
+                title: new Text('To be implemented'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     // final args = ModalRoute.of(context)!.settings.arguments as Map;
     return Query(
       options: QueryOptions(
-        document: gql(getAllJobs),
+        document: gql(GraphQlQuery.getAllJobs(20)),
       ),
       builder: (QueryResult result, {refetch, fetchMore}) {
         if (result.hasException) {
@@ -90,35 +94,56 @@ class _JobSearchPageState extends State<JobSearchPage> {
           appBar: AppBar(
             title: Text(widget.title),
           ),
-          body: Column(
-            children: [
-              Expanded(child: JobSearchForm()),
-              Expanded(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 460,
-                  child: ListView(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height,
-                        child: ListView.builder(
-                          itemCount: jobs.length,
-                          itemBuilder: (context, index) {
-                            final jobId = jobs[index];
-                            return JobCard(job: jobId);
-                          },
-                        ),
-                      ),
-                    ],
+          body: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: [
+                // JobSearchForm(),
+                Container(
+                  margin: EdgeInsets.all(15),
+                  child: TextFormField(
+                    // onSaved: (val) => setState(() => _searchOption.name = val!),
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                      labelText: 'Search ...',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.search),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                    margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SearchOptionButton(
+                            optionTitle: 'District',
+                            buildBar: buildModalBottomSheet),
+                        SizedBox(width: 10),
+                        SearchOptionButton(
+                            optionTitle: 'Time',
+                            buildBar: buildModalBottomSheet),
+                        SizedBox(width: 10),
+                        SearchOptionButton(
+                            optionTitle: 'Salary',
+                            buildBar: buildModalBottomSheet),
+                      ],
+                    )),
+                ListView.builder(
+                  itemCount: jobs.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final jobId = jobs[index];
+                    return JobCard(job: jobId);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 }
-
