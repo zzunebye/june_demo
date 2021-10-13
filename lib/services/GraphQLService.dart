@@ -14,7 +14,8 @@ class GraphQLService {
     final HttpLink httpLink = HttpLink(apiHost + '/seeker');
 
     final AuthLink authLink = AuthLink(
-      getToken: () async => 'Bearer ${responseData['access_token']}',
+      // getToken: () async => 'Bearer ${responseData['access_token']}',
+      getToken: () async => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYmI3MWVlZC0xZTBmLTRkZjQtYjA4My0wMjYzYzc5OTYxNTciLCJpYXQiOjE2MzQxMTg1ODAsImlzcyI6Im1vb3Z1cCIsInN1YiI6ImIwM2MxYWMzLWRmODQtNDcwMy1hM2NkLWU3NTUwMzk5OGEwZiIsImV4cCI6MTY0MTg5NDU4MCwiYW5vbnltb3VzPyI6ZmFsc2V9.hysOJzEwTlPxpxreA2AS7Dd0J2qA4M6zz3R4f6FBbYs',
     );
 
     final Link link = authLink.concat(httpLink);
