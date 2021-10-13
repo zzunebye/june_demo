@@ -15,3 +15,12 @@ class FetchDetailData extends DetailEvents {
   @override
   List<Object>? get props => null;
 }
+
+class SaveJob extends DetailEvents {
+  // final String jobId;
+
+  SaveJob();
+
+  @override
+  List<Object>? get props => null;
+}
