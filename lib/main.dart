@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 import 'package:moovup_demo/providers/preferences.dart';
 import 'package:provider/provider.dart';
 import './services/GraphQLService.dart';
@@ -42,7 +43,10 @@ void main() async {
     providers: [
       BlocProvider.value(value: notificationBloc),
     ],
-    child: GraphQLProvider(client: client, child: MyApp()),
+    child: GraphQLProvider(
+      client: client,
+      child: MyApp(),
+    ),
   );
   // runApp(app);
 
@@ -65,7 +69,6 @@ class _MyAppState extends State<MyApp> {
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
         if (state is JobDetailNotificationState) {
-
           final snackBar = SnackBar(
             content: state.notificationInfo.getForeground
                 ? Text(
@@ -78,8 +81,8 @@ class _MyAppState extends State<MyApp> {
                     onPressed: () {
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              JobDetailPage(state.notificationInfo.dataBody!['id']),
+                          builder: (context) => JobDetailPage(
+                              state.notificationInfo.dataBody!['id']),
                         ),
                       );
                     },
@@ -110,6 +113,7 @@ class _MyAppState extends State<MyApp> {
             JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
             JobSearchPage.routeName: (context) =>
                 JobSearchPage(title: "Job Searching", searchCategory: ''),
+            SavedJobPage.routeName: (context) => SavedJobPage(),
             SettingPage.routeName: (context) => SettingPage(),
           },
           theme: ThemeData(
