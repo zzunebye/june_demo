@@ -2,21 +2,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/repositories/job_post.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
-import 'saved_job_events.dart';
-import 'saved_job_states';
+import 'bookmark_events.dart';
+import 'bookmark_states.dart';
 
-class SavedJob extends Bloc<DetailEvents, DetailStates> {
+class BookmarkBloc extends Bloc<BookmarkEvents, BookmarkStates> {
   late PostRepository repository;
 
-  SavedJob(GraphQLService _graphQLService) : super(OnLoading()) {
+  BookmarkBloc() : super(OnLoading()) {
     this.repository = PostRepository(client: GraphQLService());
     on<SaveJob>(_onSaveJob);
-    on<FetchDetailData>(_onFetchDetailData);
+    on<FetchBookmarkData>(_onFetchDetailData);
   }
 
-  DetailStates get initialState => OnLoading();
+  BookmarkStates get initialState => OnLoading();
 
-  _onSaveJob(DetailEvents, Emitter<DetailStates> emit) async {
+  _onSaveJob(BookmarkEvents, Emitter<BookmarkStates> emit) async {
     final state = this.state;
     print("state: $state");
     // emit(state);
@@ -24,7 +24,6 @@ class SavedJob extends Bloc<DetailEvents, DetailStates> {
       try {
         // NOTE: to be implemented for GQL mutation
         // repository.saveJob(event.jobId);
-        // print("try");
         emit(LoadDataSuccess(state.data));
       } catch (error) {
         print(error);
@@ -32,11 +31,11 @@ class SavedJob extends Bloc<DetailEvents, DetailStates> {
     }
   }
 
-  _onFetchDetailData(DetailEvents, Emitter<DetailStates> emit) async {
+  _onFetchDetailData(BookmarkEvents, Emitter<BookmarkStates> emit) async {
     emit(OnLoading());
 
     try {
-      final result = await repository.fetchSingleJob(DetailEvents.jobId);
+      final result = await repository.fetchSingleJob(BookmarkEvents.jobId);
       emit(LoadDataSuccess(result.data));
     } catch (error) {
       emit(LoadDataFail(error));

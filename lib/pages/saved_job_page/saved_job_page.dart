@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_bloc.dart';
+import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_events.dart';
 
 class SavedJobPage extends StatelessWidget {
   const SavedJobPage({Key? key}) : super(key: key);
@@ -14,33 +17,36 @@ class SavedJobPage extends StatelessWidget {
       };
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Saved Jobs'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.manage_search),
-            tooltip: 'Show Search Bar',
+    return BlocProvider<BookmarkBloc>(
+      create: (BuildContext context) =>
+          BookmarkBloc()..add(FetchBookmarkData()),
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Saved Jobs'),
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.manage_search),
+                tooltip: 'Show Search Bar',
+              ),
+            ],
           ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: dummyList.length,
-        itemBuilder: (context, index) => Card(
-          elevation: 6,
-          margin: EdgeInsets.all(10),
-          child: ListTile(
-            leading: CircleAvatar(
-              child: Text(dummyList[index]["id"].toString()),
-              backgroundColor: Colors.purple,
+          body: ListView.builder(
+            itemCount: dummyList.length,
+            itemBuilder: (context, index) => Card(
+              elevation: 6,
+              margin: EdgeInsets.all(10),
+              child: ListTile(
+                leading: CircleAvatar(
+                  child: Text(dummyList[index]["id"].toString()),
+                  backgroundColor: Colors.purple,
+                ),
+                title: Text(dummyList[index]["title"]),
+                subtitle: Text(dummyList[index]["subtitle"]),
+                trailing: Icon(Icons.add_a_photo),
+              ),
             ),
-            title: Text(dummyList[index]["title"]),
-            subtitle: Text(dummyList[index]["subtitle"]),
-            trailing: Icon(Icons.add_a_photo),
-          ),
-        ),
-      )
+          )),
     );
   }
 }

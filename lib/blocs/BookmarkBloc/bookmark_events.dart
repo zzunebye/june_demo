@@ -1,22 +1,22 @@
 import 'package:equatable/equatable.dart';
 
-abstract class DetailEvents extends Equatable {
-  DetailEvents();
+abstract class BookmarkEvents extends Equatable {
+  BookmarkEvents();
 
   @override
   List<Object>? get props => null;
 }
 
-class FetchDetailData extends DetailEvents {
-  final String jobId;
+class FetchBookmarkData extends BookmarkEvents {
+  // final String jobId;
 
-  FetchDetailData(this.jobId);
+  FetchBookmarkData();
 
   @override
   List<Object>? get props => null;
 }
 
-class SaveJob extends DetailEvents {
+class SaveJob extends BookmarkEvents {
   // final String jobId;
 
   SaveJob();

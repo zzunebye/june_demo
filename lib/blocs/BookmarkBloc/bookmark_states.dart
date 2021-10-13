@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 
- class DetailStates extends Equatable {
-  DetailStates();
+class BookmarkStates extends Equatable {
+  BookmarkStates();
 
   @override
   List<Object>? get props => null;
 }
 
-class OnLoading extends DetailStates {
+class OnLoading extends BookmarkStates {
   OnLoading() : super();
 }
 
-class LoadDataSuccess extends DetailStates {
+class LoadDataSuccess extends BookmarkStates {
   final dynamic data;
 
   LoadDataSuccess(this.data) : super();
@@ -20,7 +20,7 @@ class LoadDataSuccess extends DetailStates {
   List<Object> get props => data;
 }
 
-class LoadDataFail extends DetailStates {
+class LoadDataFail extends BookmarkStates {
   final dynamic error;
 
   LoadDataFail(this.error) : super();
