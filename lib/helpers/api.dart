@@ -1,3 +1,8 @@
+enum BookmarkAction {
+  add,
+  delete,
+}
+
 class GraphQlQuery{
   static String getJob(String id) {
     return """
@@ -123,5 +128,41 @@ class GraphQlQuery{
     }
   """;
 
+  }
+
+  static String updateBookmark(BookmarkAction action, String jobId) {
+    return """
+          mutation update_bookmark(
+            \$action: BookmarkAction!, 
+            \$job_id: ID!) {
+                  update_bookmark (
+                    action: $action
+                    job_id: $jobId
+                  ) {
+                    total
+                    bookmarks {
+                      _created_at
+                    }
+                  }
+                }
+    """;
+  }
+
+  static String getBookmarks(int limit){
+    return """
+      query SavedJob{
+        saved_jobs(limit:$limit) {
+          total
+          bookmarks {
+            _created_at
+            job {
+              _id
+              job_name
+            }
+          }
+          
+        }
+      }
+    """;
   }
 }
