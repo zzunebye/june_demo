@@ -9,6 +9,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
+import 'blocs/SearchBloc/SearchBloc.dart';
 import 'config/environment.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
@@ -41,6 +42,9 @@ void main() async {
   var app = MultiBlocProvider(
     providers: [
       BlocProvider.value(value: notificationBloc),
+      BlocProvider<SearchBloc>(
+        create: (BuildContext context) => SearchBloc(),
+      )
     ],
     child: GraphQLProvider(client: client, child: MyApp()),
   );
@@ -65,7 +69,6 @@ class _MyAppState extends State<MyApp> {
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
         if (state is JobDetailNotificationState) {
-
           final snackBar = SnackBar(
             content: state.notificationInfo.getForeground
                 ? Text(
@@ -78,8 +81,8 @@ class _MyAppState extends State<MyApp> {
                     onPressed: () {
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              JobDetailPage(state.notificationInfo.dataBody!['id']),
+                          builder: (context) => JobDetailPage(
+                              state.notificationInfo.dataBody!['id']),
                         ),
                       );
                     },
