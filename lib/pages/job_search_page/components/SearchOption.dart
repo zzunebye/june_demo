@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moovup_demo/widgets/SalaryFilterBottomSheet.dart';
 
 class SearchOptionButton extends StatelessWidget {
   String optionTitle;
@@ -21,28 +22,32 @@ class SearchOptionButton extends StatelessWidget {
               ),
               context: context,
               builder: (context) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Text(optionTitle,
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 24)),
-                      ),
-                      ListTile(
-                        leading: new Icon(Icons.share),
-                        title: new Text('To be implemented'),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                );
+                if (this.optionTitle == 'Salary') {
+                  return SalaryFilterBottomSheet(optionTitle);
+                } else {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          child: Text(optionTitle,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 24)),
+                        ),
+                        ListTile(
+                          leading: new Icon(Icons.share),
+                          title: new Text('To be implemented'),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }
               });
         },
         child: Container(

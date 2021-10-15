@@ -31,4 +31,18 @@ class PostRepository {
       return results;
     }
   }
+
+  Future<QueryResult> SearchJobWithOptions() async {
+    final QueryResult results =
+        await client.performQueryWithVars(GraphQlQuery.SearchWithParams(), {
+      "limit": 10,
+      "monthly_rate": [0, 10000]
+    });
+
+    if (results.hasException) {
+      throw results.exception!;
+    } else {
+      return results;
+    }
+  }
 }

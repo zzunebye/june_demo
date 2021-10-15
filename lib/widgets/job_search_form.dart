@@ -10,12 +10,6 @@ class JobSearchForm extends StatefulWidget {
 
 class _JobSearchFormState extends State<JobSearchForm> {
   final _formKey = GlobalKey<FormState>();
-  SearchOption _searchOption = new SearchOption(
-    name: "",
-    district: "Kowloon",
-    time: "",
-    salary: "",
-  );
 
   var _districtCategory = ['Kowloon', 'Island', 'New Territories'];
 
@@ -23,7 +17,6 @@ class _JobSearchFormState extends State<JobSearchForm> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
-      // padding: EdgeInsets.all(8),
       child: Form(
         key: _formKey,
         child: ListView(
@@ -31,7 +24,7 @@ class _JobSearchFormState extends State<JobSearchForm> {
             Container(
               margin: EdgeInsets.all(10),
               child: TextFormField(
-                onSaved: (val) => setState(() => _searchOption.name = val!),
+                // onSaved: (val) => setState(() => _searchOption.name = val!),
                 obscureText: true,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -41,78 +34,6 @@ class _JobSearchFormState extends State<JobSearchForm> {
                 ),
               ),
             ),
-
-            // NOTE: Below code is being tested
-            // DropdownButtonFormField(
-            //   value: _searchOption.district,
-            //   items: _districtCategory.map((item) {
-            //     return DropdownMenuItem(value: item, child: Text(item));
-            //   }).toList(),
-            // )
-            //   Row(
-            //     children: [
-            //       // Dropdown
-            //       Expanded(
-            //         child: DropdownButtonFormField<String>(
-            //           onSaved: (val) => _searchOption.district = val!,
-            //           value: _searchOption.district,
-            //           items: ['Kowloon', 'Island', 'New Territories']
-            //               .map<DropdownMenuItem<String>>(
-            //             (String val) {
-            //               return DropdownMenuItem(
-            //                 child: Text(val),
-            //                 value: val,
-            //               );
-            //             },
-            //           ).toList(),
-            //           onChanged: (val) {
-            //             setState(() {
-            //               _searchOption.district = val!;
-            //             });
-            //           },
-            //           decoration: InputDecoration(
-            //             labelText: 'Expiry Month',
-            //             icon: Icon(Icons.calendar_today),
-            //           ),
-            //         ),
-            //       ),
-            //       Expanded(
-            //         child: Container(
-            //           margin: EdgeInsets.all(0),
-            //           // color: Theme.of(context).accentColor,
-            //           decoration: BoxDecoration(
-            //             color: Theme.of(context).accentColor,
-            //             border: Border.all(
-            //               color: Theme.of(context).accentColor,
-            //               width: 1.0,
-            //             ),
-            //             borderRadius: BorderRadius.circular(10),
-            //           ),
-            //           child: Center(
-            //             child: Text('Time'),
-            //           ),
-            //         ),
-            //       ),
-            //       Expanded(
-            //         child: Container(
-            //           margin: EdgeInsets.all(0),
-            //           // color: Theme.of(context).accentColor,
-            //           decoration: BoxDecoration(
-            //             color: Theme.of(context).accentColor,
-            //             border: Border.all(
-            //               color: Theme.of(context).accentColor,
-            //               width: 1.0,
-            //             ),
-            //             borderRadius: BorderRadius.circular(10),
-            //           ),
-            //
-            //           child: Center(
-            //             child: Text('Salary'),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
           ],
         ),
       ),
