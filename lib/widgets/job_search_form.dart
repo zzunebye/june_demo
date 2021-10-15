@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moovup_demo/models/search.dart';
 
 class JobSearchForm extends StatefulWidget {
   const JobSearchForm({Key? key}) : super(key: key);

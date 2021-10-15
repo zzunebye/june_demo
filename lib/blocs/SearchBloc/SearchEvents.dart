@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:moovup_demo/models/search.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 
 abstract class SearchEvents extends Equatable {

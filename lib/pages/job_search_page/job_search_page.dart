@@ -5,9 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchBloc.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
-import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/widgets/job_card.dart';
-import 'package:moovup_demo/models/search.dart';
 
 import 'components/SearchOption.dart';
 
@@ -138,19 +136,7 @@ class _JobSearchPageState extends State<JobSearchPage> {
   Widget build(BuildContext context) {
     // final args = ModalRoute.of(context)!.settings.arguments as Map;
     print("${widget.title}, ${widget.searchCategory}");
-    return Query(
-      options: QueryOptions(
-        document: gql(GraphQlQuery.getAllJobs(20)),
-      ),
-      builder: (QueryResult result, {refetch, fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString());
-        }
 
-        if (result.isLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
-        List jobs = result.data?['job_search']['result'];
 
         return Scaffold(
           appBar: AppBar(
@@ -203,24 +189,16 @@ class _JobSearchPageState extends State<JobSearchPage> {
                       // streamController.add(jobDetail?['job_name']);
                       // print(jobDetail?['working_hour']);
                       return ListView.builder(
-                        itemCount: jobs.length,
+                        itemCount: jobDetail.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          final jobId = jobs[index];
+                          final jobId = jobDetail[index];
                           return JobCard(job: jobId);
                         },
                       );
                     } else {
-                      return ListView.builder(
-                        itemCount: jobs.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final jobId = jobs[index];
-                          return JobCard(job: jobId);
-                        },
-                      );
+                      return Text("Empty");
                     }
                   },
                 ),
@@ -228,7 +206,5 @@ class _JobSearchPageState extends State<JobSearchPage> {
             ),
           ),
         );
-      },
-    );
   }
 }
