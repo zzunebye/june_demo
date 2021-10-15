@@ -2,64 +2,74 @@ class GraphQlQuery{
   static String getJob(String id) {
     return """
     query job {
-    get_jobs(_id: "${id}"){
-      _id
-      _created_at
-      job_name
-      start_date
-      end_date
-      company  {
-        name
-        about
+      get_jobs(_id: "${id}"){
+        _id
+        _created_at
+        job_name
+        start_date
+        end_date
+        company  {
+          name
+          about
+        }
+        education_requirement{
+          category
+          level
+          name
+        }
+        spoken_skill{
+          name
+          level
+        }
+        written_skill{
+          name
+          level
+        }
+        attributes {
+          category
+          category_display_sequence
+        }
+        allowances {
+          name
+          description
+        }
+        job_types {
+          category
+          name
+          __typename
+        }
+        to_monthly_rate
+        to_hourly_rate
+  
+        employment
+        employment_type {
+          name
+        }
+        state
+        attributes {
+          category
+        }
+        address {
+          address 
+          formatted_address
+        }
+        address_on_map
+        images
+        is_applied
+        is_invited
+        to_working_days_per_week
+        to_working_hours_per_day
+        vacancy
+        working_hour{
+          _id
+          day_of_week
+          end_time
+          shift_name
+          start_time
+        }
       }
-      education_requirement{
-        category
-        level
-        name
-      }
-      spoken_skill{
-        name
-        level
-      }
-      written_skill{
-        name
-        level
-      }
-      attributes {
-        category
-        category_display_sequence
-      }
-      allowances {
-        name
-        description
-      }
-      job_types {
-        category
-        name
-        __typename
-      }
-      to_monthly_rate
-      to_hourly_rate
-
-      employment
-      employment_type {
-        name
-      }
-      state
-      attributes {
-        category
-      }
-      address {
-        address 
-        formatted_address
-      }
-      address_on_map
-      images
-    is_applied
-    is_invited
-  }
-}
-  """;
+    }
+    """;
   }
 
   static String getAllJobs(int limit) {
@@ -118,6 +128,16 @@ class GraphQlQuery{
           }
           address_on_map
           images
+          to_working_days_per_week
+          to_working_hours_per_day
+          vacancy
+          working_hour{
+            _id
+            day_of_week
+            end_time
+            shift_name
+            start_time
+          }
         }
       }
     }
