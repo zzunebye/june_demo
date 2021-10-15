@@ -144,4 +144,58 @@ class GraphQlQuery{
   """;
 
   }
+
+  static String SearchWithParams() {
+    return """
+      query SearchWithParams(\$limit: Int, \$monthly_rate: [Float]) {
+        job_search(limit: \$limit, monthly_rate: \$monthly_rate) {
+          total
+          result {
+            _id
+            _created_at
+            job_name
+            company {
+              name
+              about
+            }
+            attributes {
+              category
+              category_display_sequence
+            }
+            allowances {
+              name
+              description
+            }
+            education_requirement {
+              category
+              level
+              name
+            }
+            job_types {
+              _id
+              category
+              name
+              __typename
+            }
+            to_monthly_rate
+            to_hourly_rate
+            employment
+            employment_type {
+              name
+            }
+            state
+            attributes {
+              category
+            }
+            address {
+              address
+              formatted_address
+            }
+            address_on_map
+            images
+          }
+        }
+      }
+    """;
+  }
 }

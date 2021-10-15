@@ -32,7 +32,8 @@ class GraphQLService {
 
   init(apiHost) async {
     final Link link = await getToken(apiHost);
-    _client = GraphQLClient(link: link, cache: GraphQLCache(store: InMemoryStore()));
+    _client =
+        GraphQLClient(link: link, cache: GraphQLCache(store: InMemoryStore()));
   }
 
   GraphQLClient get client => _client;
@@ -43,8 +44,20 @@ class GraphQLService {
     return await _client.query(options);
   }
 
-  Future<QueryResult> performMutation(String query, Map<String, dynamic> variables) async {
-    MutationOptions options = MutationOptions(document: gql(query), variables: variables);
+  Future<QueryResult> performQueryWithVars(
+      String query, Map<String, dynamic> variables) async {
+    QueryOptions options = QueryOptions(
+      document: gql(query),
+      variables: variables,
+    );
+
+    return await _client.query(options);
+  }
+
+  Future<QueryResult> performMutation(
+      String query, Map<String, dynamic> variables) async {
+    MutationOptions options =
+        MutationOptions(document: gql(query), variables: variables);
 
     final result = await _client.mutate(options);
 
