@@ -26,15 +26,6 @@ class _JobListState extends State<JobListPage> {
     super.initState();
   }
 
-  void selectJobCategoryCard(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(
-      JobSearchPage.routeName,
-      arguments: {
-        'title': 'Job Searching',
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 

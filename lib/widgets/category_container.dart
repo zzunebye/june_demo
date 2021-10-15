@@ -38,7 +38,7 @@ class CategoryButton extends StatelessWidget {
             BoxShadow(
               color: Colors.redAccent,
               blurRadius: 0,
-              offset: Offset(3, 4), // Shadow position
+              offset: Offset(3, 4),
             ),
           ],
         ),

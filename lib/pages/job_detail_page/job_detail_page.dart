@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_states.dart';
+import 'package:moovup_demo/helpers/enum.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
 class JobDetailPage extends StatefulWidget {
@@ -78,6 +79,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
             if (state is LoadDataSuccess) {
               jobDetail = state.data['get_jobs'][0];
               streamController.add(jobDetail?['job_name']);
+              print(jobDetail?['working_hour']);
+              // print(jobDetail);
               return ListView(
                 children: [
                   Card(
@@ -161,11 +164,52 @@ class _JobDetailPageState extends State<JobDetailPage> {
                   ),
                   Container(
                     width: double.infinity,
-                    height: 150,
+                    height: 180,
                     child: Card(
                       margin: const EdgeInsets.all(10.0),
                       elevation: 5,
-                      child: Center(child: Text('Time Table')),
+                      // NOTE
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('TimeTable',
+                                style: Theme.of(context).textTheme.headline6),
+                            ...jobDetail['working_hour'][0]['day_of_week']
+                                .map(
+                                  (day) => Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(weeksName(weekEnum.values[day]),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1),
+                                      SizedBox(width: 10),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            (jobDetail['working_hour'][0]
+                                                    ['start_time']
+                                                .toString()),
+                                          ),
+                                          Text(' - '),
+                                          Text(
+                                            (jobDetail['working_hour'][0]
+                                                    ['end_time']
+                                                .toString()),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Container(
