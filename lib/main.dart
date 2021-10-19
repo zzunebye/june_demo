@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/providers/preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './services/GraphQLService.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -31,13 +34,21 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
+  await Hive.initFlutter();
+
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
+
+  final getIt = GetIt.instance;
 
   final GraphQLService gqlService = GraphQLService();
   await gqlService.init(apiHost);
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(gqlService.client);
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  await Hive.openBox('resentSearchBox');
 
   var app = MultiBlocProvider(
     providers: [

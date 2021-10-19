@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
@@ -11,14 +12,25 @@ import 'package:moovup_demo/services/GraphQLService.dart';
 
 class SearchBloc extends Bloc<SearchEvents, SearchStates> {
   late PostRepository repository;
+  late final Box _recentSearchBox;
+
+  Box get recentSearchBox => _recentSearchBox;
 
   // NOTE: initial state of the bloc is EmptyState
   SearchBloc() : super(EmptyState(SearchOptionData.empty())) {
     this.repository = PostRepository(client: GraphQLService());
+    this._recentSearchBox = Hive.box('resentSearchBox');
     on<FetchSearchData>(onFetchSearchData);
     on<ResetSearch>(onResetSearch);
     on<UpdateWage>(onUpdateWage);
     on<UpdateTerm>(onUpdateTerm);
+  }
+
+  @override
+  Future<void> close() async {
+    //cancel streams
+    _recentSearchBox.close();
+    super.close();
   }
 
   // @override
@@ -39,6 +51,12 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
       final searchResult =
           await repository.SearchJobWithOptions(this.state.searchOption);
       emit(LoadDataSuccess(searchResult.data, this.state.searchOption));
+
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // int counter = (prefs.getInt('counter') ?? 0) + 1;
+      // print('Pressed $counter times.');
+      // await prefs.setInt('counter', counter);
+
     } catch (e) {
       emit(LoadDataFail(e.toString(), this.state.searchOption));
     }
@@ -47,10 +65,8 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
   FutureOr<void> onResetSearch(ResetSearch event, Emitter<SearchStates> emit) {
     try {
       emit(EmptyState(SearchOptionData.empty()));
-    }
-    catch(e){
+    } catch (e) {
       emit(LoadDataFail(e.toString(), this.state.searchOption));
-
     }
   }
 
@@ -68,13 +84,15 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
     Emitter<SearchStates> emit,
   ) async {
     this.state.searchOption.term = event.term;
+    _addSearchHive(event.term);
     emit(OnLoading(this.state.searchOption));
     this.add(FetchSearchData(this.state.searchOption));
   }
 
-  @override
-  Future<void> close() async {
-    //cancel streams
-    super.close();
+  void _addSearchHive(String term) async {
+    _recentSearchBox.add(term);
+  }
+  void deleteSearchHive(int index) async {
+    _recentSearchBox.deleteAt(index);
   }
 }
