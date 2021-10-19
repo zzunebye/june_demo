@@ -19,7 +19,7 @@ class _SalaryFilterBottomSheetState extends State<SalaryFilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final SearchBloc _searchBloc = BlocProvider.of<SearchBloc>(context);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -62,8 +62,7 @@ class _SalaryFilterBottomSheetState extends State<SalaryFilterBottomSheet> {
           ),
           ElevatedButton(
               onPressed: () {
-                print("SalaryFilterBottomSheet - updateWage: $minSalary, $maxSalary");
-                _searchBloc.add(UpdateWage([minSalary, maxSalary]));
+                BlocProvider.of<SearchBloc>(context).add(UpdateWage([minSalary, maxSalary]));
                 Navigator.pop(context);
               },
               child: Text("Confirm"))

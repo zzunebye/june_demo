@@ -5,58 +5,17 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchBloc.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
+import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/widgets/job_card.dart';
 
 import 'components/SearchOption.dart';
-
-class SearchOptionData {
-  double _startMonthlySalary = 0;
-  double _endMontlySalary = 999999;
-
-  int _limit = 10;
-
-  Map _district = {'title': 'District'};
-  Map _time = {'title': 'Time'};
-  List<double> _monthly_rate = [0, 999999];
-
-  SearchOptionData.empty();
-
-  double get startMonthlySalary => _startMonthlySalary;
-
-  double get endMontlySalary => _endMontlySalary;
-
-  int get limit => _limit;
-
-  Map get district => _district;
-
-  Map get time => _time;
-
-  List<double> get monthly_rate => _monthly_rate;
-
-  set monthly_rate(List<double> value) {
-    _monthly_rate = value;
-  }
-
-  @override
-  List<Object>? get props => [
-        _startMonthlySalary,
-        _endMontlySalary,
-        _limit,
-        _district,
-        _time,
-        _monthly_rate
-      ];
-
-  SearchOptionData(this._startMonthlySalary, this._endMontlySalary, this._limit,
-      this._district, this._time, this._monthly_rate);
-}
 
 class JobSearchPage extends StatefulWidget {
   static const String routeName = 'job-search';
   final String title;
   final String searchCategory;
 
-  JobSearchPage({required this.title, required this.searchCategory});
+  JobSearchPage({required this.title, this.searchCategory = ''});
 
   @override
   _JobSearchPageState createState() => _JobSearchPageState();
@@ -111,46 +70,39 @@ class _JobSearchPageState extends State<JobSearchPage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // _searchBloc = SearchBloc();
-    // _searchBloc..add(E(widget.jobId));
-  }
-
-  getSearchOption() {
-    return this._searchBloc.state.searchOption;
-  }
-
-  performSearch() {
-    this._searchBloc.add(FetchSearchData(_searchOption));
-  }
-
-  changeSearchOption() {
-    setState(() {});
+    _searchBloc = SearchBloc();
   }
 
   @override
   Widget build(BuildContext context) {
     // final args = ModalRoute.of(context)!.settings.arguments as Map;
+
+    // print() For implmentation
     print("${widget.title}, ${widget.searchCategory}");
+    var _termController = TextEditingController();
 
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),
-          ),
-          body: SingleChildScrollView(
+    return BlocProvider.value(
+      value: _searchBloc,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
             physics: ScrollPhysics(),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // JobSearchForm(),
                 Container(
                   margin: EdgeInsets.all(15),
                   child: TextFormField(
-                    // onSaved: (val) => setState(() => _searchOption.name = val!),
+                    controller: _termController,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (term) {
+                      _searchBloc.add(UpdateTerm(term));
+                    },
                     decoration: InputDecoration(
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -163,6 +115,7 @@ class _JobSearchPageState extends State<JobSearchPage> {
                 Container(
                     margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SearchOptionButton(
@@ -181,30 +134,49 @@ class _JobSearchPageState extends State<JobSearchPage> {
                         ),
                       ],
                     )),
-                BlocBuilder<SearchBloc, SearchStates>(
-                  builder: (BuildContext context, state) {
-                    if (state is LoadDataSuccess) {
-                      var jobDetail = state.data['job_search']['result'];
-                      print("jobDetail: $jobDetail");
-                      // streamController.add(jobDetail?['job_name']);
-                      // print(jobDetail?['working_hour']);
-                      return ListView.builder(
-                        itemCount: jobDetail.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final jobId = jobDetail[index];
-                          return JobCard(job: jobId);
-                        },
-                      );
-                    } else {
-                      return Text("Empty");
-                    }
-                  },
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _searchBloc.add(ResetSearch());
+                    },
+                    child: Text('Reset'),
+                  ),
+                ),
+                Container(
+                  child: BlocBuilder<SearchBloc, SearchStates>(
+                    builder: (context, state) {
+                      if (state is LoadDataSuccess) {
+                        var jobDetail = state.data['job_search']['result'];
+                        // streamController.add(jobDetail?['job_name']);
+                        return ListView.builder(
+                          itemCount: jobDetail.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final jobId = jobDetail[index];
+                            return JobCard(job: jobId);
+                          },
+                        );
+                      } else if (state is EmptyState) {
+                        return Container(
+                            height: MediaQuery.of(context).size.height - 400,
+                            child: Center(child: Text("Waiting for Search")));
+                      } else if (state is OnLoading) {
+                        return LinearProgressIndicator();
+                      } else {
+                        return Container(
+                            height: MediaQuery.of(context).size.height - 400,
+                            child: Text("Empty"));
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
+import 'package:moovup_demo/models/search_option_data.dart';
 
 abstract class SearchEvents extends Equatable {
   SearchEvents();
@@ -25,9 +25,19 @@ class UpdateWage extends SearchEvents {
   final List<double> wageRange;
 
   UpdateWage(this.wageRange) {
-    print("UpdateWage: Event");
   }
 
   @override
   List<Object>? get props => [];
+
+}
+
+class UpdateTerm extends SearchEvents {
+  final String term;
+
+  UpdateTerm(this.term) {
+  }
+
+  @override
+  List<Object>? get props => [term];
 }

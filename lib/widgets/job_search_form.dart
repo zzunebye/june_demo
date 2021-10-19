@@ -9,6 +9,7 @@ class JobSearchForm extends StatefulWidget {
 
 class _JobSearchFormState extends State<JobSearchForm> {
   final _formKey = GlobalKey<FormState>();
+  String _searchTerm = "";
 
   var _districtCategory = ['Kowloon', 'Island', 'New Territories'];
 
@@ -23,10 +24,13 @@ class _JobSearchFormState extends State<JobSearchForm> {
             Container(
               margin: EdgeInsets.all(10),
               child: TextFormField(
-                // onSaved: (val) => setState(() => _searchOption.name = val!),
+                onSaved: (val) => setState(() {
+                  _searchTerm = val!;
+                }),
                 obscureText: true,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 5),
                   labelText: 'Search ...',
                   border: OutlineInputBorder(),
                   icon: Icon(Icons.search),
