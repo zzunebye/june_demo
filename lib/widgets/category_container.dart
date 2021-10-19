@@ -9,6 +9,7 @@ class CategoryButton extends StatelessWidget {
   CategoryButton(this.catData);
 
   void selectJobCategory(BuildContext ctx) {
+    // NOTE: print for implmentation
     // print("catData: ${this.catData}");
     Navigator.of(ctx).pushNamed(
       JobSearchPage.routeName,

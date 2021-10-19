@@ -79,8 +79,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
             if (state is LoadDataSuccess) {
               jobDetail = state.data['get_jobs'][0];
               streamController.add(jobDetail?['job_name']);
-              print(jobDetail?['working_hour']);
-              // print(jobDetail);
               return ListView(
                 children: [
                   Card(

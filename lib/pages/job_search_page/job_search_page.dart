@@ -1,3 +1,4 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,6 +75,12 @@ class _JobSearchPageState extends State<JobSearchPage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // final args = ModalRoute.of(context)!.settings.arguments as Map;
 
@@ -88,7 +95,7 @@ class _JobSearchPageState extends State<JobSearchPage> {
           title: Text(widget.title),
         ),
         body: Container(
-          height: MediaQuery.of(context).size.height,
+          // height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
             physics: ScrollPhysics(),
             child: Column(
@@ -96,7 +103,7 @@ class _JobSearchPageState extends State<JobSearchPage> {
               children: [
                 // JobSearchForm(),
                 Container(
-                  margin: EdgeInsets.all(15),
+                  margin: const EdgeInsets.all(15),
                   child: TextFormField(
                     controller: _termController,
                     textInputAction: TextInputAction.done,
@@ -122,12 +129,12 @@ class _JobSearchPageState extends State<JobSearchPage> {
                           optionTitle: 'District',
                           buildBar: buildModalBottomSheet,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         SearchOptionButton(
                           optionTitle: 'Time',
                           buildBar: buildModalBottomSheet,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         SearchOptionButton(
                           optionTitle: 'Salary',
                           buildBar: buildModalBottomSheet,
@@ -135,12 +142,12 @@ class _JobSearchPageState extends State<JobSearchPage> {
                       ],
                     )),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
                   child: ElevatedButton(
                     onPressed: () {
                       _searchBloc.add(ResetSearch());
                     },
-                    child: Text('Reset'),
+                    child: const Text('Reset'),
                   ),
                 ),
                 Container(
@@ -148,7 +155,6 @@ class _JobSearchPageState extends State<JobSearchPage> {
                     builder: (context, state) {
                       if (state is LoadDataSuccess) {
                         var jobDetail = state.data['job_search']['result'];
-                        // streamController.add(jobDetail?['job_name']);
                         return ListView.builder(
                           itemCount: jobDetail.length,
                           shrinkWrap: true,
@@ -159,9 +165,41 @@ class _JobSearchPageState extends State<JobSearchPage> {
                           },
                         );
                       } else if (state is EmptyState) {
-                        return Container(
-                            height: MediaQuery.of(context).size.height - 400,
-                            child: Center(child: Text("Waiting for Search")));
+                        return ValueListenableBuilder(
+                          valueListenable:
+                              _searchBloc.recentSearchBox.listenable(),
+                          builder: (context, Box box, widget) {
+                            if (box.isEmpty) {
+                              return Center(child: Text('Empty'));
+                            } else {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: box.length,
+                                itemBuilder: (context, index) {
+                                  var currentBox = box;
+                                  var data = currentBox.getAt(index)!;
+                                  return InkWell(
+                                    child: Card(
+                                      margin: EdgeInsets.symmetric(horizontal: 15),
+                                      child: ListTile(
+                                        title: Text(data, style: TextStyle(fontSize: 16),),
+                                        trailing: IconButton(
+                                          onPressed: () => _searchBloc.deleteSearchHive(index),
+                                          icon: Icon(
+                                            Icons.delete,
+                                            // color: Colors.red,
+                                          ),
+                                        ),
+                                        dense: true,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        );
                       } else if (state is OnLoading) {
                         return LinearProgressIndicator();
                       } else {
