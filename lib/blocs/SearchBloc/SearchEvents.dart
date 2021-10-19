@@ -24,19 +24,16 @@ class ResetSearch extends SearchEvents {
 class UpdateWage extends SearchEvents {
   final List<double> wageRange;
 
-  UpdateWage(this.wageRange) {
-  }
+  UpdateWage(this.wageRange) {}
 
   @override
   List<Object>? get props => [];
-
 }
 
 class UpdateTerm extends SearchEvents {
   final String term;
 
-  UpdateTerm(this.term) {
-  }
+  UpdateTerm(this.term) {}
 
   @override
   List<Object>? get props => [term];

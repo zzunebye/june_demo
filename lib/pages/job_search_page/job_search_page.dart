@@ -1,8 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchBloc.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
@@ -101,7 +99,6 @@ class _JobSearchPageState extends State<JobSearchPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // JobSearchForm(),
                 Container(
                   margin: const EdgeInsets.all(15),
                   child: TextFormField(

@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
-import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/repositories/job_post.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
@@ -16,7 +14,6 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
 
   Box get recentSearchBox => _recentSearchBox;
 
-  // NOTE: initial state of the bloc is EmptyState
   SearchBloc() : super(EmptyState(SearchOptionData.empty())) {
     this.repository = PostRepository(client: GraphQLService());
     this._recentSearchBox = Hive.box('resentSearchBox');
@@ -33,12 +30,6 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
     super.close();
   }
 
-  // @override
-  // void onChange(Change<int> change) {
-  //   super.onChange(change);
-  //   print(change);
-  // }
-
   @override
   void onError(Object error, StackTrace stackTrace) {
     print('$error, $stackTrace');
@@ -51,12 +42,6 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
       final searchResult =
           await repository.SearchJobWithOptions(this.state.searchOption);
       emit(LoadDataSuccess(searchResult.data, this.state.searchOption));
-
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // int counter = (prefs.getInt('counter') ?? 0) + 1;
-      // print('Pressed $counter times.');
-      // await prefs.setInt('counter', counter);
-
     } catch (e) {
       emit(LoadDataFail(e.toString(), this.state.searchOption));
     }
@@ -92,6 +77,7 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
   void _addSearchHive(String term) async {
     _recentSearchBox.add(term);
   }
+
   void deleteSearchHive(int index) async {
     _recentSearchBox.deleteAt(index);
   }
