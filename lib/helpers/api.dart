@@ -147,8 +147,8 @@ class GraphQlQuery{
 
   static String SearchWithParams() {
     return """
-      query SearchWithParams(\$limit: Int, \$monthly_rate: [Float]) {
-        job_search(limit: \$limit, monthly_rate: \$monthly_rate) {
+      query SearchWithParams(\$limit: Int, \$monthly_rate: [Float], \$term: String) {
+        job_search(limit: \$limit, monthly_rate: \$monthly_rate, term: \$term) {
           total
           result {
             _id

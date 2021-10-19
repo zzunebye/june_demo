@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moovup_demo/helpers/api.dart';
+import 'package:moovup_demo/models/search_option_data.dart';
 import '../services/GraphQLService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -32,12 +34,16 @@ class PostRepository {
     }
   }
 
-  Future<QueryResult> SearchJobWithOptions() async {
-    final QueryResult results =
-        await client.performQueryWithVars(GraphQlQuery.SearchWithParams(), {
-      "limit": 10,
-      "monthly_rate": [0, 10000]
-    });
+  Future<QueryResult> SearchJobWithOptions(
+      SearchOptionData searchOptionData) async {
+    final QueryResult results = await client.performQueryWithVars(
+      query: GraphQlQuery.SearchWithParams(),
+      variables: {
+        "limit": searchOptionData.limit,
+        "monthly_rate": searchOptionData.monthly_rate,
+        "term": searchOptionData.term,
+      },
+    );
 
     if (results.hasException) {
       throw results.exception!;
