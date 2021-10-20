@@ -25,8 +25,7 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
 
   @override
   Future<void> close() async {
-    //cancel streams
-    _recentSearchBox.close();
+    // _recentSearchBox.close();
     super.close();
   }
 
@@ -36,11 +35,9 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
     super.onError(error, stackTrace);
   }
 
-  FutureOr<void> onFetchSearchData(
-      FetchSearchData event, Emitter<SearchStates> emit) async {
+  FutureOr<void> onFetchSearchData(FetchSearchData event, Emitter<SearchStates> emit) async {
     try {
-      final searchResult =
-          await repository.SearchJobWithOptions(this.state.searchOption);
+      final searchResult = await repository.SearchJobWithOptions(this.state.searchOption);
       emit(LoadDataSuccess(searchResult.data, this.state.searchOption));
     } catch (e) {
       emit(LoadDataFail(e.toString(), this.state.searchOption));
@@ -51,6 +48,7 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
     try {
       emit(EmptyState(SearchOptionData.empty()));
     } catch (e) {
+      print(e);
       emit(LoadDataFail(e.toString(), this.state.searchOption));
     }
   }
@@ -76,7 +74,11 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
 
   void _addSearchHive(String term) async {
     _recentSearchBox.add(term);
+    if (_recentSearchBox.values.length > 100){
+      _recentSearchBox.deleteAt(0);
+    }
   }
+
 
   void deleteSearchHive(int index) async {
     _recentSearchBox.deleteAt(index);

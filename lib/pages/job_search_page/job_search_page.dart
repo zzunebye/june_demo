@@ -31,16 +31,14 @@ class _JobSearchPageState extends State<JobSearchPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
+    _searchBloc.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context)!.settings.arguments as Map;
-
-    // print() For implmentation
-    print("${widget.title}, ${widget.searchCategory}");
+    // NOTE: print For implmentation
+    // print("${widget.title}, ${widget.searchCategory}");
     var _termController = TextEditingController();
 
     return BlocProvider.value(
@@ -65,8 +63,7 @@ class _JobSearchPageState extends State<JobSearchPage> {
                       _searchBloc.add(UpdateTerm(term));
                     },
                     decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
                       labelText: 'Search ...',
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
@@ -97,6 +94,9 @@ class _JobSearchPageState extends State<JobSearchPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       _searchBloc.add(ResetSearch());
+                      setState(() {
+                        _termController.text = '';
+                      });
                     },
                     child: const Text('Reset'),
                   ),
@@ -111,36 +111,34 @@ class _JobSearchPageState extends State<JobSearchPage> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            final jobId = jobDetail[index];
-                            return JobCard(job: jobId);
+                            return JobCard(job: jobDetail[index]);
                           },
                         );
                       } else if (state is EmptyState) {
                         return ValueListenableBuilder(
-                          valueListenable:
-                              _searchBloc.recentSearchBox.listenable(),
+                          valueListenable: _searchBloc.recentSearchBox.listenable(),
                           builder: (context, Box box, widget) {
                             if (box.isEmpty) {
                               return Center(child: Text('Empty'));
                             } else {
+                              List<dynamic> boxValues = box.values.take(10).toList().reversed.toList();
                               return ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: box.length,
+                                itemCount: boxValues.length,
                                 itemBuilder: (context, index) {
-                                  var currentBox = box;
-                                  var data = currentBox.getAt(index)!;
+                                  String data = boxValues.elementAt(index)!;
                                   return InkWell(
                                     child: Card(
                                       margin: EdgeInsets.symmetric(horizontal: 15),
                                       child: ListTile(
-                                        title: Text(data, style: TextStyle(fontSize: 16),),
+                                        title: Text(
+                                          data,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
                                         trailing: IconButton(
                                           onPressed: () => _searchBloc.deleteSearchHive(index),
-                                          icon: Icon(
-                                            Icons.delete,
-                                            // color: Colors.red,
-                                          ),
+                                          icon: const Icon(Icons.delete),
                                         ),
                                         dense: true,
                                       ),
@@ -154,9 +152,7 @@ class _JobSearchPageState extends State<JobSearchPage> {
                       } else if (state is OnLoading) {
                         return LinearProgressIndicator();
                       } else {
-                        return Container(
-                            height: MediaQuery.of(context).size.height - 400,
-                            child: Text("Empty"));
+                        return Container(height: MediaQuery.of(context).size.height - 400, child: Text("Empty"));
                       }
                     },
                   ),

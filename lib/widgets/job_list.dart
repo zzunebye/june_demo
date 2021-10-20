@@ -33,9 +33,7 @@ class JobList extends StatelessWidget {
                     shrinkWrap: true,
                     padding: EdgeInsets.all(25),
                     children: jobCategories
-                        .map(
-                          (catData) => CategoryButton(catData),
-                    )
+                        .map((catData) => CategoryButton(catData))
                         .toList(),
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 150,
