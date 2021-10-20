@@ -23,7 +23,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
   late DetailBloc _detailBloc;
   bool isSaved = false;
 
-  StreamController<String> streamController = new StreamController();
+  StreamController<String> streamController = StreamController();
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    buildSkillList(BuildContext context, String title, List skillList) {
+    Widget buildSkillList(BuildContext context, String title, List skillList) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(height: 10),
         Text(title, style: Theme.of(context).textTheme.bodyText1),
@@ -61,6 +61,19 @@ class _JobDetailPageState extends State<JobDetailPage> {
           },
         )
       ]);
+    }
+
+    Widget buildTimeTableRow(int day) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(_detailBloc.convertIntToDate(day),
+              style: Theme.of(context).textTheme.bodyText1),
+          Text(
+            ("${jobDetail['working_hour'][0]['start_time'].toString()} - ${jobDetail['working_hour'][0]['end_time'].toString()}"),
+          )
+        ],
+      );
     }
 
     return BlocProvider.value(
@@ -99,19 +112,19 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.all(5.0),
+                                      margin: const EdgeInsets.all(5.0),
                                       child: Text(
                                           jobDetail['employment_type']['name']),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.all(5.0),
+                                      margin: const EdgeInsets.all(5.0),
                                       child: Text(jobDetail['job_name'],
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.all(5.0),
+                                      margin: const EdgeInsets.all(5.0),
                                       child: Text(jobDetail['company']['name']),
                                     ),
                                   ],
@@ -119,7 +132,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                               ),
                               jobDetail?['image'] == null
                                   ? ClipRRect(
-                                      borderRadius: BorderRadius.only(
+                                      borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15),
                                         bottomLeft: Radius.circular(15),
@@ -132,7 +145,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                       ),
                                     )
                                   : ClipRRect(
-                                      borderRadius: BorderRadius.only(
+                                      borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15),
                                         bottomLeft: Radius.circular(15),
@@ -154,8 +167,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
                   Container(
                     width: double.infinity,
                     height: 150,
-                    child: Card(
-                      margin: const EdgeInsets.all(10.0),
+                    child: const Card(
+                      margin: EdgeInsets.all(10.0),
                       elevation: 5,
                       child: Center(child: Text('Map of Work Address')),
                     ),
@@ -166,7 +179,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     child: Card(
                       margin: const EdgeInsets.all(10.0),
                       elevation: 5,
-                      // NOTE
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
@@ -176,34 +188,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                             Text('TimeTable',
                                 style: Theme.of(context).textTheme.headline6),
                             ...jobDetail['working_hour'][0]['day_of_week']
-                                .map(
-                                  (day) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(weeksName(weekEnum.values[day]),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1),
-                                      SizedBox(width: 10),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            (jobDetail['working_hour'][0]
-                                                    ['start_time']
-                                                .toString()),
-                                          ),
-                                          Text(' - '),
-                                          Text(
-                                            (jobDetail['working_hour'][0]
-                                                    ['end_time']
-                                                .toString()),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
+                                .map((day) => buildTimeTableRow(day))
                                 .toList(),
                           ],
                         ),
@@ -212,7 +197,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
                   ),
                   Container(
                     width: double.infinity,
-                    // height: 180,
                     child: Card(
                       margin: const EdgeInsets.all(10.0),
                       elevation: 3,
@@ -224,14 +208,14 @@ class _JobDetailPageState extends State<JobDetailPage> {
                           children: [
                             Text('Education',
                                 style: Theme.of(context).textTheme.headline6),
-                            SizedBox(height: 10.0),
+                            const SizedBox(height: 10.0),
                             Text(jobDetail['education_requirement']['category'],
                                 style: Theme.of(context).textTheme.bodyText1),
-                            SizedBox(height: 10.0),
+                            const SizedBox(height: 10.0),
                             Divider(),
                             Text('Language',
                                 style: Theme.of(context).textTheme.headline6),
-                            SizedBox(height: 5.0),
+                            const SizedBox(height: 5.0),
                             buildSkillList(context, 'Spoken Skill',
                                 jobDetail['spoken_skill']),
                             buildSkillList(context, 'Written Skill',
@@ -245,7 +229,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                          margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                           child: ElevatedButton(
                             onPressed: () {
                               // Navigate back to first screen when tapped.
@@ -255,7 +239,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 0, 10, 0),
+                        margin: const EdgeInsets.fromLTRB(5, 0, 10, 0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             primary: Colors.redAccent,
@@ -267,19 +251,15 @@ class _JobDetailPageState extends State<JobDetailPage> {
                             });
                           },
                           child: Container(
-                            padding: EdgeInsets.all(0),
-                            margin: EdgeInsets.all(0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 isSaved
-                                    ? Icon(Icons.check_box)
-                                    : Icon(Icons.check_box_outline_blank),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text('Save'),
+                                    ? const Icon(Icons.check_box)
+                                    : const Icon(Icons.check_box_outline_blank),
+                                const SizedBox(width: 5),
+                                const Text('Save'),
                               ],
                             ),
                           ),
@@ -292,7 +272,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
             } else if (state is LoadDataFail) {
               return Center(child: Text(state.error));
             } else {
-              return LinearProgressIndicator();
+              return const LinearProgressIndicator();
             }
           },
         ),

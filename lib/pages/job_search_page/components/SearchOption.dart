@@ -5,9 +5,8 @@ import 'package:moovup_demo/widgets/SalaryFilterBottomSheet.dart';
 
 class SearchOptionButton extends StatelessWidget {
   String optionTitle;
-  Function buildBar;
 
-  SearchOptionButton({required this.optionTitle, required this.buildBar});
+  SearchOptionButton({required this.optionTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +44,8 @@ class SearchOptionButton extends StatelessWidget {
                                     color: Colors.black, fontSize: 24)),
                           ),
                           ListTile(
-                            leading: new Icon(Icons.share),
-                            title: new Text('To be implemented'),
+                            leading: const Icon(Icons.share),
+                            title: const Text('To be implemented'),
                             onTap: () {
                               Navigator.pop(context);
                             },

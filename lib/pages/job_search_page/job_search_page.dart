@@ -21,50 +21,7 @@ class JobSearchPage extends StatefulWidget {
 }
 
 class _JobSearchPageState extends State<JobSearchPage> {
-  final _formKey = GlobalKey<FormState>();
   late SearchBloc _searchBloc;
-
-  SearchOptionData _searchOption = new SearchOptionData.empty();
-
-  Future<dynamic> buildModalBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            // mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
-  }
 
   @override
   void initState() {
@@ -124,17 +81,14 @@ class _JobSearchPageState extends State<JobSearchPage> {
                       children: [
                         SearchOptionButton(
                           optionTitle: 'District',
-                          buildBar: buildModalBottomSheet,
                         ),
                         const SizedBox(width: 10),
                         SearchOptionButton(
                           optionTitle: 'Time',
-                          buildBar: buildModalBottomSheet,
                         ),
                         const SizedBox(width: 10),
                         SearchOptionButton(
                           optionTitle: 'Salary',
-                          buildBar: buildModalBottomSheet,
                         ),
                       ],
                     )),

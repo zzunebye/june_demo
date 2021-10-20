@@ -1,5 +1,5 @@
 class SearchOptionData {
-  List<double> monthly_rate= [0, 99999];
+  List<double> monthly_rate = [0, 99999];
   int limit;
   List<String> district;
   List time = [];

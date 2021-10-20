@@ -5,7 +5,8 @@ enum weekEnum {
   Thursday,
   Friday,
   Saturday,
-  Sunday
+  Sunday,
+  Empty,
 }
 
 String weeksName(weekEnum deptRepair) {
@@ -24,6 +25,8 @@ String weeksName(weekEnum deptRepair) {
       return "Saturday";
     case weekEnum.Sunday:
       return "Sunday";
+    default:
+      return "";
   }
 }
 
@@ -43,10 +46,12 @@ int weekEnumValue(weekEnum weekName) {
       return 6;
     case weekEnum.Sunday:
       return 7;
+    default:
+      return 0;
   }
 }
 
-weekEnum? weekEnumString(int weekEnumIndex) {
+weekEnum weekEnumString(int weekEnumIndex) {
   switch (weekEnumIndex) {
     case 1:
       return weekEnum.Monday;
@@ -63,6 +68,6 @@ weekEnum? weekEnumString(int weekEnumIndex) {
     case 7:
       return weekEnum.Sunday;
     default:
-      return null;
+      return weekEnum.Empty;
   }
 }

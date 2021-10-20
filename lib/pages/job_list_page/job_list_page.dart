@@ -25,7 +25,6 @@ class _JobListState extends State<JobListPage> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -37,8 +36,13 @@ class _JobListState extends State<JobListPage> {
           actions: [
             IconButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => JobSearchPage(title: 'Searching', searchCategory: '',)));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => JobSearchPage(
+                      title: 'Searching',
+                    ),
+                  ),
+                );
               },
               icon: const Icon(Icons.manage_search),
               tooltip: 'Show Search Bar',
