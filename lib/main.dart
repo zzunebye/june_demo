@@ -39,14 +39,11 @@ void main() async {
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
 
-  final getIt = GetIt.instance;
 
   final GraphQLService gqlService = GraphQLService();
   await gqlService.init(apiHost);
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(gqlService.client);
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
 
   await Hive.openBox('resentSearchBox');
 
