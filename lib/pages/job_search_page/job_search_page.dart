@@ -37,8 +37,6 @@ class _JobSearchPageState extends State<JobSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    // NOTE: print For implmentation
-    // print("${widget.title}, ${widget.searchCategory}");
     var _termController = TextEditingController();
 
     return BlocProvider.value(
@@ -48,7 +46,6 @@ class _JobSearchPageState extends State<JobSearchPage> {
           title: Text(widget.title),
         ),
         body: Container(
-          // height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
             physics: ScrollPhysics(),
             child: Column(
