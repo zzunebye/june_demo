@@ -10,6 +10,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
+import 'blocs/PreferenceBloc/preference_bloc.dart';
 import 'blocs/SearchBloc/SearchBloc.dart';
 import 'config/environment.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
@@ -37,7 +38,6 @@ void main() async {
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
 
-
   final GraphQLService gqlService = GraphQLService();
   await gqlService.init(apiHost);
 
@@ -50,6 +50,9 @@ void main() async {
       BlocProvider.value(value: notificationBloc),
       BlocProvider<SearchBloc>(
         create: (BuildContext context) => SearchBloc(),
+      ),
+      BlocProvider<PreferenceBloc>(
+        create: (BuildContext context) => PreferenceBloc(),
       )
     ],
     child: GraphQLProvider(client: client, child: MyApp()),
@@ -77,18 +80,15 @@ class _MyAppState extends State<MyApp> {
         if (state is JobDetailNotificationState) {
           final snackBar = SnackBar(
             content: state.notificationInfo.getForeground
-                ? Text(
-                    'Are you interested in ${state.notificationInfo.dataBody!['job_name']}?')
-                : Text(
-                    'You are checking ${state.notificationInfo.dataBody!['job_name']}'),
+                ? Text('Are you interested in ${state.notificationInfo.dataBody!['job_name']}?')
+                : Text('You are checking ${state.notificationInfo.dataBody!['job_name']}'),
             action: state.notificationInfo.getForeground
                 ? SnackBarAction(
                     label: 'Check!',
                     onPressed: () {
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) => JobDetailPage(
-                              state.notificationInfo.dataBody!['id']),
+                          builder: (context) => JobDetailPage(state.notificationInfo.dataBody!['id']),
                         ),
                       );
                     },
@@ -113,12 +113,10 @@ class _MyAppState extends State<MyApp> {
           scaffoldMessengerKey: _messangerKey,
           routes: {
             '/': (context) => JobListPage(title: 'Main'),
-            PreferencePage.routeName: (context) =>
-                PreferencePage(title: 'Preference'),
+            PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
             JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
             JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
-            JobSearchPage.routeName: (context) =>
-                JobSearchPage(title: "Job Searching", searchCategory: ''),
+            JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
             SettingPage.routeName: (context) => SettingPage(),
           },
           theme: ThemeData(
