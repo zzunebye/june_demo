@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:moovup_demo/models/preference.dart';
 
 class PreferenceEvents extends Equatable {
   PreferenceEvents();
@@ -7,5 +8,13 @@ class PreferenceEvents extends Equatable {
   List<Object> get props => [];
 }
 
-class EmptyState extends PreferenceEvents {}
 class LoadPreference extends PreferenceEvents {}
+
+class ResetBtnTapped extends PreferenceEvents {}
+
+class PillTapped extends PreferenceEvents {
+  final List<Preference> prefList;
+  final Preference pref;
+
+  PillTapped(this.pref, this.prefList);
+}
