@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_states.dart';
-import 'package:moovup_demo/helpers/enum.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
 class JobDetailPage extends StatefulWidget {
@@ -33,8 +32,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _detailBloc = DetailBloc(GraphQLService());
-    _detailBloc..add(FetchDetailData(widget.jobId));
+    _detailBloc = DetailBloc(GraphQLService())..add(FetchDetailData(widget.jobId));
   }
 
   @override
@@ -48,12 +46,10 @@ class _JobDetailPageState extends State<JobDetailPage> {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(skill['name'],
-                    style: Theme.of(context).textTheme.bodyText2),
+                Text(skill['name'], style: Theme.of(context).textTheme.bodyText2),
                 Row(
                   children: [
-                    for (var i = 0; i < skill['level']; i++)
-                      Icon(Icons.star, color: Theme.of(context).accentColor),
+                    ...List.generate(skill['level'], (index) => new Icon(Icons.star, color: Theme.of(context).accentColor)),
                   ],
                 )
               ],
@@ -67,11 +63,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(_detailBloc.convertIntToDate(day),
-              style: Theme.of(context).textTheme.bodyText1),
-          Text(
-            ("${jobDetail['working_hour'][0]['start_time'].toString()} - ${jobDetail['working_hour'][0]['end_time'].toString()}"),
-          )
+          Text(_detailBloc.convertIntToDate(day), style: Theme.of(context).textTheme.bodyText1),
+          Text(_detailBloc.getWorkingHour(jobDetail))
         ],
       );
     }
@@ -106,22 +99,17 @@ class _JobDetailPageState extends State<JobDetailPage> {
                               Expanded(
                                 flex: 2,
                                 child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                          jobDetail['employment_type']['name']),
+                                      child: Text(jobDetail['employment_type']['name']),
                                     ),
                                     Container(
                                       margin: const EdgeInsets.all(5.0),
-                                      child: Text(jobDetail['job_name'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
+                                      child: Text(jobDetail['job_name'], style: Theme.of(context).textTheme.headline6),
                                     ),
                                     Container(
                                       margin: const EdgeInsets.all(5.0),
@@ -185,11 +173,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('TimeTable',
-                                style: Theme.of(context).textTheme.headline6),
-                            ...jobDetail['working_hour'][0]['day_of_week']
-                                .map((day) => buildTimeTableRow(day))
-                                .toList(),
+                            Text('TimeTable', style: Theme.of(context).textTheme.headline6),
+                            ...jobDetail['working_hour'][0]['day_of_week'].map((day) => buildTimeTableRow(day)).toList(),
                           ],
                         ),
                       ),
@@ -206,20 +191,15 @@ class _JobDetailPageState extends State<JobDetailPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Education',
-                                style: Theme.of(context).textTheme.headline6),
+                            Text('Education', style: Theme.of(context).textTheme.headline6),
                             const SizedBox(height: 10.0),
-                            Text(jobDetail['education_requirement']['category'],
-                                style: Theme.of(context).textTheme.bodyText1),
+                            Text(jobDetail['education_requirement']['category'], style: Theme.of(context).textTheme.bodyText1),
                             const SizedBox(height: 10.0),
                             Divider(),
-                            Text('Language',
-                                style: Theme.of(context).textTheme.headline6),
+                            Text('Language', style: Theme.of(context).textTheme.headline6),
                             const SizedBox(height: 5.0),
-                            buildSkillList(context, 'Spoken Skill',
-                                jobDetail['spoken_skill']),
-                            buildSkillList(context, 'Written Skill',
-                                jobDetail['written_skill']),
+                            buildSkillList(context, 'Spoken Skill', jobDetail['spoken_skill']),
+                            buildSkillList(context, 'Written Skill', jobDetail['written_skill']),
                           ],
                         ),
                       ),
@@ -231,9 +211,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                           child: ElevatedButton(
-                            onPressed: () {
-                              // Navigate back to first screen when tapped.
-                            },
+                            onPressed: () {},
                             child: const Text('Apply'),
                           ),
                         ),
@@ -255,9 +233,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                isSaved
-                                    ? const Icon(Icons.check_box)
-                                    : const Icon(Icons.check_box_outline_blank),
+                                isSaved ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
                                 const SizedBox(width: 5),
                                 const Text('Save'),
                               ],

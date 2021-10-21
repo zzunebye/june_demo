@@ -25,7 +25,6 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
 
   @override
   Future<void> close() async {
-    // _recentSearchBox.close();
     super.close();
   }
 

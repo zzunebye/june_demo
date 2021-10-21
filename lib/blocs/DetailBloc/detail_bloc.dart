@@ -30,5 +30,10 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   String convertIntToDate(int day) {
     return weeksName(weekEnum.values[day]);
   }
+
+  String getWorkingHour(dynamic data) {
+    return '${data['working_hour'][0]['start_time']} - ${data['working_hour'][0]['end_time']}';
+  }
+
 }
 
