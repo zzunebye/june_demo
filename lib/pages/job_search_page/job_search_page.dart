@@ -1,124 +1,186 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moovup_demo/blocs/SearchBloc/SearchBloc.dart';
+import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
+import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
 import 'package:moovup_demo/widgets/job_card.dart';
-import 'package:moovup_demo/pages/job_list_page/job_list_page.dart';
-import 'package:moovup_demo/widgets/job_search_form.dart';
 
-class SearchOption {
-  String name= '';
-  String district= '';
-  String time= '';
-  String salary= '';
-}
+import 'components/SearchOption.dart';
 
 class JobSearchPage extends StatefulWidget {
   static const String routeName = 'job-search';
   final String title;
   final String searchCategory;
 
-  JobSearchPage({required this.title, required this.searchCategory});
+  JobSearchPage({required this.title, this.searchCategory = ''});
 
   @override
   _JobSearchPageState createState() => _JobSearchPageState();
 }
 
 class _JobSearchPageState extends State<JobSearchPage> {
-  String getAllJobs = '''
-    query job {
-      job_search (limit: 10){
-        total
-        result{
-          _created_at
-              job_name
-          company {
-            name
-            about
-          }
-          attributes {
-            category
-            category_display_sequence
-          }
-          allowances {
-            name
-            description
-          }
-          job_types {
-            category
-            name
-            __typename
-          }
-          to_monthly_rate
-          to_hourly_rate
-    
-          employment
-          employment_type {
-            name
-          }
-          state
-          attributes {
-            category
-          }
-          address{
-            address
-            formatted_address
-          }
-          address_on_map
-          images
-        }
-      }
-    }
-  ''';
+  late SearchBloc _searchBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchBloc = SearchBloc();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchBloc.close();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context)!.settings.arguments as Map;
-    return Query(
-      options: QueryOptions(
-        document: gql(getAllJobs),
+    var _termController = TextEditingController();
+
+    Widget buildSearchBar() {
+      return Container(
+        margin: const EdgeInsets.all(15),
+        child: TextFormField(
+          controller: _termController,
+          textInputAction: TextInputAction.done,
+          onFieldSubmitted: (term) {
+            _searchBloc.add(UpdateTerm(term));
+          },
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+            labelText: 'Search ...',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.search),
+          ),
+        ),
+      );
+    }
+
+    Widget buildSearchOptions() {
+      return Container(
+        margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SearchOptionButton(
+              optionTitle: 'District',
+            ),
+            const SizedBox(width: 10),
+            SearchOptionButton(
+              optionTitle: 'Time',
+            ),
+            const SizedBox(width: 10),
+            SearchOptionButton(
+              optionTitle: 'Salary',
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget buildResetButton() {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 15),
+        child: ElevatedButton(
+          onPressed: () {
+            _searchBloc.add(ResetSearch());
+            setState(() {
+              _termController.text = '';
+            });
+          },
+          child: const Text('Reset'),
+        ),
+      );
+    }
+
+    Widget buildRecentSearchList() {
+      return Container(
+        margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        child: BlocBuilder<SearchBloc, SearchStates>(
+          builder: (context, state) {
+            if (state is LoadDataSuccess) {
+              var jobDetail = state.data['job_search']['result'];
+              return ListView.builder(
+                itemCount: jobDetail.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return JobCard(job: jobDetail[index]);
+                },
+              );
+            } else if (state is EmptyState) {
+              return ValueListenableBuilder(
+                valueListenable: _searchBloc.recentSearchBox.listenable(),
+                builder: (context, Box box, widget) {
+                  if (box.isEmpty) {
+                    return Center(child: Text('Empty'));
+                  } else {
+                    List<dynamic> boxValues = box.values.take(10).toList().reversed.toList();
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: boxValues.length,
+                      itemBuilder: (context, index) {
+                        String data = boxValues.elementAt(index)!;
+                        return InkWell(
+                          customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          highlightColor: Theme.of(context).cardColor,
+                          splashColor: Colors.deepPurpleAccent,
+                          onTap: () => _searchBloc.add(UpdateTerm(data)),
+                          child: ListTile(
+                            tileColor: Theme.of(context).cardColor,
+                            title: Text(
+                              data,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () => _searchBloc.deleteSearchHive(index),
+                              icon: const Icon(Icons.delete),
+                            ),
+                            dense: true,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              );
+            } else if (state is OnLoading) {
+              return LinearProgressIndicator();
+            } else {
+              return Container(height: MediaQuery.of(context).size.height - 400, child: Text("Empty"));
+            }
+          },
+        ),
+      );
+    }
+
+    return BlocProvider.value(
+      value: _searchBloc,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                buildSearchBar(),
+                buildSearchOptions(),
+                buildResetButton(),
+                buildRecentSearchList(),
+              ],
+            ),
+          ),
+        ),
       ),
-      builder: (QueryResult result, {refetch, fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString());
-        }
-
-        if (result.isLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
-        List jobs = result.data?['job_search']['result'];
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),
-          ),
-          body: Column(
-            children: [
-              Expanded(child: JobSearchForm()),
-              Expanded(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 460,
-                  child: ListView(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height,
-                        child: ListView.builder(
-                          itemCount: jobs.length,
-                          itemBuilder: (context, index) {
-                            final jobId = jobs[index];
-                            return JobCard(job: jobId);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
-

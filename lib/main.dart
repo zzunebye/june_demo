@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/providers/preferences.dart';
 import 'package:provider/provider.dart';
 import './services/GraphQLService.dart';
@@ -9,6 +10,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
+import 'blocs/SearchBloc/SearchBloc.dart';
 import 'config/environment.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
@@ -22,7 +24,7 @@ final _messangerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  NotificationBloc notificationBloc = new NotificationBloc();
+  NotificationBloc notificationBloc = NotificationBloc();
   await notificationBloc.initialize();
 
   const String environment = String.fromEnvironment(
@@ -30,17 +32,25 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
+  await Hive.initFlutter();
+
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
+
 
   final GraphQLService gqlService = GraphQLService();
   await gqlService.init(apiHost);
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(gqlService.client);
 
+  await Hive.openBox('resentSearchBox');
+
   var app = MultiBlocProvider(
     providers: [
       BlocProvider.value(value: notificationBloc),
+      BlocProvider<SearchBloc>(
+        create: (BuildContext context) => SearchBloc(),
+      )
     ],
     child: GraphQLProvider(client: client, child: MyApp()),
   );
@@ -65,7 +75,6 @@ class _MyAppState extends State<MyApp> {
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
         if (state is JobDetailNotificationState) {
-
           final snackBar = SnackBar(
             content: state.notificationInfo.getForeground
                 ? Text(
@@ -78,8 +87,8 @@ class _MyAppState extends State<MyApp> {
                     onPressed: () {
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              JobDetailPage(state.notificationInfo.dataBody!['id']),
+                          builder: (context) => JobDetailPage(
+                              state.notificationInfo.dataBody!['id']),
                         ),
                       );
                     },
