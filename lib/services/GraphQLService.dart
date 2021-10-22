@@ -41,11 +41,22 @@ class GraphQLService {
   GraphQLClient get client => _client;
 
   Future<QueryResult> performQuery(String query, {variable = const <String, dynamic>{}, forceNetworkOnly = false}) async {
-
     QueryOptions options = QueryOptions(
       document: gql(query),
       variables: variable,
-      fetchPolicy: forceNetworkOnly ? FetchPolicy.networkOnly : FetchPolicy.cacheFirst,
+      fetchPolicy: forceNetworkOnly ? FetchPolicy.networkOnly : FetchPolicy.cacheAndNetwork,
+    );
+
+    return await _client.query(options);
+  }
+
+  Future<QueryResult> performQueryWithVars({
+    required String query,
+    required Map<String, dynamic> variables,
+  }) async {
+    QueryOptions options = QueryOptions(
+      document: gql(query),
+      variables: variables,
     );
 
     return await _client.query(options);
@@ -58,4 +69,5 @@ class GraphQLService {
 
     return result;
   }
+
 }

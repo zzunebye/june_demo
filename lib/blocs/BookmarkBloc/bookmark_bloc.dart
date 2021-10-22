@@ -27,6 +27,7 @@ class BookmarkBloc extends Bloc<BookmarkEvents, BookmarkStates> {
   }
 
   _onFetchBookmarkData(BookmarkEvents event, Emitter<BookmarkStates> emit) async {
+    print('_onFetchBookmarkData');
     emit(OnLoading());
 
     try {

@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:moovup_demo/helpers/api.dart';
+import 'package:moovup_demo/helpers/enum.dart';
 import 'package:moovup_demo/repositories/job_post.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
@@ -10,12 +9,10 @@ import 'detail_events.dart';
 import 'detail_states.dart';
 
 class DetailBloc extends Bloc<DetailEvents, DetailStates> {
-  late PostRepository repository;
+  PostRepository repository = PostRepository(client: GraphQLService());
   StreamController<String> jobTitleController = new StreamController();
 
-
   DetailBloc(GraphQLService _graphQLService) : super(OnLoading()) {
-    this.repository = PostRepository(client: GraphQLService());
     on<SaveJob>(_onSaveJob);
     on<FetchDetailData>(_onFetchDetailData);
   }
@@ -27,8 +24,10 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
       try {
         final prevData = (this.state.props as List).single;
         emit(OnLoading());
-        await repository.bookmarkJob(event.isSaved ? 'Remove' : 'Add', event.jobId);
-        prevData['get_jobs'][0]['is_saved'] = !prevData['get_jobs'][0]['is_saved'];
+        await repository.bookmarkJob(
+            event.isSaved ? 'Remove' : 'Add', event.jobId);
+        prevData['get_jobs'][0]['is_saved'] =
+            !prevData['get_jobs'][0]['is_saved'];
         emit(LoadDataSuccess(List.from([prevData]).single));
       } catch (error) {
         // TODO For implementing modal message later
@@ -47,5 +46,13 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
       emit(LoadDataFail(error));
     }
     jobTitleController.close();
+  }
+
+  String convertIntToDate(int day) {
+    return weeksName(weekEnum.values[day]);
+  }
+
+  String getWorkingHour(dynamic data) {
+    return '${data['working_hour'][0]['start_time']} - ${data['working_hour'][0]['end_time']}';
   }
 }

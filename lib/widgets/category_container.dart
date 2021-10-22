@@ -9,6 +9,8 @@ class CategoryButton extends StatelessWidget {
   CategoryButton(this.catData);
 
   void selectJobCategory(BuildContext ctx) {
+    // NOTE: print for implmentation
+    // print("catData: ${this.catData}");
     Navigator.of(ctx).pushNamed(
       JobSearchPage.routeName,
       arguments: {
@@ -38,7 +40,7 @@ class CategoryButton extends StatelessWidget {
             BoxShadow(
               color: Colors.redAccent,
               blurRadius: 0,
-              offset: Offset(3, 4), // Shadow position
+              offset: Offset(3, 4),
             ),
           ],
         ),

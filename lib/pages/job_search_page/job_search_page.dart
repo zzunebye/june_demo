@@ -1,149 +1,186 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:moovup_demo/helpers/api.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moovup_demo/blocs/SearchBloc/SearchBloc.dart';
+import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
+import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
 import 'package:moovup_demo/widgets/job_card.dart';
-import 'package:moovup_demo/models/search.dart';
 
 import 'components/SearchOption.dart';
-
-class searchOptionData {
-  static Map district = {'title': 'District'};
-  static Map time = {'title': 'Time'};
-  static Map salary = {'title': "Title"};
-}
 
 class JobSearchPage extends StatefulWidget {
   static const String routeName = 'job-search';
   final String title;
   final String searchCategory;
 
-  JobSearchPage({required this.title, required this.searchCategory});
+  JobSearchPage({required this.title, this.searchCategory = ''});
 
   @override
   _JobSearchPageState createState() => _JobSearchPageState();
 }
 
 class _JobSearchPageState extends State<JobSearchPage> {
-  final _formKey = GlobalKey<FormState>();
+  late SearchBloc _searchBloc;
 
-  SearchOption _searchOption = new SearchOption(
-    name: "",
-    district: "Kowloon",
-    time: "",
-    salary: "",
-  );
+  @override
+  void initState() {
+    super.initState();
+    _searchBloc = SearchBloc();
+  }
 
-  Future<dynamic> buildModalBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            // mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: new Icon(Icons.share),
-                title: new Text('To be implemented'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
+  @override
+  void dispose() {
+    super.dispose();
+    _searchBloc.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context)!.settings.arguments as Map;
-    return Query(
-      options: QueryOptions(
-        document: gql(GraphQlQuery.getAllJobs(20)),
-      ),
-      builder: (QueryResult result, {refetch, fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString());
-        }
+    var _termController = TextEditingController();
 
-        if (result.isLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
-        List jobs = result.data?['job_search']['result'];
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),
+    Widget buildSearchBar() {
+      return Container(
+        margin: const EdgeInsets.all(15),
+        child: TextFormField(
+          controller: _termController,
+          textInputAction: TextInputAction.done,
+          onFieldSubmitted: (term) {
+            _searchBloc.add(UpdateTerm(term));
+          },
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+            labelText: 'Search ...',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.search),
           ),
-          body: SingleChildScrollView(
+        ),
+      );
+    }
+
+    Widget buildSearchOptions() {
+      return Container(
+        margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SearchOptionButton(
+              optionTitle: 'District',
+            ),
+            const SizedBox(width: 10),
+            SearchOptionButton(
+              optionTitle: 'Time',
+            ),
+            const SizedBox(width: 10),
+            SearchOptionButton(
+              optionTitle: 'Salary',
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget buildResetButton() {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 15),
+        child: ElevatedButton(
+          onPressed: () {
+            _searchBloc.add(ResetSearch());
+            setState(() {
+              _termController.text = '';
+            });
+          },
+          child: const Text('Reset'),
+        ),
+      );
+    }
+
+    Widget buildRecentSearchList() {
+      return Container(
+        margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        child: BlocBuilder<SearchBloc, SearchStates>(
+          builder: (context, state) {
+            if (state is LoadDataSuccess) {
+              var jobDetail = state.data['job_search']['result'];
+              return ListView.builder(
+                itemCount: jobDetail.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return JobCard(job: jobDetail[index]);
+                },
+              );
+            } else if (state is EmptyState) {
+              return ValueListenableBuilder(
+                valueListenable: _searchBloc.recentSearchBox.listenable(),
+                builder: (context, Box box, widget) {
+                  if (box.isEmpty) {
+                    return Center(child: Text('Empty'));
+                  } else {
+                    List<dynamic> boxValues = box.values.take(10).toList().reversed.toList();
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: boxValues.length,
+                      itemBuilder: (context, index) {
+                        String data = boxValues.elementAt(index)!;
+                        return InkWell(
+                          customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          highlightColor: Theme.of(context).cardColor,
+                          splashColor: Colors.deepPurpleAccent,
+                          onTap: () => _searchBloc.add(UpdateTerm(data)),
+                          child: ListTile(
+                            tileColor: Theme.of(context).cardColor,
+                            title: Text(
+                              data,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () => _searchBloc.deleteSearchHive(index),
+                              icon: const Icon(Icons.delete),
+                            ),
+                            dense: true,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              );
+            } else if (state is OnLoading) {
+              return LinearProgressIndicator();
+            } else {
+              return Container(height: MediaQuery.of(context).size.height - 400, child: Text("Empty"));
+            }
+          },
+        ),
+      );
+    }
+
+    return BlocProvider.value(
+      value: _searchBloc,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Container(
+          child: SingleChildScrollView(
             physics: ScrollPhysics(),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // JobSearchForm(),
-                Container(
-                  margin: EdgeInsets.all(15),
-                  child: TextFormField(
-                    // onSaved: (val) => setState(() => _searchOption.name = val!),
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                      labelText: 'Search ...',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
-                Container(
-                    margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SearchOptionButton(
-                            optionTitle: 'District',
-                            buildBar: buildModalBottomSheet),
-                        SizedBox(width: 10),
-                        SearchOptionButton(
-                            optionTitle: 'Time',
-                            buildBar: buildModalBottomSheet),
-                        SizedBox(width: 10),
-                        SearchOptionButton(
-                            optionTitle: 'Salary',
-                            buildBar: buildModalBottomSheet),
-                      ],
-                    )),
-                ListView.builder(
-                  itemCount: jobs.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final jobId = jobs[index];
-                    return JobCard(job: jobId);
-                  },
-                ),
+                buildSearchBar(),
+                buildSearchOptions(),
+                buildResetButton(),
+                buildRecentSearchList(),
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

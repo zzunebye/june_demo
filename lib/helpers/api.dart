@@ -1,9 +1,4 @@
-enum BookmarkAction {
-  add,
-  delete,
-}
-
-class GraphQlQuery {
+class GraphQlQuery{
   static String getJob(String id) {
     return """
     query job {
@@ -61,11 +56,21 @@ class GraphQlQuery {
       }
       address_on_map
       images
-    is_applied
-    is_invited
-  }
-}
-  """;
+      is_applied
+      is_invited
+      to_working_days_per_week
+      to_working_hours_per_day
+      vacancy
+      working_hour{
+        _id
+        day_of_week
+        end_time
+        shift_name
+        start_time
+        }
+      }
+    }
+    """;
   }
 
   static String getAllJobs(int limit) {
@@ -124,10 +129,21 @@ class GraphQlQuery {
           }
           address_on_map
           images
+          to_working_days_per_week
+          to_working_hours_per_day
+          vacancy
+          working_hour{
+            _id
+            day_of_week
+            end_time
+            shift_name
+            start_time
+          }
         }
       }
     }
   """;
+
   }
 
   static String updateBookmark(String action, String jobId) {
@@ -184,6 +200,60 @@ class GraphQlQuery {
             }
           }
           
+        }
+      }
+    """;
+  }
+
+  static String SearchWithParams() {
+    return """
+      query SearchWithParams(\$limit: Int, \$monthly_rate: [Float], \$term: String) {
+        job_search(limit: \$limit, monthly_rate: \$monthly_rate, term: \$term) {
+          total
+          result {
+            _id
+            _created_at
+            job_name
+            company {
+              name
+              about
+            }
+            attributes {
+              category
+              category_display_sequence
+            }
+            allowances {
+              name
+              description
+            }
+            education_requirement {
+              category
+              level
+              name
+            }
+            job_types {
+              _id
+              category
+              name
+              __typename
+            }
+            to_monthly_rate
+            to_hourly_rate
+            employment
+            employment_type {
+              name
+            }
+            state
+            attributes {
+              category
+            }
+            address {
+              address
+              formatted_address
+            }
+            address_on_map
+            images
+          }
         }
       }
     """;

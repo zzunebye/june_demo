@@ -20,32 +20,30 @@ class JobListPage extends StatefulWidget {
 }
 
 class _JobListState extends State<JobListPage> {
-
   @override
   void initState() {
     super.initState();
   }
 
-  void selectJobCategoryCard(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(
-      JobSearchPage.routeName,
-      arguments: {
-        'title': 'Job Searching',
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider(
-      create: (BuildContext context) => HomeBloc(GraphQLService())..add(FetchHomeData()),
+      create: (BuildContext context) =>
+          HomeBloc(GraphQLService())..add(FetchHomeData()),
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => JobSearchPage(
+                      title: 'Searching',
+                    ),
+                  ),
+                );
+              },
               icon: const Icon(Icons.manage_search),
               tooltip: 'Show Search Bar',
             ),
