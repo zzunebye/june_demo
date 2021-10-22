@@ -22,13 +22,12 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   _onSaveJob(SaveJob event, Emitter<DetailStates> emit) async {
     if (this.state is LoadDataSuccess) {
       try {
-        final prevData = (this.state.props as List).single;
+        final data = (this.state.props as List).first;
         emit(OnLoading());
-        await repository.bookmarkJob(
-            event.isSaved ? 'Remove' : 'Add', event.jobId);
-        prevData['get_jobs'][0]['is_saved'] =
-            !prevData['get_jobs'][0]['is_saved'];
-        emit(LoadDataSuccess(List.from([prevData]).single));
+        await repository.bookmarkJob(event.isSaved ? 'Remove' : 'Add', event.jobId);
+        print(data['get_jobs']);
+        data['get_jobs'][0]['is_saved'] = !data['get_jobs'][0]['is_saved'];
+        emit(LoadDataSuccess(data));
       } catch (error) {
         // TODO For implementing modal message later
         print(error);
@@ -40,7 +39,7 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
     emit(OnLoading());
     try {
       final result = await repository.fetchSingleJob(event.jobId);
-      this.jobTitleController.add(result.data!['get_jobs'].single?['job_name']);
+      this.jobTitleController.add(result.data!['get_jobs'].first?['job_name']);
       emit(LoadDataSuccess(result.data!));
     } catch (error) {
       emit(LoadDataFail(error));
