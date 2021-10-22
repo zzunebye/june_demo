@@ -25,7 +25,6 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
         final data = (this.state.props as List).first;
         emit(OnLoading());
         await repository.bookmarkJob(event.isSaved ? 'Remove' : 'Add', event.jobId);
-        print(data['get_jobs']);
         data['get_jobs'][0]['is_saved'] = !data['get_jobs'][0]['is_saved'];
         emit(LoadDataSuccess(data));
       } catch (error) {
