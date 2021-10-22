@@ -48,7 +48,6 @@ class _SavedJobPageState extends State<SavedJobPage> {
           } else if (state is OnLoading) {
             return LinearProgressIndicator();
           } else {
-            print('empty');
             return Text('Empty');
           }
         },

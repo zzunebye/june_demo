@@ -47,7 +47,6 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
     try {
       emit(EmptyState(SearchOptionData.empty()));
     } catch (e) {
-      print(e);
       emit(LoadDataFail(e.toString(), this.state.searchOption));
     }
   }
