@@ -1,7 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_bloc.dart';
+import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_states.dart';
@@ -9,7 +9,7 @@ import 'package:moovup_demo/services/GraphQLService.dart';
 
 class JobDetailPage extends StatefulWidget {
   static const routeName = 'job-detail';
-  late String jobId;
+  String jobId;
 
   JobDetailPage(this.jobId);
 
@@ -18,11 +18,8 @@ class JobDetailPage extends StatefulWidget {
 }
 
 class _JobDetailPageState extends State<JobDetailPage> {
-  late var jobDetail;
   late DetailBloc _detailBloc;
   bool isSaved = false;
-
-  StreamController<String> jobTitleController = new StreamController();
 
   @override
   void initState() {
@@ -38,37 +35,42 @@ class _JobDetailPageState extends State<JobDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _detailBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: StreamBuilder<String>(
-              stream: jobTitleController.stream,
-              initialData: 'Loading...',
-              builder: (context, snapshot) {
-                return Text('${snapshot.data}');
-              }),
-        ),
-        body: BlocBuilder<DetailBloc, DetailStates>(
-          builder: (BuildContext context, DetailStates state) {
-            if (state is LoadDataSuccess) {
-              jobDetail = state.data['get_jobs'][0];
-              jobTitleController.add(jobDetail?['job_name']);
-              return buildJobDetailView(context);
-            } else if (state is LoadDataFail) {
-              return Center(
-                child: Text(state.error),
-              );
-            } else {
-              return LinearProgressIndicator();
-            }
-          },
+    return WillPopScope(
+      onWillPop: () async {
+        BlocProvider.of<BookmarkBloc>(context)..add(FetchBookmarkData());
+        return true;
+      },
+      child: BlocProvider.value(
+        value: _detailBloc,
+        child: Scaffold(
+          appBar: AppBar(
+            title: StreamBuilder<String>(
+                stream: _detailBloc.jobTitleController.stream,
+                initialData: 'Loading...',
+                builder: (context, snapshot) {
+                  return Text('${snapshot.data}');
+                }),
+          ),
+          body: BlocBuilder<DetailBloc, DetailStates>(
+            builder: (BuildContext context, DetailStates state) {
+              if (state is LoadDataSuccess) {
+                var jobDetail = state.data['get_jobs'][0];
+                return buildJobDetailView(context, jobDetail);
+              } else if (state is LoadDataFail) {
+                return Center(
+                  child: Text(state.error),
+                );
+              } else {
+                return LinearProgressIndicator();
+              }
+            },
+          ),
         ),
       ),
     );
   }
 
-  Widget buildJobDetailView(BuildContext context) {
+  Widget buildJobDetailView(BuildContext context, var jobDetail) {
     return ListView(
       children: [
         Card(
@@ -93,8 +95,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                           ),
                           Container(
                             margin: EdgeInsets.all(5.0),
-                            child: Text(jobDetail['job_name'],
-                                style: Theme.of(context).textTheme.headline6),
+                            child: Text(jobDetail['job_name'], style: Theme.of(context).textTheme.headline6),
                           ),
                           Container(
                             margin: EdgeInsets.all(5.0),
@@ -167,20 +168,15 @@ class _JobDetailPageState extends State<JobDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Education',
-                      style: Theme.of(context).textTheme.headline6),
+                  Text('Education', style: Theme.of(context).textTheme.headline6),
                   SizedBox(height: 10.0),
-                  Text(jobDetail['education_requirement']['category'],
-                      style: Theme.of(context).textTheme.bodyText1),
+                  Text(jobDetail['education_requirement']['category'], style: Theme.of(context).textTheme.bodyText1),
                   SizedBox(height: 10.0),
                   Divider(),
-                  Text('Language',
-                      style: Theme.of(context).textTheme.headline6),
+                  Text('Language', style: Theme.of(context).textTheme.headline6),
                   SizedBox(height: 5.0),
-                  buildSkillList(
-                      context, 'Spoken Skill', jobDetail['spoken_skill']),
-                  buildSkillList(
-                      context, 'Written Skill', jobDetail['written_skill']),
+                  buildSkillList(context, 'Spoken Skill', jobDetail['spoken_skill']),
+                  buildSkillList(context, 'Written Skill', jobDetail['written_skill']),
                 ],
               ),
             ),
@@ -207,10 +203,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                   onSurface: Colors.red,
                 ),
                 onPressed: () {
-                  setState(() {
-                    isSaved = !isSaved;
-                  });
-                  _detailBloc..add(SaveJob());
+                  _detailBloc..add(SaveJob(jobDetail['is_saved'], jobDetail['_id']));
                 },
                 child: Container(
                   padding: EdgeInsets.all(0),
@@ -219,9 +212,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      isSaved
-                          ? Icon(Icons.check_box)
-                          : Icon(Icons.check_box_outline_blank),
+                      jobDetail['is_saved'] ? Icon(Icons.check_box) : Icon(Icons.check_box_outline_blank),
                       SizedBox(
                         width: 5,
                       ),
@@ -249,8 +240,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
               Text(skill['name'], style: Theme.of(context).textTheme.bodyText2),
               Row(
                 children: [
-                  for (var i = 0; i < skill['level']; i++)
-                    Icon(Icons.star, color: Theme.of(context).accentColor),
+                  for (var i = 0; i < skill['level']; i++) Icon(Icons.star, color: Theme.of(context).accentColor),
                 ],
               )
             ],
