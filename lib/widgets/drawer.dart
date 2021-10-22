@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -58,6 +59,15 @@ class AppDrawer extends StatelessWidget {
             title: Text('Job List'),
             onTap: () {
               Navigator.pushNamed(context, '/jobList');
+            },
+          ),
+          ListTile(
+            leading: CircleAvatar(
+              child: Icon(Icons.save),
+            ),
+            title: Text('Bookmarks'),
+            onTap: () {
+              Navigator.pushNamed(context, SavedJobPage.routeName);
             },
           ),
           ListTile(

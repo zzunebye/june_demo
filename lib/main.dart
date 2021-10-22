@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/providers/preferences.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import './services/GraphQLService.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
+import 'blocs/BookmarkBloc/bookmark_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
 import 'blocs/SearchBloc/SearchBloc.dart';
@@ -37,7 +39,6 @@ void main() async {
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
 
-
   final GraphQLService gqlService = GraphQLService();
   await gqlService.init(apiHost);
 
@@ -48,14 +49,14 @@ void main() async {
   var app = MultiBlocProvider(
     providers: [
       BlocProvider.value(value: notificationBloc),
-      BlocProvider<SearchBloc>(
-        create: (BuildContext context) => SearchBloc(),
-      )
+      BlocProvider(create: (BuildContext context) => BookmarkBloc()),
+      BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc())
     ],
-    child: GraphQLProvider(client: client, child: MyApp()),
+    child: GraphQLProvider(
+      client: client,
+      child: MyApp(),
+    ),
   );
-  // runApp(app);
-
   runApp(app);
 }
 
@@ -119,6 +120,7 @@ class _MyAppState extends State<MyApp> {
             JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
             JobSearchPage.routeName: (context) =>
                 JobSearchPage(title: "Job Searching", searchCategory: ''),
+            SavedJobPage.routeName: (context) => SavedJobPage(),
             SettingPage.routeName: (context) => SettingPage(),
           },
           theme: ThemeData(
