@@ -10,36 +10,30 @@ class BookmarkBloc extends Bloc<BookmarkEvents, BookmarkStates> {
 
   BookmarkBloc() : super(OnLoading()) {
     this.repository = PostRepository(client: GraphQLService());
-    on<SaveJob>(_onSaveJob);
-    on<FetchBookmarkData>(_onFetchDetailData);
+    on<DeleteBookmark>(_onSaveJob);
+    on<FetchBookmarkData>(_onFetchBookmarkData);
   }
 
-  BookmarkStates get initialState => OnLoading();
-
-  _onSaveJob(BookmarkEvents, Emitter<BookmarkStates> emit) async {
-    final state = this.state;
-    print("state: $state");
-    // emit(state);
-    if (state is LoadDataSuccess) {
+  // TODO: Make Bookmark item deleteable in Bookmark page
+  _onSaveJob(DeleteBookmark event, Emitter<BookmarkStates> emit) async {
+    if (this.state is LoadDataSuccess) {
       try {
-        // NOTE: to be implemented for GQL mutation
-        // repository.saveJob(event.jobId);
-        emit(LoadDataSuccess(state.data));
+        emit(LoadDataSuccess(this.state.props));
       } catch (error) {
+        // TODO For implementing modal message later
         print(error);
       }
     }
   }
 
-  _onFetchDetailData(BookmarkEvents, Emitter<BookmarkStates> emit) async {
+  _onFetchBookmarkData(BookmarkEvents event, Emitter<BookmarkStates> emit) async {
     emit(OnLoading());
 
     try {
-      final result = await repository.fetchSingleJob(BookmarkEvents.jobId);
+      final result = await repository.fetchBookmarkJob(20);
       emit(LoadDataSuccess(result.data));
     } catch (error) {
       emit(LoadDataFail(error));
     }
-    print("state: $state");
   }
 }

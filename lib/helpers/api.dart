@@ -3,7 +3,7 @@ enum BookmarkAction {
   delete,
 }
 
-class GraphQlQuery{
+class GraphQlQuery {
   static String getJob(String id) {
     return """
     query job {
@@ -17,6 +17,7 @@ class GraphQlQuery{
         name
         about
       }
+      is_saved
       education_requirement{
         category
         level
@@ -75,7 +76,7 @@ class GraphQlQuery{
         result{
           _id
           _created_at
-              job_name
+          job_name
           company {
             name
             about
@@ -127,17 +128,16 @@ class GraphQlQuery{
       }
     }
   """;
-
   }
 
-  static String updateBookmark(BookmarkAction action, String jobId) {
+  static String updateBookmark(String action, String jobId) {
     return """
           mutation update_bookmark(
             \$action: BookmarkAction!, 
             \$job_id: ID!) {
                   update_bookmark (
-                    action: $action
-                    job_id: $jobId
+                    action: \$action
+                    job_id: \$job_id
                   ) {
                     total
                     bookmarks {
@@ -148,7 +148,7 @@ class GraphQlQuery{
     """;
   }
 
-  static String getBookmarks(int limit){
+  static String getBookmarks(int limit) {
     return """
       query SavedJob{
         saved_jobs(limit:$limit) {
@@ -157,7 +157,30 @@ class GraphQlQuery{
             _created_at
             job {
               _id
+              _created_at
               job_name
+              start_date
+              end_date
+              address{
+                address
+                formatted_address
+              }
+              company  {
+                name
+                about
+              }
+              job_types {
+                category
+                name
+                __typename
+              }
+              to_monthly_rate
+              to_hourly_rate
+        
+              employment
+              employment_type {
+                name
+              }
             }
           }
           

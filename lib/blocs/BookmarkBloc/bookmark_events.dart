@@ -8,7 +8,6 @@ abstract class BookmarkEvents extends Equatable {
 }
 
 class FetchBookmarkData extends BookmarkEvents {
-  // final String jobId;
 
   FetchBookmarkData();
 
@@ -16,10 +15,11 @@ class FetchBookmarkData extends BookmarkEvents {
   List<Object>? get props => null;
 }
 
-class SaveJob extends BookmarkEvents {
-  // final String jobId;
 
-  SaveJob();
+class DeleteBookmark extends BookmarkEvents {
+  final String jobId;
+
+  DeleteBookmark(this.jobId);
 
   @override
   List<Object>? get props => null;

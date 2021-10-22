@@ -8,6 +8,7 @@ import './services/GraphQLService.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
+import 'blocs/BookmarkBloc/bookmark_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
 import 'config/environment.dart';
@@ -42,7 +43,8 @@ void main() async {
   var app = MultiBlocProvider(
     providers: [
       BlocProvider.value(value: notificationBloc),
-    ],
+      BlocProvider(create: (BuildContext context) => BookmarkBloc()),
+  ],
     child: GraphQLProvider(
       client: client,
       child: MyApp(),
