@@ -2,70 +2,71 @@ class GraphQlQuery{
   static String getJob(String id) {
     return """
     query job {
-      get_jobs(_id: "${id}"){
+    get_jobs(_id: "${id}"){
+      _id
+      _created_at
+      job_name
+      start_date
+      end_date
+      company  {
+        name
+        about
+      }
+      is_saved
+      education_requirement{
+        category
+        level
+        name
+      }
+      spoken_skill{
+        name
+        level
+      }
+      written_skill{
+        name
+        level
+      }
+      attributes {
+        category
+        category_display_sequence
+      }
+      allowances {
+        name
+        description
+      }
+      job_types {
+        category
+        name
+        __typename
+      }
+      to_monthly_rate
+      to_hourly_rate
+
+      employment
+      employment_type {
+        name
+      }
+      state
+      attributes {
+        category
+      }
+      address {
+        address 
+        formatted_address
+      }
+      address_on_map
+      images
+      is_applied
+      is_invited
+      to_working_days_per_week
+      to_working_hours_per_day
+      vacancy
+      working_hour{
         _id
-        _created_at
-        job_name
-        start_date
-        end_date
-        company  {
-          name
-          about
-        }
-        education_requirement{
-          category
-          level
-          name
-        }
-        spoken_skill{
-          name
-          level
-        }
-        written_skill{
-          name
-          level
-        }
-        attributes {
-          category
-          category_display_sequence
-        }
-        allowances {
-          name
-          description
-        }
-        job_types {
-          category
-          name
-          __typename
-        }
-        to_monthly_rate
-        to_hourly_rate
-  
-        employment
-        employment_type {
-          name
-        }
-        state
-        attributes {
-          category
-        }
-        address {
-          address 
-          formatted_address
-        }
-        address_on_map
-        images
-        is_applied
-        is_invited
-        to_working_days_per_week
-        to_working_hours_per_day
-        vacancy
-        working_hour{
-          _id
-          day_of_week
-          end_time
-          shift_name
-          start_time
+        day_of_week
+        end_time
+        shift_name
+        start_time
         }
       }
     }
@@ -80,7 +81,7 @@ class GraphQlQuery{
         result{
           _id
           _created_at
-              job_name
+          job_name
           company {
             name
             about
@@ -143,6 +144,65 @@ class GraphQlQuery{
     }
   """;
 
+  }
+
+  static String updateBookmark(String action, String jobId) {
+    return """
+          mutation update_bookmark(
+            \$action: BookmarkAction!, 
+            \$job_id: ID!) {
+                  update_bookmark (
+                    action: \$action
+                    job_id: \$job_id
+                  ) {
+                    total
+                    bookmarks {
+                      _created_at
+                    }
+                  }
+                }
+    """;
+  }
+
+  static String getBookmarks(int limit) {
+    return """
+      query SavedJob{
+        saved_jobs(limit:$limit) {
+          total
+          bookmarks {
+            _created_at
+            job {
+              _id
+              _created_at
+              job_name
+              start_date
+              end_date
+              address{
+                address
+                formatted_address
+              }
+              company  {
+                name
+                about
+              }
+              job_types {
+                category
+                name
+                __typename
+              }
+              to_monthly_rate
+              to_hourly_rate
+        
+              employment
+              employment_type {
+                name
+              }
+            }
+          }
+          
+        }
+      }
+    """;
   }
 
   static String SearchWithParams() {

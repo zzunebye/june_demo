@@ -10,25 +10,47 @@ import 'detail_states.dart';
 
 class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   PostRepository repository = PostRepository(client: GraphQLService());
+  StreamController<String> jobTitleController = new StreamController();
 
-  DetailBloc(GraphQLService _graphQLService) : super(DetailStates()) {
-    on<FetchDetailData>(onFetchDetailData);
+  DetailBloc(GraphQLService _graphQLService) : super(OnLoading()) {
+    on<SaveJob>(_onSaveJob);
+    on<FetchDetailData>(_onFetchDetailData);
   }
 
   DetailStates get initialState => OnLoading();
 
-  FutureOr<void> onFetchDetailData(FetchDetailData event,
-      Emitter<DetailStates> emit) async {
+  _onSaveJob(SaveJob event, Emitter<DetailStates> emit) async {
+    if (this.state is LoadDataSuccess) {
+      try {
+        final data = (this.state.props as List).first;
+        emit(OnLoading());
+        await repository.bookmarkJob(event.isSaved ? 'Remove' : 'Add', event.jobId);
+        data['get_jobs'][0]['is_saved'] = !data['get_jobs'][0]['is_saved'];
+        emit(LoadDataSuccess(data));
+      } catch (error) {
+        // TODO For implementing modal message later
+        print(error);
+      }
+    }
+  }
+
+  _onFetchDetailData(FetchDetailData event, Emitter<DetailStates> emit) async {
+    emit(OnLoading());
     try {
       final result = await repository.fetchSingleJob(event.jobId);
-      emit(LoadDataSuccess(result.data));
-    } catch (e) {
-      emit(LoadDataFail(e.toString()));
+      this.jobTitleController.add(result.data!['get_jobs'].first?['job_name']);
+      emit(LoadDataSuccess(result.data!));
+    } catch (error) {
+      emit(LoadDataFail(error));
     }
+    jobTitleController.close();
   }
 
   String convertIntToDate(int day) {
     return weeksName(weekEnum.values[day]);
   }
-}
 
+  String getWorkingHour(dynamic data) {
+    return '${data['working_hour'][0]['start_time']} - ${data['working_hour'][0]['end_time']}';
+  }
+}

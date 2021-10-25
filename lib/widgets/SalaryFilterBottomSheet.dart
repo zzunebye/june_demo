@@ -9,17 +9,15 @@ class SalaryFilterBottomSheet extends StatefulWidget {
   SalaryFilterBottomSheet(this.title);
 
   @override
-  _SalaryFilterBottomSheetState createState() =>
-      _SalaryFilterBottomSheetState();
+  _SalaryFilterBottomSheetState createState() => _SalaryFilterBottomSheetState();
 }
 
 class _SalaryFilterBottomSheetState extends State<SalaryFilterBottomSheet> {
-  double minSalary = 0;
-  double maxSalary = 99999;
+  double _minSalary = 0;
+  double _maxSalary = 0;
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -28,41 +26,38 @@ class _SalaryFilterBottomSheetState extends State<SalaryFilterBottomSheet> {
       child: Column(
         children: [
           Container(
-            child: Text(widget.title,
-                style: TextStyle(color: Colors.black, fontSize: 24)),
+            child: Text(widget.title, style: TextStyle(color: Colors.black, fontSize: 24)),
           ),
           Expanded(
             child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            maxSalary = 25000;
-                          });
-                        },
-                        child: Text("25K+")),
-                    ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            maxSalary = 45000;
-                          });
-                        },
-                        child: Text("45K+")),
-                    ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            maxSalary = 60000;
-                          });
-                        },
-                        child: Text("60K+")),
-                  ]),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _maxSalary = 25000;
+                      });
+                    },
+                    child: Text("25K+")),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _maxSalary = 45000;
+                      });
+                    },
+                    child: Text("45K+")),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _maxSalary = 60000;
+                      });
+                    },
+                    child: Text("60K+")),
+              ]),
             ),
           ),
           ElevatedButton(
               onPressed: () {
-                BlocProvider.of<SearchBloc>(context).add(UpdateWage([minSalary, maxSalary]));
+                BlocProvider.of<SearchBloc>(context).add(UpdateWage([_minSalary, _maxSalary]));
                 Navigator.pop(context);
               },
               child: Text("Confirm"))

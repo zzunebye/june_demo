@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
- class DetailStates extends Equatable {
+class DetailStates extends Equatable {
   DetailStates();
 
   @override
@@ -11,13 +11,22 @@ class OnLoading extends DetailStates {
   OnLoading() : super();
 }
 
+class OnLoadingWithData extends DetailStates {
+  final Map<String, dynamic> data;
+
+  OnLoadingWithData(this.data);
+
+  @override
+  List<Object> get props => [data];
+}
+
 class LoadDataSuccess extends DetailStates {
-  final dynamic data;
+  final Map<String, dynamic> data;
 
   LoadDataSuccess(this.data) : super();
 
   @override
-  List<Object> get props => data;
+  List<Object> get props => [data];
 }
 
 class LoadDataFail extends DetailStates {

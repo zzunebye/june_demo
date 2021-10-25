@@ -6,6 +6,7 @@ import './services/GraphQLService.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
+import 'blocs/BookmarkBloc/bookmark_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
 import 'blocs/PreferenceBloc/preference_bloc.dart';
@@ -13,7 +14,6 @@ import 'blocs/PreferenceBloc/preference_events.dart';
 import 'blocs/SearchBloc/SearchBloc.dart';
 import 'config/environment.dart';
 import 'models/preference.dart';
-import 'models/preferences.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
@@ -52,12 +52,9 @@ void main() async {
   var app = MultiBlocProvider(
     providers: [
       BlocProvider.value(value: notificationBloc),
-      BlocProvider<SearchBloc>(
-        create: (BuildContext context) => SearchBloc(),
-      ),
-      BlocProvider<PreferenceBloc>(
-        create: (BuildContext context) => PreferenceBloc()..add(LoadPreference()),
-      )
+      BlocProvider(create: (BuildContext context) => BookmarkBloc()),
+      BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc()),
+      BlocProvider<PreferenceBloc>(create: (BuildContext context) => PreferenceBloc()..add(LoadPreference()))
     ],
     child: GraphQLProvider(client: client, child: MyApp()),
   );
