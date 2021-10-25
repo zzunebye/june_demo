@@ -4,8 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/providers/preferences.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:provider/provider.dart';
-import './services/GraphQLService.dart';
+import './services/graphql_service_deprecated.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
@@ -19,6 +20,7 @@ import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
 
 import 'pages/setting_page/setting_page.dart';
+import 'services/graphql_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final _messangerKey = GlobalKey<ScaffoldMessengerState>();
@@ -42,18 +44,24 @@ void main() async {
   final GraphQLService gqlService = GraphQLService();
   await gqlService.init(apiHost);
 
+  final GraphQlService graphqlService = GraphQlService();
+  await graphqlService.init(apiHost);
+
+
   ValueNotifier<GraphQLClient> client = ValueNotifier(gqlService.client);
 
   await Hive.openBox('resentSearchBox');
 
-  var app = MultiBlocProvider(
+  var app = MultiRepositoryProvider(
     providers: [
-      BlocProvider.value(value: notificationBloc),
-      BlocProvider(create: (BuildContext context) => BookmarkBloc()),
-      BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc())
+      RepositoryProvider<PostRepository>(create: (context) => PostRepository(graphqlService)),
     ],
-    child: GraphQLProvider(
-      client: client,
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: notificationBloc),
+        BlocProvider<BookmarkBloc>(create: (BuildContext context) => BookmarkBloc()),
+        BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc())
+      ],
       child: MyApp(),
     ),
   );
@@ -78,18 +86,15 @@ class _MyAppState extends State<MyApp> {
         if (state is JobDetailNotificationState) {
           final snackBar = SnackBar(
             content: state.notificationInfo.getForeground
-                ? Text(
-                    'Are you interested in ${state.notificationInfo.dataBody!['job_name']}?')
-                : Text(
-                    'You are checking ${state.notificationInfo.dataBody!['job_name']}'),
+                ? Text('Are you interested in ${state.notificationInfo.dataBody!['job_name']}?')
+                : Text('You are checking ${state.notificationInfo.dataBody!['job_name']}'),
             action: state.notificationInfo.getForeground
                 ? SnackBarAction(
                     label: 'Check!',
                     onPressed: () {
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) => JobDetailPage(
-                              state.notificationInfo.dataBody!['id']),
+                          builder: (context) => JobDetailPage(state.notificationInfo.dataBody!['id']),
                         ),
                       );
                     },
@@ -114,12 +119,10 @@ class _MyAppState extends State<MyApp> {
           scaffoldMessengerKey: _messangerKey,
           routes: {
             '/': (context) => JobListPage(title: 'Main'),
-            PreferencePage.routeName: (context) =>
-                PreferencePage(title: 'Preference'),
+            PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
             JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
             JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
-            JobSearchPage.routeName: (context) =>
-                JobSearchPage(title: "Job Searching", searchCategory: ''),
+            JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
             SavedJobPage.routeName: (context) => SavedJobPage(),
             SettingPage.routeName: (context) => SettingPage(),
           },

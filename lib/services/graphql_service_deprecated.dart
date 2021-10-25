@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:graphql/client.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:moovup_demo/helpers/api.dart';
+import 'package:moovup_demo/services/service.dart';
 
 class GraphQLService {
   late GraphQLClient _client;

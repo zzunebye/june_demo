@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_bloc.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_events.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/services/graphql_service_deprecated.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 import 'package:moovup_demo/widgets/job_list.dart';
 

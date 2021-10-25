@@ -1,12 +1,14 @@
 import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
-import '../services/GraphQLService.dart';
+import 'package:moovup_demo/services/service.dart';
+import '../services/graphql_service_deprecated.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class PostRepository {
+// deprecated
+class JobRepository {
   final GraphQLService client;
 
-  PostRepository({
+  JobRepository({
     required this.client,
   });
 
@@ -80,5 +82,37 @@ class PostRepository {
     } else {
       return results;
     }
+  }
+}
+
+class PostRepository {
+  IService _dataService;
+
+  PostRepository(this._dataService);
+
+  getJobPosts(int limit) {
+    _dataService.getJobPosts(limit);
+  }
+
+  getSingleJobDetail(String id) {
+    try {
+      final result = _dataService.getSingleJobDetail(id);
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  getBookmarkJob(jobId, limit) {
+    try {
+      final result = _dataService.getBookmarkJob(jobId, limit);
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  bookmarkJob(action, jobId) {
+    _dataService.bookmarkJob(action, jobId);
   }
 }

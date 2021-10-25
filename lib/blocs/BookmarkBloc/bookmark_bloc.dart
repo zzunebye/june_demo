@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/services/graphql_service_deprecated.dart';
 
 import 'bookmark_events.dart';
 import 'bookmark_states.dart';
 
 class BookmarkBloc extends Bloc<BookmarkEvents, BookmarkStates> {
-  late PostRepository repository;
+  late JobRepository repository;
 
   BookmarkBloc() : super(OnLoading()) {
-    this.repository = PostRepository(client: GraphQLService());
+    this.repository = JobRepository(client: GraphQLService());
     on<DeleteBookmark>(_onSaveJob);
     on<FetchBookmarkData>(_onFetchBookmarkData);
   }

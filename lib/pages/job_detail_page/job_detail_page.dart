@@ -5,7 +5,7 @@ import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_states.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/services/graphql_service_deprecated.dart';
 
 class JobDetailPage extends StatefulWidget {
   static const routeName = 'job-detail';

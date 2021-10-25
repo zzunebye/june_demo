@@ -6,16 +6,16 @@ import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/services/graphql_service_deprecated.dart';
 
 class SearchBloc extends Bloc<SearchEvents, SearchStates> {
-  late PostRepository repository;
+  late JobRepository repository;
   late final Box _recentSearchBox;
 
   Box get recentSearchBox => _recentSearchBox;
 
   SearchBloc() : super(EmptyState(SearchOptionData.empty())) {
-    this.repository = PostRepository(client: GraphQLService());
+    this.repository = JobRepository(client: GraphQLService());
     this._recentSearchBox = Hive.box('resentSearchBox');
     on<FetchSearchData>(onFetchSearchData);
     on<ResetSearch>(onResetSearch);

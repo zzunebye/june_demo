@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/helpers/enum.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/services/graphql_service_deprecated.dart';
 
 import 'detail_events.dart';
 import 'detail_states.dart';
 
 class DetailBloc extends Bloc<DetailEvents, DetailStates> {
-  PostRepository repository = PostRepository(client: GraphQLService());
+  JobRepository repository = JobRepository(client: GraphQLService());
   StreamController<String> jobTitleController = new StreamController();
 
   DetailBloc(GraphQLService _graphQLService) : super(OnLoading()) {
