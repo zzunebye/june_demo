@@ -20,7 +20,7 @@ class PreferenceList extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(bottom: 15),
-            child: Text('${title}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           ),
           Container(
             child: Center(

@@ -20,7 +20,7 @@ class PreferenceBloc extends Bloc<PreferenceEvents, PreferenceStates> {
 
   List<Preference> get prefData => _prefData;
 
-  PreferenceBloc() : super(EmptyState()) {
+  PreferenceBloc() : super(PreferenceLoading()) {
     this._prefBoxs = Hive.box('seekerPrefBox');
     on<LoadPreference>(onLoadPreference);
     on<PillTapped>(onPillTapped);

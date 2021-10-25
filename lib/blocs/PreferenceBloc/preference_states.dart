@@ -8,6 +8,10 @@ class PreferenceStates extends Equatable {
   List<Object> get props => [];
 }
 
+// NOTE: When the bloc is created, EmptyState is passed to the bloc constructor.
+class EmptyState extends PreferenceStates {
+  EmptyState() : super();
+}
 class PreferenceLoading extends PreferenceStates {}
 
 class PreferenceLoaded extends PreferenceStates {
@@ -28,6 +32,4 @@ class PreferenceLoaded extends PreferenceStates {
   }
 }
 
-class EmptyState extends PreferenceStates {
-  EmptyState() : super();
-}
+
