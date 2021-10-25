@@ -1,8 +1,8 @@
 class GraphQlQuery{
-  static String getJob(String id) {
+  static String getJob() {
     return """
-    query job {
-    get_jobs(_id: "${id}"){
+    query job(\$ids: [ID]) {
+    get_jobs(_id: \$ids){
       _id
       _created_at
       job_name
@@ -73,10 +73,10 @@ class GraphQlQuery{
     """;
   }
 
-  static String getAllJobs(int limit) {
+  static String getAllJobs() {
     return """
-    query job {
-      job_search (limit: $limit){
+    query job (\$limit: Int){
+      job_search (limit: \$limit){
         total
         result{
           _id
@@ -146,7 +146,7 @@ class GraphQlQuery{
 
   }
 
-  static String updateBookmark(String action, String jobId) {
+  static String updateBookmark() {
     return """
           mutation update_bookmark(
             \$action: BookmarkAction!, 
@@ -164,10 +164,10 @@ class GraphQlQuery{
     """;
   }
 
-  static String getBookmarks(int limit) {
+  static String getBookmarks() {
     return """
-      query SavedJob{
-        saved_jobs(limit:$limit) {
+      query SavedJob(\$limit){
+        saved_jobs(limit:\$limit) {
           total
           bookmarks {
             _created_at

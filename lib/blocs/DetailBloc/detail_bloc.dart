@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/helpers/enum.dart';
-import 'package:moovup_demo/repositories/job_post.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
 import 'detail_events.dart';

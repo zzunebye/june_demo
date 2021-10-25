@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moovup_demo/repositories/job_post.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
 import 'home_events.dart';

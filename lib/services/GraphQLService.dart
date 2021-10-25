@@ -40,7 +40,11 @@ class GraphQLService {
 
   GraphQLClient get client => _client;
 
-  Future<QueryResult> performQuery(String query, {variable = const <String, dynamic>{}, forceNetworkOnly = false}) async {
+  Future<QueryResult> performQuery(
+    String query, {
+    variable = const <String, dynamic>{},
+    forceNetworkOnly = false,
+  }) async {
     QueryOptions options = QueryOptions(
       document: gql(query),
       variables: variable,
@@ -69,5 +73,4 @@ class GraphQLService {
 
     return result;
   }
-
 }

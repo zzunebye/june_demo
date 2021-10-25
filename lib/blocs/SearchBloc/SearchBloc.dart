@@ -5,7 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
-import 'package:moovup_demo/repositories/job_post.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:moovup_demo/services/GraphQLService.dart';
 
 class SearchBloc extends Bloc<SearchEvents, SearchStates> {

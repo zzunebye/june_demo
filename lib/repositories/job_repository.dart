@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:moovup_demo/helpers/api.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
 import '../services/GraphQLService.dart';
@@ -13,7 +11,9 @@ class PostRepository {
   });
 
   Future<QueryResult> fetchJobPosts() async {
-    final QueryResult results = await client.performQuery(GraphQlQuery.getAllJobs(10));
+    final QueryResult results = await client.performQuery(GraphQlQuery.getAllJobs(), variable: {
+      "limit": 5,
+    });
 
     if (results.hasException) {
       throw results.exception!;
@@ -23,7 +23,12 @@ class PostRepository {
   }
 
   Future<QueryResult> fetchSingleJob(String id) async {
-    final QueryResult results = await client.performQuery(GraphQlQuery.getJob(id));
+    final QueryResult results = await client.performQuery(
+      GraphQlQuery.getJob(),
+      variable: {
+        "ids": [id],
+      },
+    );
 
     if (results.hasException) {
       throw results.exception!;
@@ -33,7 +38,7 @@ class PostRepository {
   }
 
   Future<QueryResult> fetchBookmarkJob(int limit) async {
-    final QueryResult results = await client.performQuery(GraphQlQuery.getBookmarks(limit), forceNetworkOnly: true);
+    final QueryResult results = await client.performQuery(GraphQlQuery.getBookmarks(), forceNetworkOnly: true);
 
     if (results.hasException) {
       throw results.exception!;
@@ -44,7 +49,7 @@ class PostRepository {
 
   Future<QueryResult> bookmarkJob(String action, String jobId) async {
     final QueryOptions options = QueryOptions(
-      document: gql(GraphQlQuery.updateBookmark(action, jobId)),
+      document: gql(GraphQlQuery.updateBookmark()),
       variables: <String, dynamic>{
         'action': action,
         'job_id': jobId,
@@ -60,8 +65,7 @@ class PostRepository {
     }
   }
 
-  Future<QueryResult> SearchJobWithOptions(
-      SearchOptionData searchOptionData) async {
+  Future<QueryResult> SearchJobWithOptions(SearchOptionData searchOptionData) async {
     final QueryResult results = await client.performQueryWithVars(
       query: GraphQlQuery.SearchWithParams(),
       variables: {
