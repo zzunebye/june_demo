@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
@@ -6,11 +5,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/providers/preferences.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:provider/provider.dart';
-import './services/graphql_service_deprecated.dart';
-
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'blocs/BookmarkBloc/bookmark_bloc.dart';
+import 'blocs/HomeBloc/home_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
 import 'blocs/SearchBloc/SearchBloc.dart';
@@ -18,7 +15,6 @@ import 'config/environment.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
-
 import 'pages/setting_page/setting_page.dart';
 import 'services/graphql_service.dart';
 
@@ -40,15 +36,9 @@ void main() async {
 
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
-
-  final GraphQLService gqlService = GraphQLService();
-  await gqlService.init(apiHost);
-
+  //
   final GraphQlService graphqlService = GraphQlService();
   await graphqlService.init(apiHost);
-
-
-  ValueNotifier<GraphQLClient> client = ValueNotifier(gqlService.client);
 
   await Hive.openBox('resentSearchBox');
 
@@ -59,8 +49,9 @@ void main() async {
     child: MultiBlocProvider(
       providers: [
         BlocProvider.value(value: notificationBloc),
-        BlocProvider<BookmarkBloc>(create: (BuildContext context) => BookmarkBloc()),
-        BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc())
+        BlocProvider<BookmarkBloc>(create: (BuildContext context) => BookmarkBloc(RepositoryProvider.of<PostRepository>(context))),
+        BlocProvider<HomeBloc>(create: (BuildContext context) => HomeBloc(RepositoryProvider.of<PostRepository>(context))),
+        BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc(RepositoryProvider.of<PostRepository>(context)))
       ],
       child: MyApp(),
     ),

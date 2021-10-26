@@ -25,13 +25,13 @@ class _JobSearchPageState extends State<JobSearchPage> {
   @override
   void initState() {
     super.initState();
-    _searchBloc = SearchBloc();
+    _searchBloc = BlocProvider.of<SearchBloc>(context);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _searchBloc.close();
+    // _searchBloc.close();
   }
 
   @override

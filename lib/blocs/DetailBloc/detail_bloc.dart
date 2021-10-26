@@ -3,16 +3,15 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/helpers/enum.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
-import 'package:moovup_demo/services/graphql_service_deprecated.dart';
 
 import 'detail_events.dart';
 import 'detail_states.dart';
 
 class DetailBloc extends Bloc<DetailEvents, DetailStates> {
-  JobRepository repository = JobRepository(client: GraphQLService());
+  final PostRepository jobRepository;
   StreamController<String> jobTitleController = new StreamController();
 
-  DetailBloc(GraphQLService _graphQLService) : super(OnLoading()) {
+  DetailBloc(this.jobRepository) : super(OnLoading()) {
     on<SaveJob>(_onSaveJob);
     on<FetchDetailData>(_onFetchDetailData);
   }
@@ -24,7 +23,7 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
       try {
         final data = (this.state.props as List).first;
         emit(OnLoading());
-        await repository.bookmarkJob(event.isSaved ? 'Remove' : 'Add', event.jobId);
+        await jobRepository.bookmarkJob(event.isSaved ? 'Remove' : 'Add', event.jobId);
         data['get_jobs'][0]['is_saved'] = !data['get_jobs'][0]['is_saved'];
         emit(LoadDataSuccess(data));
       } catch (error) {
@@ -37,7 +36,7 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   _onFetchDetailData(FetchDetailData event, Emitter<DetailStates> emit) async {
     emit(OnLoading());
     try {
-      final result = await repository.fetchSingleJob(event.jobId);
+      final result = await jobRepository.getSingleJobDetail(event.jobId);
       this.jobTitleController.add(result.data!['get_jobs'].first?['job_name']);
       emit(LoadDataSuccess(result.data!));
     } catch (error) {

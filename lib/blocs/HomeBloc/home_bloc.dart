@@ -1,18 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
-import 'package:moovup_demo/services/graphql_service_deprecated.dart';
-
 import 'home_events.dart';
 import 'home_states.dart';
 
 class HomeBloc extends Bloc<HomeEvents, HomeStates> {
-  late GraphQLService service = GraphQLService();
-  late JobRepository repository;
+  late PostRepository jobRepository;
 
-  HomeBloc(GraphQLService _graphQLService) : super(HomeStates()) {
-    this.service = GraphQLService();
-    this.repository = JobRepository(client: service);
-  }
+  HomeBloc(this.jobRepository) : super(HomeStates()) {}
 
   HomeStates get initialState => OnLoading();
 
@@ -24,14 +18,11 @@ class HomeBloc extends Bloc<HomeEvents, HomeStates> {
   }
 
   Stream<HomeStates> _mapFetchHomeDataToStates(FetchHomeData event) async* {
-
     try {
-      final result = await repository.fetchJobPosts();
+      final result = await jobRepository.getJobPosts(10);
       yield LoadDataSuccess(result.data);
     } catch (e) {
       yield LoadDataFail(e.toString());
     }
   }
-
 }
-

@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/helpers/api.dart';
+import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/services/service.dart';
 import 'package:http/http.dart' as http;
-
 
 class GraphQlService extends IService {
   late GraphQLClient _client;
@@ -68,10 +68,10 @@ class GraphQlService extends IService {
     }
   }
 
-  getBookmarkJob(String action, int limit) async {
+  getBookmarkJob(int limit) async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQlQuery.getBookmarks()),
-      variables: <String, dynamic>{'action': action, 'limit': limit},
+      variables: <String, dynamic>{'limit': limit},
     );
 
     final QueryResult result = await _client.query(options);
@@ -89,6 +89,25 @@ class GraphQlService extends IService {
       variables: <String, dynamic>{
         'action': action,
         'job_id': jobId,
+      },
+    );
+
+    final QueryResult result = await _client.query(options);
+
+    if (result.hasException) {
+      throw result.exception!;
+    } else {
+      return result;
+    }
+  }
+
+  searchJobWithOptions(SearchOptionData searchOptionData) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(GraphQlQuery.SearchWithParams()),
+      variables: <String, dynamic>{
+        "limit": searchOptionData.limit,
+        "monthly_rate": searchOptionData.monthly_rate,
+        "term": searchOptionData.term,
       },
     );
 
