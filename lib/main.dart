@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:moovup_demo/providers/preferences.dart';
+import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
+
 import 'package:moovup_demo/repositories/job_repository.dart';
-import 'package:provider/provider.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'blocs/BookmarkBloc/bookmark_bloc.dart';
 import 'blocs/HomeBloc/home_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
+import 'blocs/PreferenceBloc/preference_bloc.dart';
+import 'blocs/PreferenceBloc/preference_events.dart';
 import 'blocs/SearchBloc/SearchBloc.dart';
 import 'config/environment.dart';
+import 'models/preference.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
@@ -40,7 +42,12 @@ void main() async {
   final GraphQlService graphqlService = GraphQlService();
   await graphqlService.init(apiHost);
 
+  Hive.registerAdapter(PreferenceAdapter());
+
   await Hive.openBox('resentSearchBox');
+  await Hive.openBox('seekerPrefBox');
+
+
 
   var app = MultiRepositoryProvider(
     providers: [
@@ -51,7 +58,8 @@ void main() async {
         BlocProvider.value(value: notificationBloc),
         BlocProvider<BookmarkBloc>(create: (BuildContext context) => BookmarkBloc(RepositoryProvider.of<PostRepository>(context))),
         BlocProvider<HomeBloc>(create: (BuildContext context) => HomeBloc(RepositoryProvider.of<PostRepository>(context))),
-        BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc(RepositoryProvider.of<PostRepository>(context)))
+        BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc(RepositoryProvider.of<PostRepository>(context))),
+        BlocProvider<PreferenceBloc>(create: (BuildContext context) => PreferenceBloc()..add(LoadPreference())),
       ],
       child: MyApp(),
     ),
@@ -85,7 +93,8 @@ class _MyAppState extends State<MyApp> {
                     onPressed: () {
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) => JobDetailPage(state.notificationInfo.dataBody!['id']),
+                          builder: (context) => JobDetailPage(
+                              state.notificationInfo.dataBody!['id']),
                         ),
                       );
                     },
@@ -101,39 +110,36 @@ class _MyAppState extends State<MyApp> {
           _messangerKey.currentState!.showSnackBar(snackBar);
         }
       },
-      child: ChangeNotifierProvider(
-        create: (ctx) => Preferences(),
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          initialRoute: '/',
-          navigatorKey: navigatorKey,
-          scaffoldMessengerKey: _messangerKey,
-          routes: {
-            '/': (context) => JobListPage(title: 'Main'),
-            PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
-            JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
-            JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
-            JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
-            SavedJobPage.routeName: (context) => SavedJobPage(),
-            SettingPage.routeName: (context) => SettingPage(),
-          },
-          theme: ThemeData(
-            primarySwatch: Colors.deepPurple,
-            accentColor: Colors.amber,
-            errorColor: Colors.red,
-            canvasColor: Color.fromRGBO(255, 254, 229, 1),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        initialRoute: '/',
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: _messangerKey,
+        routes: {
+          '/': (context) => JobListPage(title: 'Main'),
+          PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
+          JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
+          JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
+          SavedJobPage.routeName: (context) => SavedJobPage(),
+          JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
+          SettingPage.routeName: (context) => SettingPage(),
+        },
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+          accentColor: Colors.amber,
+          errorColor: Colors.red,
+          canvasColor: Color.fromRGBO(255, 254, 229, 1),
+          textTheme: ThemeData.light().textTheme.copyWith(
+              headline5: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              button: TextStyle(color: Colors.white)),
+          appBarTheme: AppBarTheme(
             textTheme: ThemeData.light().textTheme.copyWith(
-                headline5: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-                button: TextStyle(color: Colors.white)),
-            appBarTheme: AppBarTheme(
-              textTheme: ThemeData.light().textTheme.copyWith(
-                    headline5: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  headline5: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
             ),
           ),
