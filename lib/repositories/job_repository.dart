@@ -4,13 +4,11 @@ import 'package:moovup_demo/services/service.dart';
 class PostRepository {
   final IJobService _dataService;
 
-  PostRepository(this._dataService) ;
+  PostRepository(this._dataService);
 
   getJobPosts(int limit) {
     try {
-      final result = _dataService.getJobPosts(limit);
-
-      return result;
+      return _dataService.getJobPosts(limit);
     } catch (e) {
       throw e;
     }
@@ -18,8 +16,7 @@ class PostRepository {
 
   getSingleJobDetail(String id) {
     try {
-      final result = _dataService.getSingleJobDetail(id);
-      return result;
+      return _dataService.getSingleJobDetail(id);
     } catch (e) {
       throw e;
     }
@@ -27,8 +24,7 @@ class PostRepository {
 
   getBookmarkJob(int limit) {
     try {
-      final result = _dataService.getBookmarkJob(limit);
-      return result;
+      return _dataService.getBookmarkJob(limit);
     } catch (e) {
       throw e;
     }
@@ -36,8 +32,7 @@ class PostRepository {
 
   bookmarkJob(String action, String jobId) {
     try {
-      final result = _dataService.bookmarkJob(action, jobId);
-      return result;
+      return _dataService.bookmarkJob(action, jobId);
     } catch (e) {
       throw e;
     }
@@ -45,8 +40,7 @@ class PostRepository {
 
   searchJobWithOptions(SearchOptionData searchOptionData) async {
     try {
-      final result = _dataService.searchJobWithOptions(searchOptionData);
-      return result;
+      return _dataService.searchJobWithOptions(searchOptionData);
     } catch (e) {
       throw e;
     }

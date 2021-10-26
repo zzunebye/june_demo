@@ -29,12 +29,6 @@ class _JobSearchPageState extends State<JobSearchPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    // _searchBloc.close();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var _termController = TextEditingController();
 
