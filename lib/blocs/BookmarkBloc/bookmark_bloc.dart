@@ -12,7 +12,7 @@ class BookmarkBloc extends Bloc<BookmarkEvents, BookmarkStates> {
     on<FetchBookmarkData>(_onFetchBookmarkData);
   }
 
-  // TODO: Make Bookmark item deleteable in Bookmark page
+  // TODO: Make Bookmark item deletable in Bookmark page
   _onSaveJob(DeleteBookmark event, Emitter<BookmarkStates> emit) async {
     if (this.state is LoadDataSuccess) {
       try {

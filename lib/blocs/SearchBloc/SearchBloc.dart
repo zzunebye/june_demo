@@ -8,13 +8,12 @@ import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
 
 class SearchBloc extends Bloc<SearchEvents, SearchStates> {
-  late PostRepository jobRepository;
-  late final Box _recentSearchBox;
+  final PostRepository jobRepository;
+  final Box _recentSearchBox;
 
   Box get recentSearchBox => _recentSearchBox;
 
-  SearchBloc(this.jobRepository) : super(EmptyState(SearchOptionData.empty())) {
-    this._recentSearchBox = Hive.box('resentSearchBox');
+  SearchBloc(this.jobRepository, this._recentSearchBox) : super(EmptyState(SearchOptionData.empty())) {
     on<FetchSearchData>(onFetchSearchData);
     on<ResetSearch>(onResetSearch);
     on<UpdateWage>(onUpdateWage);

@@ -36,12 +36,9 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
-
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
-  final HiveService hiveService = HiveService({
-    "Preference": PreferenceAdapter()
-  });
+  final HiveService hiveService = HiveService({"Preference": PreferenceAdapter()});
 
   final GraphQLService graphqlService = GraphQLService();
   await graphqlService.init(apiHost);
@@ -53,12 +50,21 @@ void main() async {
     ],
     child: MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: notificationBloc),
-        BlocProvider<BookmarkBloc>(create: (BuildContext context) => BookmarkBloc(RepositoryProvider.of<PostRepository>(context))),
-        BlocProvider<HomeBloc>(create: (BuildContext context) => HomeBloc(RepositoryProvider.of<PostRepository>(context))),
-        BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc(RepositoryProvider.of<PostRepository>(context))),
-        BlocProvider<PreferenceBloc>(create: (BuildContext context) => PreferenceBloc(RepositoryProvider.of<PrefRepository>(context))..add
-          (LoadPreference())),
+        BlocProvider.value(
+          value: notificationBloc,
+        ),
+        BlocProvider<BookmarkBloc>(
+          create: (BuildContext context) => BookmarkBloc(RepositoryProvider.of<PostRepository>(context)),
+        ),
+        BlocProvider<HomeBloc>(
+          create: (BuildContext context) => HomeBloc(RepositoryProvider.of<PostRepository>(context)),
+        ),
+        BlocProvider<SearchBloc>(
+          create: (BuildContext context) => SearchBloc(RepositoryProvider.of<PostRepository>(context), Hive.box('resentSearchBox')),
+        ),
+        BlocProvider<PreferenceBloc>(
+          create: (BuildContext context) => PreferenceBloc(RepositoryProvider.of<PrefRepository>(context))..add(LoadPreference()),
+        ),
       ],
       child: MyApp(),
     ),
@@ -81,7 +87,6 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-
   int _messageCount = 0;
 
   @override
@@ -99,8 +104,7 @@ class _MyAppState extends State<MyApp> {
                     onPressed: () {
                       navigatorKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) => JobDetailPage(
-                              state.notificationInfo.dataBody!['id']),
+                          builder: (context) => JobDetailPage(state.notificationInfo.dataBody!['id']),
                         ),
                       );
                     },
@@ -147,7 +151,7 @@ class _MyAppState extends State<MyApp> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
-            ),
+                ),
           ),
         ),
       ),
