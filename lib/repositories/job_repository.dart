@@ -2,9 +2,9 @@ import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/services/service.dart';
 
 class PostRepository {
-  final IService _dataService;
+  final IJobService _dataService;
 
-  PostRepository(this._dataService);
+  PostRepository(this._dataService) ;
 
   getJobPosts(int limit) {
     try {

@@ -6,7 +6,7 @@ import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/services/service.dart';
 import 'package:http/http.dart' as http;
 
-class GraphQlService extends IService {
+class GraphQLService extends IJobService {
   late GraphQLClient _client;
 
   init(apiHost) async {

@@ -18,7 +18,9 @@ import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
 import 'pages/setting_page/setting_page.dart';
+import 'repositories/preference_repository.dart';
 import 'services/graphql_service.dart';
+import 'services/hive_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final _messangerKey = GlobalKey<ScaffoldMessengerState>();
@@ -34,24 +36,20 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
-  await Hive.initFlutter();
 
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
-  //
-  final GraphQlService graphqlService = GraphQlService();
+  final HiveService hiveService = HiveService({
+    "Preference": PreferenceAdapter()
+  });
+
+  final GraphQLService graphqlService = GraphQLService();
   await graphqlService.init(apiHost);
-
-  Hive.registerAdapter(PreferenceAdapter());
-
-  await Hive.openBox('resentSearchBox');
-  await Hive.openBox('seekerPrefBox');
-
-
 
   var app = MultiRepositoryProvider(
     providers: [
       RepositoryProvider<PostRepository>(create: (context) => PostRepository(graphqlService)),
+      RepositoryProvider<PrefRepository>(create: (context) => PrefRepository(hiveService)),
     ],
     child: MultiBlocProvider(
       providers: [
@@ -59,7 +57,8 @@ void main() async {
         BlocProvider<BookmarkBloc>(create: (BuildContext context) => BookmarkBloc(RepositoryProvider.of<PostRepository>(context))),
         BlocProvider<HomeBloc>(create: (BuildContext context) => HomeBloc(RepositoryProvider.of<PostRepository>(context))),
         BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc(RepositoryProvider.of<PostRepository>(context))),
-        BlocProvider<PreferenceBloc>(create: (BuildContext context) => PreferenceBloc()..add(LoadPreference())),
+        BlocProvider<PreferenceBloc>(create: (BuildContext context) => PreferenceBloc(RepositoryProvider.of<PrefRepository>(context))..add
+          (LoadPreference())),
       ],
       child: MyApp(),
     ),
@@ -75,6 +74,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {}
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
 
   int _messageCount = 0;
 
