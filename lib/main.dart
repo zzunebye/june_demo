@@ -1,13 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
-import './services/GraphQLService.dart';
 
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'blocs/BookmarkBloc/bookmark_bloc.dart';
+import 'blocs/HomeBloc/home_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
 import 'blocs/PreferenceBloc/preference_bloc.dart';
@@ -18,8 +17,10 @@ import 'models/preference.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
-
 import 'pages/setting_page/setting_page.dart';
+import 'repositories/preference_repository.dart';
+import 'services/graphql_service.dart';
+import 'services/hive_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final _messangerKey = GlobalKey<ScaffoldMessengerState>();
@@ -35,32 +36,39 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
-  await Hive.initFlutter();
-
   Environment().initConfig(environment);
   final String apiHost = Environment().config.apiHost;
+  final HiveService hiveService = HiveService({"Preference": PreferenceAdapter()});
 
-  final GraphQLService gqlService = GraphQLService();
-  await gqlService.init(apiHost);
+  final GraphQLService graphqlService = GraphQLService();
+  await graphqlService.init(apiHost);
 
-  ValueNotifier<GraphQLClient> client = ValueNotifier(gqlService.client);
-
-  Hive.registerAdapter(PreferenceAdapter());
-
-  await Hive.openBox('resentSearchBox');
-  await Hive.openBox('seekerPrefBox');
-
-  var app = MultiBlocProvider(
+  var app = MultiRepositoryProvider(
     providers: [
-      BlocProvider.value(value: notificationBloc),
-      BlocProvider(create: (BuildContext context) => BookmarkBloc()),
-      BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc()),
-      BlocProvider<PreferenceBloc>(create: (BuildContext context) => PreferenceBloc()..add(LoadPreference()))
+      RepositoryProvider<PostRepository>(create: (context) => PostRepository(graphqlService)),
+      RepositoryProvider<PrefRepository>(create: (context) => PrefRepository(hiveService)),
     ],
-    child: GraphQLProvider(client: client, child: MyApp()),
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: notificationBloc,
+        ),
+        BlocProvider<BookmarkBloc>(
+          create: (BuildContext context) => BookmarkBloc(RepositoryProvider.of<PostRepository>(context)),
+        ),
+        BlocProvider<HomeBloc>(
+          create: (BuildContext context) => HomeBloc(RepositoryProvider.of<PostRepository>(context)),
+        ),
+        BlocProvider<SearchBloc>(
+          create: (BuildContext context) => SearchBloc(RepositoryProvider.of<PostRepository>(context), Hive.box('resentSearchBox')),
+        ),
+        BlocProvider<PreferenceBloc>(
+          create: (BuildContext context) => PreferenceBloc(RepositoryProvider.of<PrefRepository>(context))..add(LoadPreference()),
+        ),
+      ],
+      child: MyApp(),
+    ),
   );
-  // runApp(app);
-
   runApp(app);
 }
 
@@ -72,6 +80,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {}
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
+  int _messageCount = 0;
 
   @override
   Widget build(BuildContext context) {

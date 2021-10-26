@@ -17,7 +17,7 @@ class LoadDataSuccess extends HomeStates {
   LoadDataSuccess(this.data) : super();
 
   @override
-  List<Object> get props => data;
+  List<Object> get props => [data];
 }
 
 class LoadDataFail extends HomeStates {

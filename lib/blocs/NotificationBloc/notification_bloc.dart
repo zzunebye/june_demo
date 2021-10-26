@@ -1,4 +1,3 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -39,12 +38,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         PushNotification notification = createNotification(message, true);
-
         add(NotificationEvent(notification));
       });
     } else {
-      add(NotificationErrorEvent(
-          "You can provide permission by going into Settings later."));
+      add(NotificationErrorEvent("You can provide permission by going into Settings later."));
     }
   }
 
@@ -59,15 +56,12 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       PushNotification notification = createNotification(initialMessage, false);
     }
 
-
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       PushNotification notification = createNotification(message, false);
 
       add(NotificationEvent(notification));
     });
   }
-
-
 
   @override
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {

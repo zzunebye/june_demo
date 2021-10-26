@@ -5,18 +5,15 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchEvents.dart';
 import 'package:moovup_demo/blocs/SearchBloc/SearchStates.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
-import 'package:moovup_demo/repositories/job_post.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 
 class SearchBloc extends Bloc<SearchEvents, SearchStates> {
-  late PostRepository repository;
-  late final Box _recentSearchBox;
+  final PostRepository jobRepository;
+  final Box _recentSearchBox;
 
   Box get recentSearchBox => _recentSearchBox;
 
-  SearchBloc() : super(EmptyState(SearchOptionData.empty())) {
-    this.repository = PostRepository(client: GraphQLService());
-    this._recentSearchBox = Hive.box('resentSearchBox');
+  SearchBloc(this.jobRepository, this._recentSearchBox) : super(EmptyState(SearchOptionData.empty())) {
     on<FetchSearchData>(onFetchSearchData);
     on<ResetSearch>(onResetSearch);
     on<UpdateWage>(onUpdateWage);
@@ -36,7 +33,7 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
 
   FutureOr<void> onFetchSearchData(FetchSearchData event, Emitter<SearchStates> emit) async {
     try {
-      final searchResult = await repository.SearchJobWithOptions(this.state.searchOption);
+      final searchResult = await jobRepository.searchJobWithOptions(this.state.searchOption);
       emit(LoadDataSuccess(searchResult.data, this.state.searchOption));
     } catch (e) {
       emit(LoadDataFail(e.toString(), this.state.searchOption));
@@ -72,11 +69,10 @@ class SearchBloc extends Bloc<SearchEvents, SearchStates> {
 
   void _addSearchHive(String term) async {
     _recentSearchBox.add(term);
-    if (_recentSearchBox.values.length > 100){
+    if (_recentSearchBox.values.length > 100) {
       _recentSearchBox.deleteAt(0);
     }
   }
-
 
   void deleteSearchHive(int index) async {
     _recentSearchBox.deleteAt(index);

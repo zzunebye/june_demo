@@ -14,16 +14,14 @@ class SavedJobPage extends StatefulWidget {
 }
 
 class _SavedJobPageState extends State<SavedJobPage> {
-
   @override
   void initState() {
-   BlocProvider.of<BookmarkBloc>(context)..add(FetchBookmarkData());
+    BlocProvider.of<BookmarkBloc>(context)..add(FetchBookmarkData());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Saved Jobs'),

@@ -5,7 +5,7 @@ import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_states.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 
 class JobDetailPage extends StatefulWidget {
   static const routeName = 'job-detail';
@@ -29,7 +29,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _detailBloc = DetailBloc(GraphQLService())..add(FetchDetailData(widget.jobId));
+    _detailBloc = DetailBloc(RepositoryProvider.of<PostRepository>(context))..add(FetchDetailData(widget.jobId));
   }
 
   @override

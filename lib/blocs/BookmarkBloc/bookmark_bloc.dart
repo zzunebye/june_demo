@@ -1,20 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moovup_demo/repositories/job_post.dart';
-import 'package:moovup_demo/services/GraphQLService.dart';
+import 'package:moovup_demo/repositories/job_repository.dart';
 
 import 'bookmark_events.dart';
 import 'bookmark_states.dart';
 
 class BookmarkBloc extends Bloc<BookmarkEvents, BookmarkStates> {
-  late PostRepository repository;
+  late PostRepository jobRepository;
 
-  BookmarkBloc() : super(OnLoading()) {
-    this.repository = PostRepository(client: GraphQLService());
+  BookmarkBloc(this.jobRepository) : super(OnLoading()) {
     on<DeleteBookmark>(_onSaveJob);
     on<FetchBookmarkData>(_onFetchBookmarkData);
   }
 
-  // TODO: Make Bookmark item deleteable in Bookmark page
+  // TODO: Make Bookmark item deletable in Bookmark page
   _onSaveJob(DeleteBookmark event, Emitter<BookmarkStates> emit) async {
     if (this.state is LoadDataSuccess) {
       try {
@@ -30,7 +28,7 @@ class BookmarkBloc extends Bloc<BookmarkEvents, BookmarkStates> {
     emit(OnLoading());
 
     try {
-      final result = await repository.fetchBookmarkJob(20);
+      final result = await jobRepository.getBookmarkJob(20);
       emit(LoadDataSuccess(result.data));
     } catch (error) {
       emit(LoadDataFail(error));
