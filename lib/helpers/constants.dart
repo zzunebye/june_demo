@@ -1,4 +1,4 @@
-import 'models/job_category.dart';
+import '../models/job_category.dart';
 
 const jobCategories = const [
   JobCategory(id: 'j1', title: 'Retail Shop'),

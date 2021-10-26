@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_bloc.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_states.dart';
 
-import '../dummy_data.dart';
+import '../helpers/constants.dart';
 import 'category_container.dart';
 import 'job_card.dart';
 
