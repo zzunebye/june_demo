@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_bloc.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_events.dart';
+import 'package:moovup_demo/blocs/HomeBloc/home_states.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 import 'package:moovup_demo/widgets/job_list.dart';
@@ -47,7 +48,20 @@ class _JobListState extends State<JobListPage> {
         ],
       ),
       drawer: AppDrawer(),
-      body: JobList(),
+      body: BlocBuilder<HomeBloc, HomeStates>(
+        builder: (BuildContext context, HomeStates state) {
+          if (state is OnLoading) {
+            return LinearProgressIndicator();
+          } else if (state is LoadDataFail) {
+            return Center(child: Text(state.error));
+          } else if (state is LoadDataSuccess) {
+            var data = (state).data['job_search']?['result'];
+            return JobList(data);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }
