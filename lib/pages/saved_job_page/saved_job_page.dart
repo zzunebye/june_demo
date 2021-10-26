@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_bloc.dart';
 import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_events.dart';
 import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_states.dart';
+import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/widgets/job_card.dart';
 
 class SavedJobPage extends StatefulWidget {
@@ -27,11 +28,11 @@ class _SavedJobPageState extends State<SavedJobPage> {
         title: Text('Saved Jobs'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed:() => Navigator.pop(context, false),
+          onPressed: () => Navigator.pop(context, false),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).pushNamed(JobSearchPage.routeName),
             icon: const Icon(Icons.manage_search),
             tooltip: 'Show Search Bar',
           ),
