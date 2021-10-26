@@ -57,11 +57,16 @@ class _JobDetailPageState extends State<JobDetailPage> {
     }
 
     Widget buildTimeTableRow(int day, var jobDetail) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Column(
         children: [
-          Text(_detailBloc.convertIntToDate(day), style: Theme.of(context).textTheme.bodyText1),
-          Text(_detailBloc.getWorkingHour(jobDetail))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(_detailBloc.convertIntToDate(day), style: Theme.of(context).textTheme.bodyText1),
+              Text(_detailBloc.getWorkingHour(jobDetail)),
+            ],
+          ),
+          Divider(height: 10),
         ],
       );
     }
@@ -145,17 +150,16 @@ class _JobDetailPageState extends State<JobDetailPage> {
           ),
           Container(
             width: double.infinity,
-            height: 180,
             child: Card(
               margin: const EdgeInsets.all(10.0),
               elevation: 5,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('TimeTable', style: Theme.of(context).textTheme.headline6),
+                    SizedBox(height: 10),
                     ...jobDetail['working_hour'][0]['day_of_week'].map((day) => buildTimeTableRow(day, jobDetail)).toList(),
                   ],
                 ),
@@ -164,7 +168,6 @@ class _JobDetailPageState extends State<JobDetailPage> {
           ),
           Container(
             width: double.infinity,
-            // height: 180,
             child: Card(
               margin: const EdgeInsets.all(10.0),
               elevation: 3,
