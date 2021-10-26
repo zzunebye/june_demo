@@ -22,9 +22,9 @@ class HiveService implements IPrefService {
     try {
       final _prefBox = Hive.box('seekerPrefBox');
 
-      if (_prefBox.isEmpty || !_prefBox.containsKey('myPref')) _prefBox.put('myPref', emptyPrefValue);
+      if (_prefBox.isEmpty || !_prefBox.containsKey('myPref')) return _prefBox.put('myPref', emptyPrefValue);
 
-      return Hive.box('seekerPrefBox').get('myPref').cast<Preference>();
+      return _prefBox.get('myPref').cast<Preference>();
     } catch (e) {
       throw (e);
     }
