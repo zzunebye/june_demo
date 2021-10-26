@@ -159,6 +159,10 @@ class _JobSearchPageState extends State<JobSearchPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          ),
         ),
         body: Container(
           child: SingleChildScrollView(

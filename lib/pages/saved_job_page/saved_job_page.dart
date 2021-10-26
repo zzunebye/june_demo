@@ -25,6 +25,10 @@ class _SavedJobPageState extends State<SavedJobPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Saved Jobs'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed:() => Navigator.pop(context, false),
+        ),
         actions: [
           IconButton(
             onPressed: () {},

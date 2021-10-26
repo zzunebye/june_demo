@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:moovup_demo/pages/history_page/history_page.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 
 import 'package:moovup_demo/repositories/job_repository.dart';
@@ -131,6 +132,7 @@ class _MyAppState extends State<MyApp> {
           JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
           JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
           SavedJobPage.routeName: (context) => SavedJobPage(),
+          HistoryPage.routeName: (context) => HistoryPage(),
           JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
           SettingPage.routeName: (context) => SettingPage(),
         },
