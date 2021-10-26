@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 import './services/GraphQLService.dart';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -113,6 +114,7 @@ class _MyAppState extends State<MyApp> {
           PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
           JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
           JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
+          SavedJobPage.routeName: (context) => SavedJobPage(),
           JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
           SettingPage.routeName: (context) => SettingPage(),
         },
