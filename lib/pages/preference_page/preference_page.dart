@@ -34,6 +34,10 @@ class _PreferencePageState extends State<PreferencePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed:() => Navigator.pop(context, false),
+        ),
       ),
       drawer: AppDrawer(),
       body: SingleChildScrollView(
@@ -61,7 +65,7 @@ class _PreferencePageState extends State<PreferencePage> {
                           child: IconButton(
                             onPressed: () {
                               _bloc.savePreference(state.myPrefList);
-                              Navigator.pushNamed(context, '/');
+                              Navigator.of(context).pushNamedAndRemoveUntil('/', ModalRoute.withName('/'));
                             },
                             iconSize: 40,
                             color: Colors.purple,

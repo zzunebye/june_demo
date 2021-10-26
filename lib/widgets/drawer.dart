@@ -1,4 +1,7 @@
+
 import 'package:flutter/material.dart';
+import 'package:moovup_demo/pages/history_page/history_page.dart';
+import 'package:moovup_demo/pages/preference_page/preference_page.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -36,29 +39,21 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: CircleAvatar(
-              child: Icon(Icons.ac_unit),
-            ),
-            title: Text('Main'),
-            onTap: () {
-              Navigator.pushNamed(context, '/');
-            },
-          ),
-          ListTile(
-            leading: CircleAvatar(
               child: Icon(Icons.alt_route),
             ),
             title: Text('Preference'),
             onTap: () {
-              Navigator.pushNamed(context, '/preference');
+              Navigator.of(context).pushNamed(PreferencePage.routeName);
             },
           ),
           ListTile(
             leading: CircleAvatar(
               child: Icon(Icons.view_list),
             ),
-            title: Text('Job List'),
+            title: Text('My Applications'),
             onTap: () {
-              Navigator.pushNamed(context, '/jobList');
+              Navigator.of(context).pushNamed(HistoryPage.routeName);
+
             },
           ),
           ListTile(
@@ -67,7 +62,8 @@ class AppDrawer extends StatelessWidget {
             ),
             title: Text('Bookmarks'),
             onTap: () {
-              Navigator.pushNamed(context, SavedJobPage.routeName);
+              Navigator.of(context).pushNamed(SavedJobPage.routeName);
+
             },
           ),
           ListTile(
