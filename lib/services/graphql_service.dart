@@ -101,6 +101,7 @@ class GraphQLService implements IJobService, IUserService {
     }
   }
 
+  @override
   searchJobWithOptions(SearchOptionData searchOptionData) async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQlQuery.SearchWithParams()),
@@ -120,6 +121,7 @@ class GraphQLService implements IJobService, IUserService {
     }
   }
 
+  @override
   getPortfolio() async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQlQuery.getPortfolio()),
@@ -133,4 +135,28 @@ class GraphQLService implements IJobService, IUserService {
       return result;
     }
   }
+
+  @override
+  applyJob(List addressIds, String JobIds) async {
+    // TODO: implement applyJob
+
+    final QueryOptions options = QueryOptions(
+      document: gql(GraphQlQuery.applyJob()),
+      variables: {
+        "address_ids": addressIds,
+        "job_id": JobIds,
+      }
+    );
+
+    final QueryResult result = await _client.query(options);
+
+    throw UnimplementedError();
+    if (result.hasException) {
+      throw result.exception!;
+    } else {
+      return result;
+    }
+  }
+
+
 }

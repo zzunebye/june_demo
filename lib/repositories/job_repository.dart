@@ -45,4 +45,12 @@ class PostRepository {
       throw e;
     }
   }
+
+  applyJob(List addressIds, String JobIds) async {
+    try {
+      return _dataService.applyJob(addressIds, JobIds);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

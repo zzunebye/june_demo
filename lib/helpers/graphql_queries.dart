@@ -113,4 +113,49 @@ class GraphQlQuery {
       }
     ''';
   }
+
+  static String applyJob() {
+    return '''
+      mutation apply_job(
+        \$address_ids: [ID], 
+        \$job_id: ID!) 
+        {
+          apply_job (
+            address_ids: \$address_ids
+            job_id: \$job_id
+          ) {
+            _id
+            address {
+              _id
+              address
+              district_id
+              district_name
+              district_description
+              district_short_code
+              formatted_address
+              lat
+              lng
+            }
+            applied_at
+            contact_viewed_at
+            hired_at
+            history {
+              _created_at
+              data
+              event
+            }
+            is_contact_viewed
+            is_hired
+            is_invalid
+            is_hired
+            is_reviewed
+            rejected_at
+            reviewed_at
+            job {
+              ...jobFields 
+            }
+          }
+        }
+          ''';
+  }
 }

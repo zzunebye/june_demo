@@ -11,6 +11,8 @@ abstract class IJobService {
   bookmarkJob(String action, String jobId) async {}
 
   searchJobWithOptions(SearchOptionData searchOptionData) async {}
+
+  applyJob(List addressIds, String JobIds) async {}
 }
 
 abstract class IUserService {
