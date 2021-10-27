@@ -13,6 +13,13 @@ abstract class IJobService {
   searchJobWithOptions(SearchOptionData searchOptionData) async {}
 }
 
+abstract class IUserService {
+  // getProfile(int limit) async {}
+
+  getPortfolio() async {}
+
+}
+
 abstract class IPrefService {
   store(List<Preference> prefs) {}
   get() {}
