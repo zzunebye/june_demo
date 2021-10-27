@@ -8,7 +8,6 @@ class UserRepository {
 
   getPortfolio() {
     try {
-      print('getPort()');
       return _dataService.getPortfolio();
     } catch (e) {
       throw e;

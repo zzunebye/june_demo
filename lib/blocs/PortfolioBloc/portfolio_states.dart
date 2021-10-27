@@ -15,7 +15,6 @@ class LoadDataSuccess extends PortfolioStates {
   final dynamic data;
 
   LoadDataSuccess(this.data) : super() {
-    print('LoadDataSuccess');
   }
 
   @override

@@ -8,18 +8,15 @@ class PortfolioBloc extends Bloc<PortfolioEvents, PortfolioStates> {
   late UserRepository userRepository;
 
   PortfolioBloc(this.userRepository) : super(OnLoading()) {
-    print('PortfolioBloc created');
     on<FetchPortfolio>(_onFetchPortfolio);
   }
 
   _onFetchPortfolio(PortfolioEvents event, Emitter<PortfolioStates> emit) async {
-    print('_onFetchPortfolio');
 
     emit(OnLoading());
 
     try {
       final result = await userRepository.getPortfolio();
-      print(result.data);
       emit(LoadDataSuccess(result.data));
     } catch (error) {
       emit(LoadDataFail(error));

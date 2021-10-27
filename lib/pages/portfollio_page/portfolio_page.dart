@@ -43,7 +43,6 @@ class _PortfolioPageState extends State<PortfolioPage> {
             return Center(child: Text(state.error));
           } else if (state is LoadDataSuccess) {
             var data = (state).data['portfolio'];
-            print("data: $data");
             return ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
