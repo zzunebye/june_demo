@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:moovup_demo/blocs/PortfolioBloc/portfolio_bloc.dart';
 import 'package:moovup_demo/pages/history_page/history_page.dart';
+import 'package:moovup_demo/pages/portfollio_page/portfolio_page.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
 
 import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
+import 'package:moovup_demo/repositories/user_repository.dart';
 import 'blocs/BookmarkBloc/bookmark_bloc.dart';
 import 'blocs/HomeBloc/home_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
+import 'blocs/PortfolioBloc/portfolio_events.dart';
 import 'blocs/PreferenceBloc/preference_bloc.dart';
 import 'blocs/PreferenceBloc/preference_events.dart';
 import 'blocs/SearchBloc/SearchBloc.dart';
 import 'config/environment.dart';
 import 'models/preference.dart';
+import 'pages/apply_job_page/apply_job_page.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
 import 'pages/preference_page/preference_page.dart';
@@ -48,6 +53,7 @@ void main() async {
     providers: [
       RepositoryProvider<PostRepository>(create: (context) => PostRepository(graphqlService)),
       RepositoryProvider<PrefRepository>(create: (context) => PrefRepository(hiveService)),
+      RepositoryProvider<UserRepository>(create: (context) => UserRepository(graphqlService)),
     ],
     child: MultiBlocProvider(
       providers: [
@@ -66,6 +72,9 @@ void main() async {
         BlocProvider<PreferenceBloc>(
           create: (BuildContext context) => PreferenceBloc(RepositoryProvider.of<PrefRepository>(context))..add(LoadPreference()),
         ),
+        BlocProvider<PortfolioBloc>(
+          create: (BuildContext context) => PortfolioBloc(RepositoryProvider.of<UserRepository>(context)),
+        ),
       ],
       child: MyApp(),
     ),
@@ -79,9 +88,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {}
-
   @override
   void dispose() {
     Hive.close();
@@ -133,6 +139,8 @@ class _MyAppState extends State<MyApp> {
           JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
           SavedJobPage.routeName: (context) => SavedJobPage(),
           HistoryPage.routeName: (context) => HistoryPage(),
+          ApplyJobPage.routeName: (context) => ApplyJobPage(),
+          PortfolioPage.routeName: (context) => PortfolioPage(),
           JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
           SettingPage.routeName: (context) => SettingPage(),
         },

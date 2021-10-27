@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:moovup_demo/pages/history_page/history_page.dart';
+import 'package:moovup_demo/pages/portfollio_page/portfolio_page.dart';
 import 'package:moovup_demo/pages/preference_page/preference_page.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
+import 'package:moovup_demo/pages/setting_page/setting_page.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -15,8 +16,7 @@ class AppDrawer extends StatelessWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.purple, Colors.deepPurpleAccent]),
+              gradient: LinearGradient(colors: [Colors.purple, Colors.deepPurpleAccent]),
             ),
             child: Center(
               child: ListTile(
@@ -29,10 +29,8 @@ class AppDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
-                title: Text('Junyoung',
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
-                subtitle: Text('+852 95401225',
-                    style: TextStyle(color: Colors.white60, fontSize: 12)),
+                title: Text('Junyoung', style: TextStyle(color: Colors.white, fontSize: 18)),
+                subtitle: Text('+852 95401225', style: TextStyle(color: Colors.white60, fontSize: 12)),
                 trailing: Icon(Icons.arrow_forward, color: Colors.white),
               ),
             ),
@@ -53,7 +51,6 @@ class AppDrawer extends StatelessWidget {
             title: Text('My Applications'),
             onTap: () {
               Navigator.of(context).pushNamed(HistoryPage.routeName);
-
             },
           ),
           ListTile(
@@ -63,7 +60,6 @@ class AppDrawer extends StatelessWidget {
             title: Text('Bookmarks'),
             onTap: () {
               Navigator.of(context).pushNamed(SavedJobPage.routeName);
-
             },
           ),
           ListTile(
@@ -72,7 +68,16 @@ class AppDrawer extends StatelessWidget {
             ),
             title: Text('Setting'),
             onTap: () {
-              Navigator.pushNamed(context, '/setting');
+              Navigator.of(context).pushNamed(SettingPage.routeName);
+            },
+          ),
+          ListTile(
+            leading: CircleAvatar(
+              child: Icon(Icons.wallet_travel),
+            ),
+            title: Text('Portfolio'),
+            onTap: () {
+              Navigator.of(context).pushNamed(PortfolioPage.routeName);
             },
           ),
         ],

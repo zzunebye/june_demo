@@ -6,7 +6,7 @@ import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/services/service.dart';
 import 'package:http/http.dart' as http;
 
-class GraphQLService extends IJobService {
+class GraphQLService implements IJobService, IUserService {
   late GraphQLClient _client;
 
   init(apiHost) async {
@@ -109,6 +109,20 @@ class GraphQLService extends IJobService {
         "monthly_rate": searchOptionData.monthly_rate,
         "term": searchOptionData.term,
       },
+    );
+
+    final QueryResult result = await _client.query(options);
+
+    if (result.hasException) {
+      throw result.exception!;
+    } else {
+      return result;
+    }
+  }
+
+  getPortfolio() async {
+    final QueryOptions options = QueryOptions(
+      document: gql(GraphQlQuery.getPortfolio()),
     );
 
     final QueryResult result = await _client.query(options);
