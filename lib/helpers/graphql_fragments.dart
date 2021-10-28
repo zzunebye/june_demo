@@ -28,6 +28,7 @@ class GraphQlFragment {
           about
         }
         is_saved
+        is_applied
         attributes {
           category
           category_display_sequence

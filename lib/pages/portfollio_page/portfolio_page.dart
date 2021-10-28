@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/blocs/PortfolioBloc/portfolio_bloc.dart';
 import 'package:moovup_demo/blocs/PortfolioBloc/portfolio_events.dart';
 import 'package:moovup_demo/blocs/PortfolioBloc/portfolio_states.dart';
+import 'package:moovup_demo/pages/portfolio_edit_page/portfolio_edit_page.dart';
 import 'package:moovup_demo/widgets/job_type_pill.dart';
+import 'package:moovup_demo/widgets/portfolio_contents.dart';
 
 class PortfolioPage extends StatefulWidget {
   const PortfolioPage({Key? key}) : super(key: key);
@@ -14,14 +16,12 @@ class PortfolioPage extends StatefulWidget {
 }
 
 class _PortfolioPageState extends State<PortfolioPage> {
-  late PortfolioBloc _bloc;
   final double coverHeight = 180;
   final double profileHeight = 120;
 
   @override
   void initState() {
-    BlocProvider.of<PortfolioBloc>(context).add(FetchPortfolio());
-    _bloc = BlocProvider.of<PortfolioBloc>(context);
+    // BlocProvider.of<PortfolioBloc>(context).add(FetchPortfolio());
     super.initState();
   }
 
@@ -42,7 +42,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
           } else if (state is LoadDataFail) {
             return Center(child: Text(state.error));
           } else if (state is LoadDataSuccess) {
-            var data = (state).data['portfolio'];
+            var data = (state).data;
+            print(data);
             return ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
@@ -50,13 +51,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                 SizedBox(height: profileHeight / 2),
                 buildNamePH(data['name'], data['telephone']),
                 buildStatus(),
-                PortfolioSection(title: 'Self Introduction', child: buildAbout(data['self_introduction'])),
-                PortfolioSection(title: 'Work Experience', child: buildExperiences(data['work_experience'])),
-                PortfolioSection(title: 'Education', child: buildEducation(data['education'])),
-                PortfolioSection(title: 'Spoken Skill', child: buildLangSkills(data['spoken_skill'])),
-                PortfolioSection(title: 'Written Skill', child: buildLangSkills(data['written_skill'])),
-                PortfolioSection(title: 'Certificate and License', child: buildSkills(data['cert'])),
-                PortfolioSection(title: 'Skill', child: buildSkills(data['skill'])),
+                PortfolioContents(data),
                 SizedBox(height: profileHeight / 2),
                 // buildInfo(),
               ],
@@ -83,19 +78,20 @@ class _PortfolioPageState extends State<PortfolioPage> {
         Positioned(
           top: top,
           child: Container(
-              child: (data['profile_picture'] != null)
-                  ? CircleAvatar(
-                      backgroundColor: Colors.grey.shade800,
-                      radius: profileHeight / 2,
-                      backgroundImage: NetworkImage(data['profile_picture']),
-                    )
-                  : CircleAvatar(
-                      // radius: 24,
-                      radius: profileHeight / 2,
-                      child: FittedBox(
-                        child: Icon(Icons.supervised_user_circle),
-                      ),
-                    )),
+            child: (data['profile_picture'] != null)
+                ? CircleAvatar(
+                    backgroundColor: Colors.grey.shade800,
+                    radius: profileHeight / 2,
+                    backgroundImage: NetworkImage(data['profile_picture']),
+                  )
+                : CircleAvatar(
+                    // radius: 24,
+                    radius: profileHeight / 2,
+                    child: FittedBox(
+                      child: Icon(Icons.supervised_user_circle),
+                    ),
+                  ),
+          ),
         ),
       ],
     );
@@ -158,110 +154,15 @@ class _PortfolioPageState extends State<PortfolioPage> {
     );
   }
 
-  Widget buildAbout(String about) {
-    return Text(
-      about,
-      style: TextStyle(fontSize: 15, height: 1.4),
-    );
-  }
-
-  Widget buildEducation(Map education) {
-    return Row(
-      children: [
-        Text(
-          "${education['category']} - ${education['name']}",
-          style: TextStyle(fontSize: 15, height: 1.4),
+  Widget EditTextButton(String title) {
+    return TextButton.icon(
+        onPressed: () {
+          Navigator.of(context).pushNamed(PortfolioEditPage.routeName);
+        },
+        icon: Icon(
+          Icons.arrow_forward_ios,
+          size: 14,
         ),
-      ],
-    );
-  }
-
-  Widget buildCert(List certs) {
-    return Column(children: [
-      ...certs.map(
-        (cert) => Text(cert['name'], style: TextStyle(fontSize: 15)),
-      ),
-    ]);
-  }
-
-  Widget buildLangSkills(List skills) {
-    return Column(children: [
-      ...skills.map(
-        (skill) => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(skill['name'], style: TextStyle(fontSize: 15)),
-            Row(
-              children: [
-                ...List.generate(skill['level'], (index) => new Icon(Icons.star, color: Theme.of(context).accentColor)),
-              ],
-            )
-          ],
-        ),
-      ),
-    ]);
-  }
-
-  Widget buildExperiences(List experiences) {
-    return Column(children: [
-      ...experiences.map(
-        (expr) => Card(
-          elevation: 1,
-          color: Colors.amber.shade50,
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "${expr['start_date']} - ${_bloc.getNowFromNull(expr['end_date'])}",
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 3),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(expr['position_name'], style: TextStyle(fontSize: 16)),
-                    JobTypePill(expr['employment'].toString()),
-                  ],
-                ),
-                SizedBox(height: 3),
-                Text(expr['company_name'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300)),
-                SizedBox(height: 3),
-                Text(expr['description'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300)),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget buildSkills(List skills) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...skills.map((skill) => Text(skill['name'], style: TextStyle(fontSize: 15, height: 1.4))),
-      ],
-    );
-  }
-
-  Widget PortfolioSection({required String title, required Widget child}) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: TextStyle(fontSize: 18)),
-          const SizedBox(height: 10),
-          child,
-        ],
-      ),
-    );
+        label: Text('Edit', style: TextStyle(fontSize: 14)));
   }
 }

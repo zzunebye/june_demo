@@ -17,7 +17,7 @@ class PortfolioBloc extends Bloc<PortfolioEvents, PortfolioStates> {
 
     try {
       final result = await userRepository.getPortfolio();
-      emit(LoadDataSuccess(result.data));
+      emit(LoadDataSuccess(result.data['portfolio']));
     } catch (error) {
       emit(LoadDataFail(error));
     }
