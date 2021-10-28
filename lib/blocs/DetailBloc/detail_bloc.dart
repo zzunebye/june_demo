@@ -9,7 +9,7 @@ import 'detail_states.dart';
 
 class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   final PostRepository jobRepository;
-  StreamController<String> jobTitleController = new StreamController();
+  final jobTitleController = StreamController<String>.broadcast();
 
   DetailBloc(this.jobRepository) : super(OnLoading()) {
     on<SaveJob>(_onSaveJob);
@@ -35,14 +35,17 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
 
   _onFetchDetailData(FetchDetailData event, Emitter<DetailStates> emit) async {
     emit(OnLoading());
+    print('ONLOADING emitted');
     try {
+      print('try on On..');
       final result = await jobRepository.getSingleJobDetail(event.jobId);
+      print('await jobRepository.getSingleJobDetail');
       this.jobTitleController.add(result.data!['get_jobs'].first?['job_name']);
       emit(LoadDataSuccess(result.data!));
     } catch (error) {
+      print('error on On..: $error');
       emit(LoadDataFail(error));
     }
-    jobTitleController.close();
   }
 
   String convertIntToDate(int day) {
@@ -51,5 +54,9 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
 
   String getWorkingHour(dynamic data) {
     return '${data['working_hour'][0]['start_time']} - ${data['working_hour'][0]['end_time']}';
+  }
+
+  dispose() {
+    // jobTitleController.close();
   }
 }

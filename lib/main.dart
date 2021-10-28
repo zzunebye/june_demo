@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moovup_demo/blocs/PortfolioBloc/portfolio_bloc.dart';
+import 'package:moovup_demo/pages/apply_job_page/apply_job_result_page.dart';
 import 'package:moovup_demo/pages/history_page/history_page.dart';
 import 'package:moovup_demo/pages/portfollio_page/portfolio_page.dart';
 import 'package:moovup_demo/pages/saved_job_page/saved_job_page.dart';
@@ -10,6 +11,7 @@ import 'package:moovup_demo/repositories/job_repository.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
 import 'package:moovup_demo/repositories/user_repository.dart';
 import 'blocs/BookmarkBloc/bookmark_bloc.dart';
+import 'blocs/DetailBloc/detail_bloc.dart';
 import 'blocs/HomeBloc/home_bloc.dart';
 import 'blocs/NotificationBloc/notification_bloc.dart';
 import 'blocs/NotificationBloc/notification_states.dart';
@@ -22,6 +24,7 @@ import 'models/preference.dart';
 import 'pages/apply_job_page/apply_job_page.dart';
 import 'pages/job_detail_page/job_detail_page.dart';
 import 'pages/job_list_page/job_list_page.dart';
+import 'pages/portfolio_edit_page/portfolio_edit_page.dart';
 import 'pages/preference_page/preference_page.dart';
 import 'pages/setting_page/setting_page.dart';
 import 'repositories/preference_repository.dart';
@@ -71,9 +74,13 @@ void main() async {
         ),
         BlocProvider<PreferenceBloc>(
           create: (BuildContext context) => PreferenceBloc(RepositoryProvider.of<PrefRepository>(context))..add(LoadPreference()),
+          lazy: false,
         ),
         BlocProvider<PortfolioBloc>(
-          create: (BuildContext context) => PortfolioBloc(RepositoryProvider.of<UserRepository>(context)),
+          create: (BuildContext context) => PortfolioBloc(RepositoryProvider.of<UserRepository>(context))..add(FetchPortfolio()),
+        ),
+        BlocProvider<DetailBloc>(
+          create: (BuildContext context) => DetailBloc(RepositoryProvider.of<PostRepository>(context)),
         ),
       ],
       child: MyApp(),
@@ -141,14 +148,20 @@ class _MyAppState extends State<MyApp> {
           HistoryPage.routeName: (context) => HistoryPage(),
           ApplyJobPage.routeName: (context) => ApplyJobPage(),
           PortfolioPage.routeName: (context) => PortfolioPage(),
+          PortfolioEditPage.routeName: (context) => PortfolioEditPage(),
           JobSearchPage.routeName: (context) => JobSearchPage(title: "Job Searching", searchCategory: ''),
           SettingPage.routeName: (context) => SettingPage(),
+          ApplyJobResultPage.routeName: (context) => ApplyJobResultPage(),
         },
         theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
+          // primarySwatch: Colors.indigo,
+          primaryColor: Color.fromRGBO(89, 93, 229, 1),
+          canvasColor: Color.fromRGBO(251, 250, 255, 1),
+          buttonColor: Colors.deepOrange,
+          highlightColor: Colors.amber,
           accentColor: Colors.amber,
-          errorColor: Colors.red,
-          canvasColor: Color.fromRGBO(255, 254, 229, 1),
+          // errorColor: Colors.red,
+          // canvasColor: Color.fromRGBO(255, 254, 229, 1),
           textTheme: ThemeData.light().textTheme.copyWith(
               headline5: TextStyle(
                 fontWeight: FontWeight.bold,

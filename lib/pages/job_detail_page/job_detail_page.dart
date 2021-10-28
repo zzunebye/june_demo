@@ -5,7 +5,9 @@ import 'package:moovup_demo/blocs/BookmarkBloc/bookmark_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_bloc.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_events.dart';
 import 'package:moovup_demo/blocs/DetailBloc/detail_states.dart';
+import 'package:moovup_demo/pages/apply_job_page/apply_job_page.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
+import 'package:moovup_demo/widgets/appbar_preset.dart';
 
 class JobDetailPage extends StatefulWidget {
   static const routeName = 'job-detail';
@@ -24,12 +26,16 @@ class _JobDetailPageState extends State<JobDetailPage> {
   @override
   void initState() {
     super.initState();
+    print('initState');
+    _detailBloc = BlocProvider.of<DetailBloc>(context);
+    print('widget id: ${widget.jobId}');
+    _detailBloc.add(FetchDetailData(widget.jobId));
+    print('initState event added');
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _detailBloc = DetailBloc(RepositoryProvider.of<PostRepository>(context))..add(FetchDetailData(widget.jobId));
   }
 
   @override
@@ -72,6 +78,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
     }
 
     Widget buildJobDetailView(BuildContext context, var jobDetail) {
+      final bool isApplied = jobDetail['is_applied'];
+      print("isApplied: $isApplied");
       return ListView(
         children: [
           Card(
@@ -197,10 +205,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
                 child: Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 5, 0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Navigate back to first screen when tapped.
-                    },
-                    child: const Text('Apply'),
+                    onPressed: isApplied ? () => Navigator.of(context).pushNamed(ApplyJobPage.routeName) : null,
+                    child: isApplied ? const Text('Apply') : const Text('Applied'),
                   ),
                 ),
               ),
@@ -242,31 +248,29 @@ class _JobDetailPageState extends State<JobDetailPage> {
         BlocProvider.of<BookmarkBloc>(context)..add(FetchBookmarkData());
         return true;
       },
-      child: BlocProvider.value(
-        value: _detailBloc,
-        child: Scaffold(
-          appBar: AppBar(
-            title: StreamBuilder<String>(
-                stream: _detailBloc.jobTitleController.stream,
-                initialData: 'Loading...',
-                builder: (context, snapshot) {
-                  return Text('${snapshot.data}');
-                }),
-          ),
-          body: BlocBuilder<DetailBloc, DetailStates>(
-            builder: (BuildContext context, DetailStates state) {
-              if (state is LoadDataSuccess) {
-                var jobDetail = state.data['get_jobs'][0];
-                return buildJobDetailView(context, jobDetail);
-              } else if (state is LoadDataFail) {
-                return Center(
-                  child: Text(state.error),
-                );
-              } else {
-                return LinearProgressIndicator();
-              }
+      child: Scaffold(
+        appBar: AppBarPreset(
+          appBartitle: StreamBuilder<String>(
+            stream: _detailBloc.jobTitleController.stream,
+            initialData: 'Loading...',
+            builder: (context, snapshot) {
+              return Text('${snapshot.data}');
             },
           ),
+        ),
+        body: BlocBuilder<DetailBloc, DetailStates>(
+          builder: (BuildContext context, DetailStates state) {
+            if (state is LoadDataSuccess) {
+              var jobDetail = state.data['get_jobs'][0];
+              return buildJobDetailView(context, jobDetail);
+            } else if (state is LoadDataFail) {
+              return Center(
+                child: Text(state.error),
+              );
+            } else {
+              return LinearProgressIndicator();
+            }
+          },
         ),
       ),
     );

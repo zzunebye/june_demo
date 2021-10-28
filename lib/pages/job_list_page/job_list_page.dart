@@ -5,6 +5,7 @@ import 'package:moovup_demo/blocs/HomeBloc/home_bloc.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_events.dart';
 import 'package:moovup_demo/blocs/HomeBloc/home_states.dart';
 import 'package:moovup_demo/pages/job_search_page/job_search_page.dart';
+import 'package:moovup_demo/widgets/appbar_preset.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 import 'package:moovup_demo/widgets/job_list.dart';
 
@@ -29,9 +30,9 @@ class _JobListState extends State<JobListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
+      appBar: AppBarPreset(
+        appBartitle: Text(widget.title),
+        appActions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).push(

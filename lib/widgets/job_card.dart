@@ -61,11 +61,13 @@ class JobCard extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: CircleAvatar(
+                    foregroundColor: Color.fromRGBO(89, 93, 229, 0.8),
+                    // backgroundColor: Color.fromRGBO(89, 93, 229, 0.9),
                     radius: 24,
                     child: Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: FittedBox(
-                        child: Icon(Icons.verified_user),
+                        child: Icon(Icons.person),
                       ),
                     ),
                   ),
