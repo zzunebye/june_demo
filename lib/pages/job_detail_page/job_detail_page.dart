@@ -79,12 +79,11 @@ class _JobDetailPageState extends State<JobDetailPage> {
 
     Widget buildJobDetailView(BuildContext context, var jobDetail) {
       final bool isApplied = jobDetail['is_applied'];
-      print("isApplied: $isApplied");
       return ListView(
         children: [
           Card(
             margin: const EdgeInsets.all(10.0),
-            elevation: 5,
+            elevation: 2,
             child: Column(
               children: [
                 Padding(
@@ -115,12 +114,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                       ),
                       jobDetail?['image'] == null
                           ? ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                                bottomLeft: Radius.circular(15),
-                                bottomRight: Radius.circular(15),
-                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(15)),
                               child: Image.asset(
                                 'assets/images/no-job-image.jpeg',
                                 height: 100,
@@ -128,12 +122,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                               ),
                             )
                           : ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                                bottomLeft: Radius.circular(15),
-                                bottomRight: Radius.circular(15),
-                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(15)),
                               child: Image.network(
                                 jobDetail['image'],
                                 height: 250,
@@ -147,55 +136,68 @@ class _JobDetailPageState extends State<JobDetailPage> {
               ],
             ),
           ),
-          Container(
-            width: double.infinity,
-            height: 150,
-            child: Card(
-              margin: const EdgeInsets.all(10.0),
-              elevation: 5,
-              child: Center(child: Text('Map of Work Address')),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            child: Card(
-              margin: const EdgeInsets.all(10.0),
-              elevation: 5,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('TimeTable', style: Theme.of(context).textTheme.headline6),
-                    SizedBox(height: 10),
-                    ...jobDetail['working_hour'][0]['day_of_week'].map((day) => buildTimeTableRow(day, jobDetail)).toList(),
-                  ],
-                ),
+          Card(
+            margin: const EdgeInsets.all(10.0),
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Locations', style: Theme.of(context).textTheme.headline6),
+                  ...jobDetail['address'].map(
+                    (address) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(address['address'], style: TextStyle(fontSize: 16)),
+                          IconButton(
+                            iconSize: 16,
+                            onPressed: () {},
+                            icon: Icon(Icons.arrow_forward_ios),
+                          ),
+                        ],
+                      );
+                    },
+                  ).toList(),
+                ],
               ),
             ),
           ),
-          Container(
-            width: double.infinity,
-            child: Card(
-              margin: const EdgeInsets.all(10.0),
-              elevation: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Education', style: Theme.of(context).textTheme.headline6),
-                    SizedBox(height: 10.0),
-                    Text(jobDetail['education_requirement']['category'], style: Theme.of(context).textTheme.bodyText1),
-                    SizedBox(height: 10.0),
-                    Divider(),
-                    Text('Language', style: Theme.of(context).textTheme.headline6),
-                    SizedBox(height: 5.0),
-                    buildSkillList(context, 'Spoken Skill', jobDetail['spoken_skill']),
-                    buildSkillList(context, 'Written Skill', jobDetail['written_skill']),
-                  ],
-                ),
+          Card(
+            margin: const EdgeInsets.all(10.0),
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('TimeTable', style: Theme.of(context).textTheme.headline6),
+                  SizedBox(height: 10),
+                  ...jobDetail['working_hour'][0]['day_of_week'].map((day) => buildTimeTableRow(day, jobDetail)).toList(),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            margin: const EdgeInsets.all(10.0),
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Education', style: Theme.of(context).textTheme.headline6),
+                  SizedBox(height: 10.0),
+                  Text(jobDetail['education_requirement']['category'], style: Theme.of(context).textTheme.bodyText1),
+                  SizedBox(height: 10.0),
+                  Divider(),
+                  Text('Language', style: Theme.of(context).textTheme.headline6),
+                  SizedBox(height: 5.0),
+                  buildSkillList(context, 'Spoken Skill', jobDetail['spoken_skill']),
+                  buildSkillList(context, 'Written Skill', jobDetail['written_skill']),
+                ],
               ),
             ),
           ),

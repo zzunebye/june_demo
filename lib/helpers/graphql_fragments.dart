@@ -57,8 +57,15 @@ class GraphQlFragment {
           category
         }
         address{
+          _id
           address
+          district_id
+          district_name
+          district_short_code
+          district_description
           formatted_address
+          lat
+          lng
         }
         address_on_map
         images
