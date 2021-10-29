@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:moovup_demo/blocs/ApplyJobBloc/apply_job_bloc.dart';
+import 'package:moovup_demo/blocs/MyApplicationBloc/my_application_bloc.dart';
 import 'package:moovup_demo/blocs/PortfolioBloc/portfolio_bloc.dart';
 import 'package:moovup_demo/pages/apply_job_page/apply_job_result_page.dart';
 import 'package:moovup_demo/pages/history_page/history_page.dart';
@@ -82,6 +84,12 @@ void main() async {
         BlocProvider<DetailBloc>(
           create: (BuildContext context) => DetailBloc(RepositoryProvider.of<PostRepository>(context)),
         ),
+        BlocProvider<ApplyJobBloc>(
+          create: (BuildContext context) => ApplyJobBloc(RepositoryProvider.of<PostRepository>(context)),
+        ),
+        BlocProvider<MyApplicationBloc>(
+          create: (BuildContext context) => MyApplicationBloc(RepositoryProvider.of<PostRepository>(context)),
+        ),
       ],
       child: MyApp(),
     ),
@@ -154,28 +162,24 @@ class _MyAppState extends State<MyApp> {
           ApplyJobResultPage.routeName: (context) => ApplyJobResultPage(),
         },
         theme: ThemeData(
-          // primarySwatch: Colors.indigo,
+          primarySwatch: Colors.indigo,
           primaryColor: Color.fromRGBO(89, 93, 229, 1),
           canvasColor: Color.fromRGBO(251, 250, 255, 1),
           buttonColor: Colors.deepOrange,
           highlightColor: Colors.amber,
           accentColor: Colors.amber,
-          // errorColor: Colors.red,
-          // canvasColor: Color.fromRGBO(255, 254, 229, 1),
           textTheme: ThemeData.light().textTheme.copyWith(
-              headline5: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-              button: TextStyle(color: Colors.white)),
-          appBarTheme: AppBarTheme(
-            textTheme: ThemeData.light().textTheme.copyWith(
-                  headline5: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                headline5: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
+                button: TextStyle(color: Colors.white),
+                caption: TextStyle(color: Colors.blueGrey),
+              ),
+          tabBarTheme: TabBarTheme(
+            labelColor: Colors.black,
           ),
+          appBarTheme: AppBarTheme.of(context).copyWith(elevation: 3),
         ),
       ),
     );

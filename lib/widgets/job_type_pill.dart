@@ -20,7 +20,7 @@ class JobTypePill extends StatelessWidget {
       ),
       child: Text(
         content,
-        style: TextStyle(fontSize: 10),
+        style: TextStyle(fontSize: 10, color: Colors.black87),
       ),
     );
   }
