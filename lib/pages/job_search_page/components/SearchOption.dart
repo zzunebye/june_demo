@@ -17,7 +17,6 @@ class SearchOptionButton extends StatelessWidget {
           splashColor: Theme.of(context).accentColor,
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            final bloc = BlocProvider.of<SearchBloc>(context, listen: false);
             showModalBottomSheet(
                 elevation: 10,
                 backgroundColor: Theme.of(context).cardColor,
@@ -28,7 +27,7 @@ class SearchOptionButton extends StatelessWidget {
                 builder: (context) {
                   if (this.optionTitle == 'Salary') {
                     return BlocProvider.value(
-                        value: bloc,
+                        value: BlocProvider.of<SearchBloc>(context, listen: false),
                         child: SalaryFilterBottomSheet(optionTitle));
                   } else {
                     return Container(
@@ -59,7 +58,8 @@ class SearchOptionButton extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.deepPurpleAccent.withOpacity(0.8),
+              color: Theme.of(context).primaryColor,
+              // color: Colors.deepPurpleAccent.withOpacity(0.8),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Center(

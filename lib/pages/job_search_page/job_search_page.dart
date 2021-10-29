@@ -35,18 +35,37 @@ class _JobSearchPageState extends State<JobSearchPage> {
     Widget buildSearchBar() {
       return Container(
         margin: const EdgeInsets.all(15),
-        child: TextFormField(
-          controller: _termController,
-          textInputAction: TextInputAction.done,
-          onFieldSubmitted: (term) {
-            _searchBloc.add(UpdateTerm(term));
-          },
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-            labelText: 'Search ...',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.search),
-          ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _termController,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (term) {
+                  _searchBloc.add(UpdateTerm(term));
+                },
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                  labelText: 'Search ...',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.search),
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).primaryColor,
+              ),
+              child: IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.filter_list_rounded),
+                color: Theme.of(context).canvasColor,
+                // hoverColor: Theme.of(context).primaryColor,
+              ),
+            )
+          ],
         ),
       );
     }
