@@ -150,7 +150,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(address['address'], style: TextStyle(fontSize: 16)),
+                          Text(address['district_name'], style: TextStyle(fontSize: 16)),
                           IconButton(
                             iconSize: 16,
                             onPressed: () {},
@@ -207,8 +207,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
                 child: Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 5, 0),
                   child: ElevatedButton(
-                    onPressed: isApplied ? () => Navigator.of(context).pushNamed(ApplyJobPage.routeName) : null,
-                    child: isApplied ? const Text('Apply') : const Text('Applied'),
+                    onPressed: isApplied ? null : () => Navigator.of(context).pushNamed(ApplyJobPage.routeName),
+                    child: isApplied ? const Text('Applied') : const Text('Apply'),
                   ),
                 ),
               ),

@@ -22,10 +22,13 @@ class JobCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-      child: InkWell(
-        onTap: () => selectJobCard(context),
-        child: Card(
-          elevation: 5,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: InkWell(
+          onTap: () => selectJobCard(context),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Row(
@@ -36,24 +39,21 @@ class JobCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       JobTypePill(job['employment_type']['name'].toString()),
+                      SizedBox(height: 2),
                       Text(
                         job['company']['name'].toString(),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
-                      SizedBox(
-                        child: Text(
-                          job['job_name'].toString(),
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          style: TextStyle(fontSize: 12),
-                        ),
+                      SizedBox(height: 2),
+                      Text(
+                        job['job_name'].toString(),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
                         job['address'][0]['address'].toString(),
-                        style: TextStyle(fontSize: 12),
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ],
                   ),

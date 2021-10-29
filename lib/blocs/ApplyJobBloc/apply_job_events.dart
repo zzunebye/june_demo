@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:moovup_demo/models/job_application.dart';
 
 abstract class ApplyJobEvents extends Equatable {
   ApplyJobEvents();
@@ -12,6 +13,15 @@ class FetchApplyJob extends ApplyJobEvents {
 
   @override
   List<Object>? get props => null;
+}
+
+class ApplyJob extends ApplyJobEvents {
+  final JobApplicationInfo jobApplication;
+
+  ApplyJob(this.jobApplication);
+
+  @override
+  List<Object>? get props => [jobApplication];
 }
 
 class ModifyApplyJob extends ApplyJobEvents {

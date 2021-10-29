@@ -29,6 +29,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).canvasColor,
+        foregroundColor: Theme.of(context).primaryColor,
         title: Text('Portfolio'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -71,7 +73,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
       clipBehavior: Clip.none,
       children: [
         Container(
-          color: Colors.amber,
+          color: Colors.teal,
           width: double.infinity,
           height: coverHeight,
         ),
@@ -122,9 +124,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
               ),
             ),
             VerticalDivider(
-              // width: 10,
               thickness: 2,
-              color: Colors.amber,
+              color: Theme.of(context).canvasColor,
             ),
             Expanded(
               child: Column(

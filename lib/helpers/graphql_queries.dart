@@ -4,6 +4,8 @@ class GraphQlQuery {
 
   static String getHomepage(){
     return """
+      ${GraphQlFragment.jobFields}
+
       query homepage {
         homepage {
           home_banners{
@@ -31,11 +33,7 @@ class GraphQlQuery {
             }
             data
             jobs {
-              _id
-              job_name
-              company{
-                name
-              }
+              ...jobFields
             }
           }
         }
