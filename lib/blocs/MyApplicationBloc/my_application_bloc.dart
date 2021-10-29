@@ -14,43 +14,40 @@ class MyApplicationBloc extends Bloc<MyApplicationEvent, MyApplicationState> {
   late PostRepository userRepository;
 
   MyApplicationBloc(this.userRepository) : super(MyApplicationInitial()) {
-    on<MyApplicationEvent>((event, emit) {
-      print('MyApplicationEvent');
-    });
-    on<FetchApplications>((event, emit) async {
-      print('onFetchApplications');
-
-      emit(MyApplicationOnLoading());
-
-      try {
-        var result;
-        switch (event.applicationType) {
-          case FetchApplicationsType.ALL:
-            result = await userRepository.getApplications(ApplicationsInfo());
-            break;
-          case FetchApplicationsType.REVIEWED:
-            result = await userRepository.getApplications(ApplicationsInfo(status: 'Reviewed'));
-            break;
-          case FetchApplicationsType.REJECTED:
-            result = await userRepository.getApplications(ApplicationsInfo(status: 'Rejected'));
-            break;
-          default:
-            result = await userRepository.getApplications(ApplicationsInfo());
-            break;
-        }
-        // final result = await userRepository.getApplications(ApplicationsInfo());
-        if (result.data['get_applications']['total'] == 0) {
-          emit(MyApplicationEmpty());
-        } else {
-          emit(MyApplicationDataSuccess(result.data));
-        }
-      } catch (error) {
-        emit(MyApplicationDataFail(error));
-      }
-    });
+    on<MyApplicationEvent>((event, emit) {});
+    on<FetchApplications>(onFetchApplications);
   }
 
   String convertDateTime(String dateData) {
     return "${DateFormat("yyyy / MM / dd hh:mm").format(DateTime.parse(dateData))}";
+  }
+
+  FutureOr<void> onFetchApplications(FetchApplications event, Emitter<MyApplicationState> emit) async {
+    emit(MyApplicationOnLoading());
+
+    try {
+      var result;
+      switch (event.applicationType) {
+        case FetchApplicationsType.ALL:
+          result = await userRepository.getApplications(ApplicationsInfo());
+          break;
+        case FetchApplicationsType.REVIEWED:
+          result = await userRepository.getApplications(ApplicationsInfo(status: 'Reviewed'));
+          break;
+        case FetchApplicationsType.REJECTED:
+          result = await userRepository.getApplications(ApplicationsInfo(status: 'Rejected'));
+          break;
+        default:
+          result = await userRepository.getApplications(ApplicationsInfo());
+          break;
+      }
+      if (result.data['get_applications']['total'] == 0) {
+        emit(MyApplicationEmpty());
+      } else {
+        emit(MyApplicationDataSuccess(result.data));
+      }
+    } catch (error) {
+      emit(MyApplicationDataFail(error));
+    }
   }
 }

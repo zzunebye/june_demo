@@ -148,9 +148,9 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         scaffoldMessengerKey: _messangerKey,
         routes: {
-          '/': (context) => JobListPage(title: 'Main'),
+          '/': (context) => HomePage(title: 'Main'),
           PreferencePage.routeName: (context) => PreferencePage(title: 'Preference'),
-          JobListPage.routeName: (context) => JobListPage(title: 'Job List'),
+          HomePage.routeName: (context) => HomePage(title: 'Job List'),
           JobDetailPage.routeName: (context) => JobDetailPage("jobId"),
           SavedJobPage.routeName: (context) => SavedJobPage(),
           HistoryPage.routeName: (context) => HistoryPage(),

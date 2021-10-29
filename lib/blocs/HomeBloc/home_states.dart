@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
- class HomeStates extends Equatable {
+class HomeStates extends Equatable {
   HomeStates();
 
   @override
@@ -12,12 +12,13 @@ class OnLoading extends HomeStates {
 }
 
 class LoadDataSuccess extends HomeStates {
-  final dynamic data;
+  final dynamic jobListData;
+  final dynamic homepageData;
 
-  LoadDataSuccess(this.data) : super();
+  LoadDataSuccess(this.jobListData, this.homepageData);
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [jobListData];
 }
 
 class LoadDataFail extends HomeStates {

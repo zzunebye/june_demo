@@ -9,18 +9,18 @@ import 'package:moovup_demo/widgets/appbar_preset.dart';
 import 'package:moovup_demo/widgets/drawer.dart';
 import 'package:moovup_demo/widgets/job_list.dart';
 
-class JobListPage extends StatefulWidget {
-  static const routeName = '/jobList';
+class HomePage extends StatefulWidget {
+  static const routeName = '/homepage';
 
-  JobListPage({Key? key, required this.title}) : super(key: key);
+  HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _JobListState createState() => _JobListState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _JobListState extends State<JobListPage> {
+class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -30,9 +30,11 @@ class _JobListState extends State<JobListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarPreset(
-        appBartitle: Text(widget.title),
-        appActions: [
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).canvasColor,
+        foregroundColor: Theme.of(context).primaryColor,
+        elevation: 0,
+        actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -56,8 +58,10 @@ class _JobListState extends State<JobListPage> {
           } else if (state is LoadDataFail) {
             return Center(child: Text(state.error));
           } else if (state is LoadDataSuccess) {
-            var data = (state).data['job_search']?['result'];
-            return JobList(data);
+            var jobListdata = (state).jobListData['job_search']?['result'];
+            var homepageData = (state).homepageData?['homepage'];
+            print(homepageData);
+            return HomePageContents(jobListdata, homepageData);
           } else {
             return Center(child: CircularProgressIndicator());
           }

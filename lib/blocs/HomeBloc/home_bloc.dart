@@ -1,28 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moovup_demo/repositories/job_repository.dart';
 import 'home_events.dart';
 import 'home_states.dart';
 
 class HomeBloc extends Bloc<HomeEvents, HomeStates> {
-  late PostRepository jobRepository;
+  final PostRepository jobRepository;
 
-  HomeBloc(this.jobRepository) : super(HomeStates()) {}
+  HomeBloc(this.jobRepository) : super(HomeStates()) {
+    on<FetchHomeData>(onFetchHomeData);
+  }
 
   HomeStates get initialState => OnLoading();
 
-  @override
-  Stream<HomeStates> mapEventToState(HomeEvents event) async* {
-    if (event is FetchHomeData) {
-      yield* _mapFetchHomeDataToStates(event);
-    }
-  }
-
-  Stream<HomeStates> _mapFetchHomeDataToStates(FetchHomeData event) async* {
+  FutureOr<void> onFetchHomeData(FetchHomeData event, Emitter<HomeStates> emit) async {
     try {
-      final result = await jobRepository.getJobPosts(10);
-      yield LoadDataSuccess(result.data);
+      final jobPostResult = await jobRepository.getJobPosts(20);
+      final homepageResult = await jobRepository.getHomepageData();
+      emit(LoadDataSuccess(jobPostResult.data, homepageResult.data));
     } catch (e) {
-      yield LoadDataFail(e.toString());
+      emit(LoadDataFail(e.toString()));
     }
   }
 }
