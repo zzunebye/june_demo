@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:moovup_demo/helpers/graphql_queries.dart';
+import 'package:moovup_demo/models/job_application.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/services/service.dart';
 import 'package:http/http.dart' as http;
@@ -32,6 +33,23 @@ class GraphQLService implements IJobService, IUserService {
     return link;
   }
 
+  @override
+  getHomepageData() async {
+    final QueryOptions options = QueryOptions(
+      document: gql(GraphQlQuery.getHomepage()),
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
+    );
+
+    final result = await _client.query(options);
+
+    if (result.hasException) {
+      throw result.exception!;
+    } else {
+      return result;
+    }
+  }
+
+  @override
   getJobPosts(int limit) async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQlQuery.getAllJobs()),
@@ -50,6 +68,7 @@ class GraphQLService implements IJobService, IUserService {
     }
   }
 
+  @override
   getSingleJobDetail(String id) async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQlQuery.getJob()),
@@ -59,7 +78,11 @@ class GraphQLService implements IJobService, IUserService {
       fetchPolicy: FetchPolicy.networkOnly,
     );
 
+    print("options var: ${options.variables.toString()}");
+
     final result = await _client.query(options);
+
+    print("result in serv: $result");
 
     if (result.hasException) {
       throw result.exception!;
@@ -68,6 +91,7 @@ class GraphQLService implements IJobService, IUserService {
     }
   }
 
+  @override
   getBookmarkJob(int limit) async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQlQuery.getBookmarks()),
@@ -83,6 +107,7 @@ class GraphQLService implements IJobService, IUserService {
     }
   }
 
+  @override
   bookmarkJob(String action, String jobId) async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQlQuery.updateBookmark()),
@@ -137,20 +162,20 @@ class GraphQLService implements IJobService, IUserService {
   }
 
   @override
-  applyJob(List addressIds, String JobIds) async {
-    // TODO: implement applyJob
-
-    final QueryOptions options = QueryOptions(
+  applyJob(JobApplicationInfo jobApplication) async {
+    final MutationOptions options = MutationOptions(
       document: gql(GraphQlQuery.applyJob()),
       variables: {
-        "address_ids": addressIds,
-        "job_id": JobIds,
-      }
+        "address_ids": jobApplication.addressIds,
+        "job_id": jobApplication.jobId,
+      },
     );
 
-    final QueryResult result = await _client.query(options);
+    print("variables: ${options.variables}");
 
-    throw UnimplementedError();
+    final QueryResult result = await _client.mutate(options);
+    print(result);
+
     if (result.hasException) {
       throw result.exception!;
     } else {
@@ -158,5 +183,31 @@ class GraphQLService implements IJobService, IUserService {
     }
   }
 
+  @override
+  getApplications(ApplicationsInfo applicationsInfo) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(GraphQlQuery.getApplications()),
+      variables: {
+        "limit": applicationsInfo.limit,
+        "offset": applicationsInfo.offset,
+        "status": applicationsInfo.status,
+        "application_ids": applicationsInfo.applicationIds,
+      },
+    );
 
+    print("variables: ${options.variables}");
+
+    final QueryResult result = await _client.query(options);
+
+    // print("result.data: ${result.data}");
+
+    // print("getApplications QueryResult $result");
+
+    // throw UnimplementedError();
+    if (result.hasException) {
+      throw result.exception!;
+    } else {
+      return result;
+    }
+  }
 }

@@ -57,7 +57,7 @@ class GraphQlFragment {
           category
         }
         address{
-          _id
+            _id
           address
           district_id
           district_name
@@ -185,5 +185,40 @@ class GraphQlFragment {
         employment
       }
     }
+      ''';
+
+  static final applicationFields = '''
+    fragment applicationFields on Application {
+      _id
+      address {
+        _id
+        address
+        district_id
+        district_name
+        district_description
+        district_short_code
+        formatted_address
+        lat
+        lng
+      }
+      applied_at
+      contact_viewed_at
+      hired_at
+      history {
+        _created_at
+        data
+        event
+      }
+      is_contact_viewed
+      is_hired
+      is_invalid
+      is_hired
+      is_reviewed
+      rejected_at
+      reviewed_at
+      job {
+        ...jobFields
+      }
+    }   
       ''';
 }

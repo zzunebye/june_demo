@@ -1,8 +1,47 @@
-
-
 import 'graphql_fragments.dart';
 
 class GraphQlQuery {
+
+  static String getHomepage(){
+    return """
+      query homepage {
+        homepage {
+          home_banners{
+            cover_image
+            link
+          }
+          job_featured_lists{
+            name{
+              locale
+              value
+            }
+            data
+            jobs {
+              _id
+              job_name
+              company{
+                name
+              }
+            }
+          }
+          job_recommended_list {
+            name{
+              locale
+              value
+            }
+            data
+            jobs {
+              _id
+              job_name
+              company{
+                name
+              }
+            }
+          }
+        }
+      }
+    """;
+  }
   static String getJob() {
     return """
     ${GraphQlFragment.jobFields}
@@ -114,8 +153,26 @@ class GraphQlQuery {
     ''';
   }
 
+  static String getApplications() {
+    return '''
+      ${GraphQlFragment.jobFields}
+      ${GraphQlFragment.applicationFields}
+
+      query getApplications(\$limit: Int, \$offset: Int, \$status: ApplicationStatus, \$application_ids: [ID]) {
+        get_applications(limit:\$limit, offset:\$offset, status:\$status, application_ids: \$application_ids) {
+          total
+           applications {
+            ...applicationFields
+          }
+        }
+      }
+    ''';
+  }
+
   static String applyJob() {
     return '''
+      ${GraphQlFragment.jobFields}
+
       mutation apply_job(
         \$address_ids: [ID], 
         \$job_id: ID!) 
