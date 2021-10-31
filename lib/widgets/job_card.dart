@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moovup_demo/widgets/job_type_pill.dart';
+
 import '../pages/job_detail_page/job_detail_page.dart';
 
 class JobCard extends StatelessWidget {
@@ -19,7 +20,11 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('job: $job');
+    print('employment_type: ${job['employment_type']?['name']!}');
     return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: 130,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Card(
