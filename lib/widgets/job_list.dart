@@ -13,7 +13,6 @@ class HomePageContents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(homepageData['job_featured_lists'][0]['jobs'][0]);
     return SingleChildScrollView(
       physics: ScrollPhysics(),
       child: Column(
@@ -86,49 +85,6 @@ class HomePageContents extends StatelessWidget {
               ],
             ),
           ),
-          // Container(
-          //   width: double.infinity,
-          //   height: 1500,
-          //   child: ListView.builder(
-          //     shrinkWrap: true,
-          //     physics: const NeverScrollableScrollPhysics(),
-          //     itemBuilder: (BuildContext context, int index) {
-          //       return Container(
-          //         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          //         child: Column(
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             Container(
-          //               margin:
-          //                   EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          //               child: Text(
-          //                   homepageData['job_featured_lists'][index]['name'][0]
-          //                           ['value']
-          //                       .toString(),
-          //                   style: Theme.of(context).textTheme.headline6),
-          //             ),
-          //             Container(
-          //               width: double.infinity,
-          //               height: 130,
-          //               child: ListView.builder(
-          //                 scrollDirection: Axis.horizontal,
-          //                 itemCount: homepageData['job_featured_lists'][index]
-          //                         ['jobs']
-          //                     .length,
-          //                 shrinkWrap: true,
-          //                 itemBuilder: (context, index) {
-          //                   final job = (homepageData['job_recommended_list']
-          //                       ['jobs'][index] as Map);
-          //                   return JobCard(job: job);
-          //                 },
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // )
           ...(homepageData['job_featured_lists'] as List).map((jobList) {
             return Container(
               margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -150,9 +106,7 @@ class HomePageContents extends StatelessWidget {
                       itemCount: jobList['jobs'].length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        // print(jobList);
                         final job = (jobList['jobs'][index] as Map);
-                        // (homepageData['job_featured_lists']['jobs'][index] as Map)
                         return JobCard(job: job);
                       },
                     ),

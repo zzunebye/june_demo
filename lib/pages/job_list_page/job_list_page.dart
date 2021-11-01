@@ -60,7 +60,6 @@ class _HomePageState extends State<HomePage> {
           } else if (state is LoadDataSuccess) {
             var jobListdata = (state).jobListData['job_search']?['result'];
             var homepageData = (state).homepageData?['homepage'];
-            print(homepageData);
             return HomePageContents(jobListdata, homepageData);
           } else {
             return Center(child: CircularProgressIndicator());

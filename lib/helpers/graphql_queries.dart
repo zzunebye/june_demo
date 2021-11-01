@@ -19,11 +19,7 @@ class GraphQlQuery {
             }
             data
             jobs {
-              _id
-              job_name
-              company{
-                name
-              }
+              ...jobFields
             }
           }
           job_recommended_list {
