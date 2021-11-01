@@ -100,7 +100,7 @@ class HomePageContents extends StatelessWidget {
                   ),
                   Container(
                     width: double.infinity,
-                    height: 130,
+                    height: 136,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: jobList['jobs'].length,

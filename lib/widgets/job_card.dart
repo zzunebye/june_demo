@@ -22,7 +22,7 @@ class JobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.75,
-      height: 130,
+      height: 136,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Card(
@@ -34,47 +34,55 @@ class JobCard extends StatelessWidget {
           onTap: () => selectJobCard(context),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Row(
+            child: Stack(
+              alignment: Alignment.bottomRight,
               children: [
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      JobTypePill(job['employment_type']['name'].toString()),
-                      SizedBox(height: 2),
-                      Text(
-                        job['company']['name'].toString(),
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        job['job_name'].toString(),
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
-                      Text(
-                        job['address'][0]['address'].toString(),
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: CircleAvatar(
-                    foregroundColor: Color.fromRGBO(89, 93, 229, 0.8),
-                    // backgroundColor: Color.fromRGBO(89, 93, 229, 0.9),
-                    radius: 24,
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: FittedBox(
-                        child: Icon(Icons.person),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          JobTypePill(job['employment_type']['name'].toString()),
+                          SizedBox(height: 2),
+                          Text(
+                            job['company']['name'].toString(),
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            job['job_name'].toString(),
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                          Text(
+                            job['address'][0]['address'].toString(),
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
+                    Expanded(
+                      flex: 1,
+                      child: CircleAvatar(
+                        foregroundColor: Color.fromRGBO(89, 93, 229, 0.8),
+                        radius: 24,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: FittedBox(
+                            child: Icon(Icons.person),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                Positioned(
+                  bottom: 0,
+                  child: Text('\$ 13.5k+/hour', style: Theme.of(context).textTheme.bodyText1),
+                )
               ],
             ),
           ),

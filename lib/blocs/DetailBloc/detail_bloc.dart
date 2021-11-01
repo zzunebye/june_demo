@@ -35,13 +35,8 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
 
   _onFetchDetailData(FetchDetailData event, Emitter<DetailStates> emit) async {
     emit(OnLoading());
-    print('ONLOADING emitted');
     try {
-      print('try on On..');
-      print('${event.jobId}');
       final result = await jobRepository.getSingleJobDetail(event.jobId);
-      print('await jobRepository.getSingleJobDetail');
-      print("result $result");
       this.jobTitleController.add(result.data!['get_jobs'].first?['job_name']);
       emit(LoadDataSuccess(result.data!));
     } catch (error) {

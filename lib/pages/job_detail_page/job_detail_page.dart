@@ -26,11 +26,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
   @override
   void initState() {
     super.initState();
-    print('initState');
     _detailBloc = BlocProvider.of<DetailBloc>(context);
-    print('widget id: ${widget.jobId}');
     _detailBloc.add(FetchDetailData(widget.jobId));
-    print('initState event added');
   }
 
   @override

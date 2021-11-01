@@ -72,7 +72,6 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
         body: TabBarView(
           children: <Widget>[
             BlocBuilder<MyApplicationBloc, MyApplicationState>(builder: (context, state) {
-              print('Current State is: ${state.runtimeType}');
               if (state is MyApplicationDataSuccess) {
                 var applications = state.data['get_applications']['applications'];
                 var total = state.data['get_applications']['total'];
@@ -104,7 +103,6 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
             }),
             BlocBuilder<MyApplicationBloc, MyApplicationState>(
               builder: (context, state) {
-                print('Current State is: ${state.runtimeType}');
                 if (state is MyApplicationDataSuccess) {
                   var applications = state.data['get_applications']['applications'];
                   var total = state.data['get_applications']['total'];
@@ -136,7 +134,6 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
             ),
             BlocBuilder<MyApplicationBloc, MyApplicationState>(
               builder: (context, state) {
-                print('Current State is: ${state.runtimeType}');
                 if (state is MyApplicationOnLoading) {
                   return LinearProgressIndicator();
                 }
