@@ -4,7 +4,7 @@ abstract class BookmarkEvents extends Equatable {
   BookmarkEvents();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class FetchBookmarkData extends BookmarkEvents {
@@ -12,7 +12,7 @@ class FetchBookmarkData extends BookmarkEvents {
   FetchBookmarkData();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 
@@ -22,5 +22,5 @@ class DeleteBookmark extends BookmarkEvents {
   DeleteBookmark(this.jobId);
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [jobId];
 }

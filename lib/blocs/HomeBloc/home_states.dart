@@ -4,7 +4,7 @@ class HomeStates extends Equatable {
   HomeStates();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class OnLoading extends HomeStates {

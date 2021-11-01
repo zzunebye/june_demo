@@ -20,14 +20,14 @@ class JobDetailPage extends StatefulWidget {
 }
 
 class _JobDetailPageState extends State<JobDetailPage> {
-  late DetailBloc _detailBloc;
+  // late DetailBloc _detailBloc;
   bool isSaved = false;
 
   @override
   void initState() {
     super.initState();
-    _detailBloc = BlocProvider.of<DetailBloc>(context);
-    _detailBloc.add(FetchDetailData(widget.jobId));
+    // _detailBloc = BlocProvider.of<DetailBloc>(context, listen: false);
+    BlocProvider.of<DetailBloc>(context, listen: false).add(FetchDetailData(widget.jobId));
   }
 
   @override
@@ -65,8 +65,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(_detailBloc.convertIntToDate(day), style: Theme.of(context).textTheme.bodyText1),
-              Text(_detailBloc.getWorkingHour(jobDetail)),
+              Text(BlocProvider.of<DetailBloc>(context).convertIntToDate(day), style: Theme.of(context).textTheme.bodyText1),
+              Text(BlocProvider.of<DetailBloc>(context).getWorkingHour(jobDetail)),
             ],
           ),
           Divider(height: 10),
@@ -217,7 +217,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     onSurface: Colors.red,
                   ),
                   onPressed: () {
-                    _detailBloc..add(SaveJob(jobDetail['is_saved'], jobDetail['_id']));
+                    BlocProvider.of<DetailBloc>(context)..add(SaveJob(jobDetail['is_saved'], jobDetail['_id']));
                   },
                   child: Container(
                     padding: EdgeInsets.all(0),
@@ -250,7 +250,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
       child: Scaffold(
         appBar: AppBarPreset(
           appBartitle: StreamBuilder<String>(
-            stream: _detailBloc.jobTitleController.stream,
+            stream: BlocProvider.of<DetailBloc>(context).jobTitleController.stream,
             initialData: 'Loading...',
             builder: (context, snapshot) {
               return Text('${snapshot.data}');

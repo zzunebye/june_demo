@@ -4,7 +4,7 @@ class PortfolioStates extends Equatable {
   PortfolioStates();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class OnLoading extends PortfolioStates {

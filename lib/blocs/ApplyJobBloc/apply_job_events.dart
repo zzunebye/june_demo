@@ -5,14 +5,14 @@ abstract class ApplyJobEvents extends Equatable {
   ApplyJobEvents();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class FetchApplyJob extends ApplyJobEvents {
   FetchApplyJob();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class ApplyJob extends ApplyJobEvents {
@@ -21,7 +21,7 @@ class ApplyJob extends ApplyJobEvents {
   ApplyJob(this.jobApplication);
 
   @override
-  List<Object>? get props => [jobApplication];
+  List<Object> get props => [jobApplication];
 }
 
 class ModifyApplyJob extends ApplyJobEvents {
@@ -32,5 +32,5 @@ class DeleteApplyJob extends ApplyJobEvents {
   DeleteApplyJob();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }

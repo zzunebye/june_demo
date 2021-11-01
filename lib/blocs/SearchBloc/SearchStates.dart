@@ -6,7 +6,7 @@ class SearchStates extends Equatable {
   SearchStates(this.searchOption);
 
   @override
-  List<Object>? get props => [searchOption];
+  List<Object> get props => [searchOption];
 }
 
 class EmptyState extends SearchStates {

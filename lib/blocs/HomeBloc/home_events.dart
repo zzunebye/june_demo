@@ -4,7 +4,7 @@ abstract class HomeEvents extends Equatable {
   HomeEvents();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class FetchHomeData extends HomeEvents {
@@ -12,6 +12,6 @@ class FetchHomeData extends HomeEvents {
   FetchHomeData();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 
 }

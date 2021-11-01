@@ -9,7 +9,7 @@ import 'detail_states.dart';
 
 class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   final PostRepository jobRepository;
-  final jobTitleController = StreamController<String>.broadcast();
+  get jobTitleController => StreamController<String>.broadcast();
 
   DetailBloc(this.jobRepository) : super(OnLoading()) {
     on<SaveJob>(_onSaveJob);
@@ -37,7 +37,7 @@ class DetailBloc extends Bloc<DetailEvents, DetailStates> {
     emit(OnLoading());
     try {
       final result = await jobRepository.getSingleJobDetail(event.jobId);
-      this.jobTitleController.add(result.data!['get_jobs'].first?['job_name']);
+      // this.jobTitleController.add(result.data!['get_jobs'].first?['job_name']);
       emit(LoadDataSuccess(result.data!));
     } catch (error) {
       print('error on On..: $error');

@@ -4,7 +4,7 @@ class ApplyJobStates extends Equatable {
   ApplyJobStates();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class OnLoading extends ApplyJobStates {

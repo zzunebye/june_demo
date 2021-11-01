@@ -4,17 +4,25 @@ class DetailStates extends Equatable {
   DetailStates();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class OnLoading extends DetailStates {
-  OnLoading() : super();
+  OnLoading() : super(){
+  print('OnLoading');
+
+}
+
+  @override
+  List<Object> get props => [];
 }
 
 class OnLoadingWithData extends DetailStates {
   final Map<String, dynamic> data;
 
-  OnLoadingWithData(this.data);
+  OnLoadingWithData(this.data){
+    print('OnLoadingWithData');
+  }
 
   @override
   List<Object> get props => [data];
@@ -23,7 +31,9 @@ class OnLoadingWithData extends DetailStates {
 class LoadDataSuccess extends DetailStates {
   final Map<String, dynamic> data;
 
-  LoadDataSuccess(this.data) : super();
+  LoadDataSuccess(this.data) : super() {
+    print('LoadDataSuccess');
+  }
 
   @override
   List<Object> get props => [data];
@@ -35,5 +45,5 @@ class LoadDataFail extends DetailStates {
   LoadDataFail(this.error) : super();
 
   @override
-  List<Object> get props => error;
+  List<Object> get props => [error];
 }

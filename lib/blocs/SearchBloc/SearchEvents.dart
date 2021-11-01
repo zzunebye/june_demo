@@ -5,7 +5,7 @@ abstract class SearchEvents extends Equatable {
   SearchEvents();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class FetchSearchData extends SearchEvents {
@@ -14,7 +14,7 @@ class FetchSearchData extends SearchEvents {
   FetchSearchData(this.searchOption);
 
   @override
-  List<Object>? get props => [];
+  List<Object> get props => [searchOption];
 }
 
 class ResetSearch extends SearchEvents {
@@ -27,7 +27,7 @@ class UpdateWage extends SearchEvents {
   UpdateWage(this.wageRange);
 
   @override
-  List<Object>? get props => [];
+  List<Object> get props => [wageRange];
 }
 
 class UpdateTerm extends SearchEvents {
@@ -36,5 +36,5 @@ class UpdateTerm extends SearchEvents {
   UpdateTerm(this.term);
 
   @override
-  List<Object>? get props => [term];
+  List<Object> get props => [term];
 }

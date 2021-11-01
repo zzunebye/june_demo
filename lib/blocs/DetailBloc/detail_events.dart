@@ -4,7 +4,7 @@ abstract class DetailEvents extends Equatable {
   DetailEvents();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class FetchDetailData extends DetailEvents {
@@ -13,7 +13,7 @@ class FetchDetailData extends DetailEvents {
   FetchDetailData(this.jobId);
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [jobId];
 }
 
 class SaveJob extends DetailEvents {
@@ -23,5 +23,5 @@ class SaveJob extends DetailEvents {
   SaveJob(this.isSaved, this.jobId);
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [isSaved, jobId];
 }

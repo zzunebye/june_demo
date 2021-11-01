@@ -4,7 +4,7 @@ class BookmarkStates extends Equatable {
   BookmarkStates();
 
   @override
-  List<Object>? get props => null;
+  List<Object> get props => [];
 }
 
 class OnLoading extends BookmarkStates {

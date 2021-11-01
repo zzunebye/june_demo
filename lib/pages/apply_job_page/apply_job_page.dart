@@ -112,12 +112,6 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
                         onPressed: () {
                           // TODO: BLoC to validate form / info
                           BlocProvider.of<ApplyJobBloc>(context).add(ApplyJob(JobApplicationInfo(jobId, addressIds)));
-
-                          /* TODO: Event to apply Job
-                          - if succeed, direct to ApplyJobResultPage
-                         */
-
-                          // Navigator.of(context).pushNamed(ApplyJobResultPage.routeName);
                         },
                         icon: Icon(Icons.check_circle_outline),
                         label: Text('Submit'),

@@ -2,6 +2,10 @@ import 'package:moovup_demo/models/job_application.dart';
 import 'package:moovup_demo/models/search_option_data.dart';
 import 'package:moovup_demo/services/service.dart';
 
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+
+
 class PostRepository {
   final IJobService _dataService;
 
@@ -72,3 +76,4 @@ class PostRepository {
     }
   }
 }
+
